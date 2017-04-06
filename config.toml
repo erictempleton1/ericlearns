@@ -1,0 +1,40 @@
+baseurl = "https://ericlearns.com"
+languageCode = "en"
+title = "ericlearns"
+theme = "hucore"
+googleAnalytics = "UA-42703121-4"
+
+[taxonomies]
+tag = "tags"
+category = "categories"
+
+[params]
+description = "Follow along as I learn new things, including: c++, and bicycling"
+keywords = ["ericlearns", "learn c++", "c++", "python", "programming", "learn programming", "bicycling", "cyclocross"]
+author = "eric"
+sharingicons = true
+displayauthor = true
+
+[params.highlight]
+style = "github"
+languages = ["go", "dockerfile"]
+
+[[params.social]]
+url = "https://github.com/erictempleton1"
+fa_icon = "fa-github"
+
+[[params.social]]
+url = "https://twitter.com/google"
+fa_icon = "fa-twitter"
+
+[[params.social]]
+url = "https://linkedin.com/in/google"
+fa_icon = "fa-linkedin-square"
+
+[[params.social]]
+url = "/index.xml"
+fa_icon = "fa-rss"
+
+[[params.socialshare]]
+url = "https://linkedin.com/in/mgjohansen"
+fa_icon = "fa-linkedin-square"
