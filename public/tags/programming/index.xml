@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>ericlearns</title>
-    <link>https://ericlearns.com/index.xml</link>
-    <description>Recent content on ericlearns</description>
+    <title>Programming on ericlearns</title>
+    <link>https://ericlearns.com/tags/programming/index.xml</link>
+    <description>Recent content in Programming on ericlearns</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 05 Apr 2017 20:57:36 -0400</lastBuildDate>
-    <atom:link href="https://ericlearns.com/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://ericlearns.com/tags/programming/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>An Intro of Sorts</title>
