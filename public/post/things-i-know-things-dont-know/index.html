@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta content="ericlearns, learn c&#43;&#43;, c&#43;&#43;, python, programming, learn programming, bicycling, cyclocross" name="keywords">
+<meta content="eric" name="author">
+<meta property="og:title" content="Things I Know, Things I Don&#39;t Know, and Things I&#39;m Avoiding - ericlearns">
+<meta property="og:url" content="http://ericlearns.com/post/things-i-know-things-dont-know/">
+<meta property="og:description" content="Follow along as I learn new things, including: c&#43;&#43;, and bicycling">
+<meta property="og:type" content="website" />
+<title>Things I Know, Things I Don&#39;t Know, and Things I&#39;m Avoiding | ericlearns</title>
+<link rel="stylesheet" href="http://ericlearns.com/css/style.css">
+<link rel="shortcut icon" href="http://ericlearns.com/wave.ico">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/github.min.css">
+
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="http://ericlearns.com"><h1 class="title is-4">ericlearns</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile">
+          
+          <a class="level-item" href="https://github.com/erictempleton1" target="_blank">
+            <span class="icon">
+              <i class="fa fa-github"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://twitter.com/google" target="_blank">
+            <span class="icon">
+              <i class="fa fa-twitter"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://linkedin.com/in/google" target="_blank">
+            <span class="icon">
+              <i class="fa fa-linkedin-square"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="/index.xml" target="_blank">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+          </a>
+          
+        </nav>
+      </div>
+    </nav>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h1 class="title">Things I Know, Things I Don&#39;t Know, and Things I&#39;m Avoiding</h1>
+    <h2 class="subtitle is-5">April 6, 2017 by eric</h2>
+    
+      <div class="tags">
+    
+        <a class="button is-link" href="/tags/programming">programming</a>
+    
+        <a class="button is-link" href="/tags/c&#43;&#43;">c&#43;&#43;</a>
+    
+</div>
+
+    
+    <div class="content">
+      <p>Let me get the thing I&rsquo;m avoiding in C++ out of the way first: <em>Pointers</em>. I recently read an article that boldy proclaimed</p>
+
+<blockquote>
+<p>C++ pointers are easy and fun to learn!</p>
+</blockquote>
+
+<p>Hmm, this is a strange assertion and I&rsquo;m not entirely convinced that the person who made this statement was entirely in their right mind. To me, pointers are very foreign concept. Even just googling &ldquo;what is a pointer C++?&rdquo; lead me to find many different definitions of <em>what</em> a pointer actually is. Here is my best definition of a pointer for right now</p>
+
+<blockquote>
+<p>A variable that stores the (memory) address of another variable</p>
+</blockquote>
+
+<p>That seems simple enough but I know that&rsquo;s not all there is to it, so I am storing pointers under &ldquo;Things I&rsquo;m Avoiding&rdquo; for now.</p>
+
+<p>How about some things I know? Well, I know that C++ is a <em>statically typed</em> language, and all variable types must be defined as a result of this. Compared to Python and JavaScript (<em>dynamically typed</em>) where basically anything goes, this is a bit of a change. But I will say that after writing some C++ for few days that having no option but to define the type is sort of refreshing. It&rsquo;s nice to know exactly what is going in and what being returned.</p>
+
+<pre><code class="language-c++">int myInt, myOtherInt;
+bool myBool;
+
+int awesomeBool() {
+    ...
+    return 100;
+}
+</code></pre>
+
+<p>Another thing I know, but maybe don&rsquo;t fully understand yet is the <code>main</code> function. Another foreign concept to me, but it&rsquo;s essentially the <em>entry point</em> for the program. It must also <em>usually</em> return an <code>int</code> even if the <code>int</code> is just a placeholder zero.</p>
+
+<pre><code class="language-c++">int main() {
+    return 0;
+}
+</code></pre>
+
+<p>Of course, <code>main</code> also exists in Python but it&rsquo;s not really as common and there is no entry point enforcement really. A more common idiom in Python is the <code>if __name__ == '__main__:</code>, which can take a function named <code>main</code> or any object of your choice.</p>
+
+<p>Lastly, something I don&rsquo;t fully understand yet are vectors. I know that vectors are a very important data structure in C++, but I can&rsquo;t stop picturing them as Python dictionaries&hellip;.or maybe a list? They are accessed in a similar fashion to a Python list, but they&rsquo;re not exactly the same. You can iterate them, add (read <code>push_to</code>) them, and even <em>nest</em> them. They also need to be <code>#include</code>&rsquo;d when they&rsquo;re used. Very handy, but I need to explore more.</p>
+
+    </div>
+    
+        <div class="nav-left">
+    <a class="nav-item" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fericlearns.com%2fpost%2fthings-i-know-things-dont-know%2f" title="Share on Facebook" target="_blank"><span class="fa fa-facebook fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://plus.google.com/share?url=http%3a%2f%2fericlearns.com%2fpost%2fthings-i-know-things-dont-know%2f" title="Share on Google+" target="_blank"><span class="fa fa-google-plus fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2fericlearns.com%2fpost%2fthings-i-know-things-dont-know%2f" title="Share on LinkedIn" target="_blank"><span class="fa fa-linkedin fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://twitter.com/home?status=Things%20I%20Know%2c%20Things%20I%20Don%27t%20Know%2c%20and%20Things%20I%27m%20Avoiding - http%3a%2f%2fericlearns.com%2fpost%2fthings-i-know-things-dont-know%2f" title="Tweet this" target="_blank"><span class="fa fa-twitter fa-2x"></span></a>
+    <a class="nav-item" href="http://www.reddit.com/submit?url=http%3a%2f%2fericlearns.com%2fpost%2fthings-i-know-things-dont-know%2f&title=Things%20I%20Know%2c%20Things%20I%20Don%27t%20Know%2c%20and%20Things%20I%27m%20Avoiding" title="Share on Reddit" target="_blank"><span class="fa fa-reddit-alien fa-2x" aria-hidden="true"></span></a>
+    
+    </div>
+    
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+  </div>
+</section>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/go.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/dockerfile.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-42703121-4', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+
+

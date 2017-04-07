@@ -6,8 +6,52 @@
     <description>Recent content in Posts on ericlearns</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 05 Apr 2017 20:57:36 -0400</lastBuildDate>
+    <lastBuildDate>Thu, 06 Apr 2017 20:47:16 -0400</lastBuildDate>
     <atom:link href="http://ericlearns.com/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Things I Know, Things I Don&#39;t Know, and Things I&#39;m Avoiding</title>
+      <link>http://ericlearns.com/post/things-i-know-things-dont-know/</link>
+      <pubDate>Thu, 06 Apr 2017 20:47:16 -0400</pubDate>
+      
+      <guid>http://ericlearns.com/post/things-i-know-things-dont-know/</guid>
+      <description>&lt;p&gt;Let me get the thing I&amp;rsquo;m avoiding in C++ out of the way first: &lt;em&gt;Pointers&lt;/em&gt;. I recently read an article that boldy proclaimed&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;C++ pointers are easy and fun to learn!&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Hmm, this is a strange assertion and I&amp;rsquo;m not entirely convinced that the person who made this statement was entirely in their right mind. To me, pointers are very foreign concept. Even just googling &amp;ldquo;what is a pointer C++?&amp;rdquo; lead me to find many different definitions of &lt;em&gt;what&lt;/em&gt; a pointer actually is. Here is my best definition of a pointer for right now&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;A variable that stores the (memory) address of another variable&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;That seems simple enough but I know that&amp;rsquo;s not all there is to it, so I am storing pointers under &amp;ldquo;Things I&amp;rsquo;m Avoiding&amp;rdquo; for now.&lt;/p&gt;
+
+&lt;p&gt;How about some things I know? Well, I know that C++ is a &lt;em&gt;statically typed&lt;/em&gt; language, and all variable types must be defined as a result of this. Compared to Python and JavaScript (&lt;em&gt;dynamically typed&lt;/em&gt;) where basically anything goes, this is a bit of a change. But I will say that after writing some C++ for few days that having no option but to define the type is sort of refreshing. It&amp;rsquo;s nice to know exactly what is going in and what being returned.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;int myInt, myOtherInt;
+bool myBool;
+
+int awesomeBool() {
+    ...
+    return 100;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Another thing I know, but maybe don&amp;rsquo;t fully understand yet is the &lt;code&gt;main&lt;/code&gt; function. Another foreign concept to me, but it&amp;rsquo;s essentially the &lt;em&gt;entry point&lt;/em&gt; for the program. It must also &lt;em&gt;usually&lt;/em&gt; return an &lt;code&gt;int&lt;/code&gt; even if the &lt;code&gt;int&lt;/code&gt; is just a placeholder zero.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;int main() {
+    return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Of course, &lt;code&gt;main&lt;/code&gt; also exists in Python but it&amp;rsquo;s not really as common and there is no entry point enforcement really. A more common idiom in Python is the &lt;code&gt;if __name__ == &#39;__main__:&lt;/code&gt;, which can take a function named &lt;code&gt;main&lt;/code&gt; or any object of your choice.&lt;/p&gt;
+
+&lt;p&gt;Lastly, something I don&amp;rsquo;t fully understand yet are vectors. I know that vectors are a very important data structure in C++, but I can&amp;rsquo;t stop picturing them as Python dictionaries&amp;hellip;.or maybe a list? They are accessed in a similar fashion to a Python list, but they&amp;rsquo;re not exactly the same. You can iterate them, add (read &lt;code&gt;push_to&lt;/code&gt;) them, and even &lt;em&gt;nest&lt;/em&gt; them. They also need to be &lt;code&gt;#include&lt;/code&gt;&amp;rsquo;d when they&amp;rsquo;re used. Very handy, but I need to explore more.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>An Intro of Sorts</title>
