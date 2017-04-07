@@ -4,7 +4,6 @@ title = "An Intro of Sorts"
 draft = false
 tags = ["programming", "C++"]
 slug = "an-intro-of-sorts"
-
 +++
 
 So, I recently decided that I'd like to learn C++. Maybe not to become an expert C++ developer, which I assume takes many years, but to be comfortable enough
