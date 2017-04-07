@@ -2,26 +2,26 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>ericlearns</title>
-    <link>https://ericlearns.com/index.xml</link>
+    <link>http://ericlearns.com/index.xml</link>
     <description>Recent content on ericlearns</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Wed, 05 Apr 2017 20:57:36 -0400</lastBuildDate>
-    <atom:link href="https://ericlearns.com/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://ericlearns.com/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>An Intro of Sorts</title>
-      <link>https://ericlearns.com/post/an-intro-of-sorts/</link>
+      <link>http://ericlearns.com/post/an-intro-of-sorts/</link>
       <pubDate>Wed, 05 Apr 2017 20:57:36 -0400</pubDate>
       
-      <guid>https://ericlearns.com/post/an-intro-of-sorts/</guid>
-      <description>&lt;p&gt;So, I recently decided that I&amp;rsquo;d like to learn C++. Maybe not become an expert C++ developer, which I assume takes many years, but be comfortable enough
+      <guid>http://ericlearns.com/post/an-intro-of-sorts/</guid>
+      <description>&lt;p&gt;So, I recently decided that I&amp;rsquo;d like to learn C++. Maybe not to become an expert C++ developer, which I assume takes many years, but to be comfortable enough
 in the language to have it be useful. I think &amp;ldquo;proficient in C++&amp;rdquo; would be the right way to put it. The purpose of this blog will be for me to track my thoughts
-and learning, and I also thought there might be someone else out there like me trying to learn and maybe they want to follow along&amp;hellip;or sympathize with me.&lt;/p&gt;
+and learning, and I also thought there might be someone else out there like me trying to learn who wants to follow along&amp;hellip;or sympathize with me.&lt;/p&gt;
 
 &lt;p&gt;I should say up front that I am not learning C++ as a &lt;em&gt;new&lt;/em&gt; developer. I am (what I would consider) a relatively experienced Python and JavaScript (Node.js) developer.
 In fact, I currently write code for a living. C++ always seemed like some monstrous beast of a language that was too difficult or not worth the tremendous effort to learn. I think I&amp;rsquo;ve
-come to a point in my &lt;em&gt;programming development&lt;/em&gt; where learning C++ would help me improve as a developer, so why not give it a shot.&lt;/p&gt;
+come to a point where learning C++ would help me improve as a developer, so why not give it a shot.&lt;/p&gt;
 
 &lt;p&gt;You&amp;rsquo;ll probably see me make reference to idioms and patterns in python &lt;em&gt;a lot&lt;/em&gt;. Python is currently my favorite language, but it is obviously &lt;em&gt;very&lt;/em&gt; different than C++ in many ways. You will
 probably also see me make egregious errors in C++, things that would make a seasoned C++ developer cry out in pain. I think this is part of the learning process, and it&amp;rsquo;s important to make mistakes while

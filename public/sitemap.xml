@@ -2,35 +2,35 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://ericlearns.com/post/an-intro-of-sorts/</loc>
+    <loc>http://ericlearns.com/post/an-intro-of-sorts/</loc>
     <lastmod>2017-04-05T20:57:36-04:00</lastmod>
   </url>
   
   <url>
-    <loc>https://ericlearns.com/tags/c&#43;&#43;/</loc>
-    <lastmod>2017-04-05T20:57:36-04:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://ericlearns.com/post/</loc>
+    <loc>http://ericlearns.com/tags/c&#43;&#43;/</loc>
     <lastmod>2017-04-05T20:57:36-04:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://ericlearns.com/tags/programming/</loc>
+    <loc>http://ericlearns.com/post/</loc>
     <lastmod>2017-04-05T20:57:36-04:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://ericlearns.com/tags/</loc>
+    <loc>http://ericlearns.com/tags/programming/</loc>
+    <lastmod>2017-04-05T20:57:36-04:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://ericlearns.com/</loc>
+    <loc>http://ericlearns.com/tags/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://ericlearns.com/</loc>
     <lastmod>2017-04-05T20:57:36-04:00</lastmod>
     <priority>0</priority>
   </url>

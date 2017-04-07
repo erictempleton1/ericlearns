@@ -1,4 +1,4 @@
-baseurl = "https://ericlearns.com"
+baseurl = "http://ericlearns.com"
 languageCode = "en"
 title = "ericlearns"
 theme = "hucore"
