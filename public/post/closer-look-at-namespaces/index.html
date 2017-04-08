@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta content="ericlearns, learn c&#43;&#43;, c&#43;&#43;, python, programming, learn programming, bicycling, cyclocross" name="keywords">
+<meta content="eric" name="author">
+<meta property="og:title" content="A Closer Look At Namespaces - ericlearns">
+<meta property="og:url" content="http://ericlearns.com/post/closer-look-at-namespaces/">
+<meta property="og:description" content="Follow along as I learn new things, including: c&#43;&#43;, and bicycling">
+<meta property="og:type" content="website" />
+<title>A Closer Look At Namespaces | ericlearns</title>
+<link rel="stylesheet" href="http://ericlearns.com/css/style.css">
+<link rel="shortcut icon" href="http://ericlearns.com/wave.ico">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/github.min.css">
+
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="http://ericlearns.com"><h1 class="title is-4">ericlearns</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile">
+          
+          <a class="level-item" href="https://github.com/erictempleton1" target="_blank">
+            <span class="icon">
+              <i class="fa fa-github"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://twitter.com/google" target="_blank">
+            <span class="icon">
+              <i class="fa fa-twitter"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://linkedin.com/in/google" target="_blank">
+            <span class="icon">
+              <i class="fa fa-linkedin-square"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="/index.xml" target="_blank">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+          </a>
+          
+        </nav>
+      </div>
+    </nav>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h1 class="title">A Closer Look At Namespaces</h1>
+    <h2 class="subtitle is-5">April 8, 2017 by eric</h2>
+    
+      <div class="tags">
+    
+        <a class="button is-link" href="/tags/c&#43;&#43;">C&#43;&#43;</a>
+    
+        <a class="button is-link" href="/tags/programming">programming</a>
+    
+        <a class="button is-link" href="/tags/namespaces">namespaces</a>
+    
+</div>
+
+    
+    <div class="content">
+      <p>According to <a href="https://msdn.microsoft.com/en-us/library/5cb46ksf.aspx">Microsoft&rsquo;s C++ Language Reference</a>, C++ namespaces are (more or less):</p>
+
+<blockquote>
+<p>A declarative region that provides a scope to types, functions, variables, etc inside it. Namespaces are used to organize code into logical groups and to prevent name collisions when working with a code base that includes multiple libraries.</p>
+</blockquote>
+
+<p>So, C++ namespaces are used to organize your code and prevent duplicate names (collisions). Got it.</p>
+
+<p>When I first started working in C++ I was writing <code>using namespace std;</code> at the top of my files. It turns out that this can be a bad idea for more than a few reasons. The main reason being <code>name collisions</code>.</p>
+
+<pre><code class="language-C++">using namespace awesome1;
+using namespace awesome2;
+</code></pre>
+
+<p>In the example above (modified from <a href="http://stackoverflow.com/questions/1452721/why-is-using-namespace-std-considered-bad-practice">this SO post</a>) if <code>namespace awesome2</code> got an update that included a function named exactly the same as a function that exists in <code>namespace awesome1</code> and you were using said function somewhere in your code, you now have a collision. I would expect to see a lengthy error output from the compiler telling me that there is a problem.</p>
+
+<p>The first C++ <a href="http://www.greenteapress.com/thinkcpp/">tutorial</a> I worked through had me putting <code>using namespace std;</code> at the top of my files, as I mentioned above. While this isn&rsquo;t <em>terrible</em> in practice, it&rsquo;s also not ideal. To make declarations more clear, and to avoid potential name collisions, I switched over to prepending <code>std::</code> to my declarations instead.</p>
+
+<p>Using the prepend (<code>std::cout</code> for example) you&rsquo;re basically saying:</p>
+
+<blockquote>
+<p>Hey, I&rsquo;m using a reference to something that lives somewhere else! But, let me tell you exactly where it comes from. I&rsquo;ll also do you the nice favor of not bringing in a bunch of other things that might not be needed.</p>
+</blockquote>
+
+<p>The &ldquo;not bringing in a bunch of other things&rdquo; is an important point too. It&rsquo;s better to bring in exactly what you need instead of cluttering up the namespace with <em>everything</em> in the given library. This can get confusing pretty quickly. I&rsquo;m picturing the equivalent in Python:</p>
+
+<pre><code class="language-python">from pymongo import *  # Now I have tons of things I don't need and don't know about. Dang.
+</code></pre>
+
+<p>vs</p>
+
+<pre><code class="language-python">from pymongo import MongoClient  # I only need this thing right now and nothing else. Awesome!
+</code></pre>
+
+<p>In C++, this looks something like the example code below. Adding the prepend <code>std::</code> (or others) is very tedious as I found out, but I think it does make the code more readable in the long run.</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+
+int main() {
+    int awesomeIntVar = 100;
+    std::cout &lt;&lt; &quot;My awesome int variable: &quot; &lt;&lt; awesomeIntVar &lt;&lt; std::endl;
+    return 0;
+}
+</code></pre>
+
+<p>Another reasonable alternative is the <code>using</code> directive:</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+using std::cout;
+using std::endl;
+
+int main() {
+    int awesomeIntVar = 100;
+    cout &lt;&lt; &quot;My awesome int variable: &quot; &lt;&lt; awesomeIntVar &lt;&lt; endl;
+    return 0;
+}
+</code></pre>
+
+<p>But how much is the <code>using</code> directive pattern above really saving me? Am I giving up some <em>code readability</em> in exchange for a slight convenience? I think I&rsquo;ll stick with the <em>tedious</em> explicit declaration for now.</p>
+
+<p>Apparently <code>using namespace ...</code> or using <code>using std::cout</code> (for example) is a big no-no in header files. Similar to the above scenarios, this can cause major name collisions. The <a href="http://stackoverflow.com/questions/4872373/why-is-including-using-namespace-into-a-header-file-a-bad-idea-in-c">example</a> below shows what happened if I decided for some silly reason to create a <code>struct</code> named <code>string</code> with the <code>std</code> namespace declared and <code>#include &lt;string&gt;</code>. The compiler has no clue which <code>string</code> to use, and you get an error.</p>
+
+<pre><code class="language-C++">#include &lt;string&gt;
+using namespace std;
+
+struct string {const char* p;};  // hmm, probably a bad name choice
+
+int main() {
+    // declare a string....but from where? Error.
+    string x;
+}
+</code></pre>
+
+<p><em>But wait, there&rsquo;s more!</em> You can (and should) declare your own namespaces in C++!</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+
+namespace awesomeNamespace {
+    // whatever variable you need!
+    int height = 300;
+}
+
+namespace coolFunc {
+    // functions too!
+    void func() {
+        std::cout &lt;&lt; &quot;heck yeah&quot; &lt;&lt; std:: endl;
+    }
+}
+
+int main() {
+    std::cout &lt;&lt; awesomeNamespace::height &lt;&lt; std::endl;
+    coolFunc::func();
+    return 0;
+}
+</code></pre>
+
+<p>Why would you want to declare your own namespace? Well, I think this would help differentiate functions with the same name in the same space. If you use the namespace prepend, you can let the compiler know exactly which function you are referring to. Brilliant.</p>
+
+<p>All this C++ namespace research got me wondering about namespaces in Python. Is there such a thing as a Python namespace? Well, yes but it works much differently than C++ namespaces. Python has <code>local</code> and <code>global</code> namespaces. A <code>local</code> namespace exists in a package, module, class, or function. A <code>global</code> namespace exists outside of the <code>local</code> namespace when a name cannot be found in the <code>local</code> namespace. This wonderful <a href="http://stackoverflow.com/questions/3913217/what-are-python-namespaces-all-about?answertab=votes#tab-top">SO answer</a> sums it up nicely.</p>
+
+    </div>
+    
+        <div class="nav-left">
+    <a class="nav-item" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fericlearns.com%2fpost%2fcloser-look-at-namespaces%2f" title="Share on Facebook" target="_blank"><span class="fa fa-facebook fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://plus.google.com/share?url=http%3a%2f%2fericlearns.com%2fpost%2fcloser-look-at-namespaces%2f" title="Share on Google+" target="_blank"><span class="fa fa-google-plus fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2fericlearns.com%2fpost%2fcloser-look-at-namespaces%2f" title="Share on LinkedIn" target="_blank"><span class="fa fa-linkedin fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://twitter.com/home?status=A%20Closer%20Look%20At%20Namespaces - http%3a%2f%2fericlearns.com%2fpost%2fcloser-look-at-namespaces%2f" title="Tweet this" target="_blank"><span class="fa fa-twitter fa-2x"></span></a>
+    <a class="nav-item" href="http://www.reddit.com/submit?url=http%3a%2f%2fericlearns.com%2fpost%2fcloser-look-at-namespaces%2f&title=A%20Closer%20Look%20At%20Namespaces" title="Share on Reddit" target="_blank"><span class="fa fa-reddit-alien fa-2x" aria-hidden="true"></span></a>
+    
+    </div>
+    
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+  </div>
+</section>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/go.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/dockerfile.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-42703121-4', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+
+

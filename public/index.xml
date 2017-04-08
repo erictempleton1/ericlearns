@@ -6,8 +6,116 @@
     <description>Recent content on ericlearns</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 06 Apr 2017 20:47:16 -0400</lastBuildDate>
+    <lastBuildDate>Sat, 08 Apr 2017 07:06:45 -0400</lastBuildDate>
     <atom:link href="http://ericlearns.com/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>A Closer Look At Namespaces</title>
+      <link>http://ericlearns.com/post/closer-look-at-namespaces/</link>
+      <pubDate>Sat, 08 Apr 2017 07:06:45 -0400</pubDate>
+      
+      <guid>http://ericlearns.com/post/closer-look-at-namespaces/</guid>
+      <description>&lt;p&gt;According to &lt;a href=&#34;https://msdn.microsoft.com/en-us/library/5cb46ksf.aspx&#34;&gt;Microsoft&amp;rsquo;s C++ Language Reference&lt;/a&gt;, C++ namespaces are (more or less):&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;A declarative region that provides a scope to types, functions, variables, etc inside it. Namespaces are used to organize code into logical groups and to prevent name collisions when working with a code base that includes multiple libraries.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;So, C++ namespaces are used to organize your code and prevent duplicate names (collisions). Got it.&lt;/p&gt;
+
+&lt;p&gt;When I first started working in C++ I was writing &lt;code&gt;using namespace std;&lt;/code&gt; at the top of my files. It turns out that this can be a bad idea for more than a few reasons. The main reason being &lt;code&gt;name collisions&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;using namespace awesome1;
+using namespace awesome2;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In the example above (modified from &lt;a href=&#34;http://stackoverflow.com/questions/1452721/why-is-using-namespace-std-considered-bad-practice&#34;&gt;this SO post&lt;/a&gt;) if &lt;code&gt;namespace awesome2&lt;/code&gt; got an update that included a function named exactly the same as a function that exists in &lt;code&gt;namespace awesome1&lt;/code&gt; and you were using said function somewhere in your code, you now have a collision. I would expect to see a lengthy error output from the compiler telling me that there is a problem.&lt;/p&gt;
+
+&lt;p&gt;The first C++ &lt;a href=&#34;http://www.greenteapress.com/thinkcpp/&#34;&gt;tutorial&lt;/a&gt; I worked through had me putting &lt;code&gt;using namespace std;&lt;/code&gt; at the top of my files, as I mentioned above. While this isn&amp;rsquo;t &lt;em&gt;terrible&lt;/em&gt; in practice, it&amp;rsquo;s also not ideal. To make declarations more clear, and to avoid potential name collisions, I switched over to prepending &lt;code&gt;std::&lt;/code&gt; to my declarations instead.&lt;/p&gt;
+
+&lt;p&gt;Using the prepend (&lt;code&gt;std::cout&lt;/code&gt; for example) you&amp;rsquo;re basically saying:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Hey, I&amp;rsquo;m using a reference to something that lives somewhere else! But, let me tell you exactly where it comes from. I&amp;rsquo;ll also do you the nice favor of not bringing in a bunch of other things that might not be needed.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The &amp;ldquo;not bringing in a bunch of other things&amp;rdquo; is an important point too. It&amp;rsquo;s better to bring in exactly what you need instead of cluttering up the namespace with &lt;em&gt;everything&lt;/em&gt; in the given library. This can get confusing pretty quickly. I&amp;rsquo;m picturing the equivalent in Python:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from pymongo import *  # Now I have tons of things I don&#39;t need and don&#39;t know about. Dang.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;vs&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from pymongo import MongoClient  # I only need this thing right now and nothing else. Awesome!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In C++, this looks something like the example code below. Adding the prepend &lt;code&gt;std::&lt;/code&gt; (or others) is very tedious as I found out, but I think it does make the code more readable in the long run.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+
+int main() {
+    int awesomeIntVar = 100;
+    std::cout &amp;lt;&amp;lt; &amp;quot;My awesome int variable: &amp;quot; &amp;lt;&amp;lt; awesomeIntVar &amp;lt;&amp;lt; std::endl;
+    return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Another reasonable alternative is the &lt;code&gt;using&lt;/code&gt; directive:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+using std::cout;
+using std::endl;
+
+int main() {
+    int awesomeIntVar = 100;
+    cout &amp;lt;&amp;lt; &amp;quot;My awesome int variable: &amp;quot; &amp;lt;&amp;lt; awesomeIntVar &amp;lt;&amp;lt; endl;
+    return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;But how much is the &lt;code&gt;using&lt;/code&gt; directive pattern above really saving me? Am I giving up some &lt;em&gt;code readability&lt;/em&gt; in exchange for a slight convenience? I think I&amp;rsquo;ll stick with the &lt;em&gt;tedious&lt;/em&gt; explicit declaration for now.&lt;/p&gt;
+
+&lt;p&gt;Apparently &lt;code&gt;using namespace ...&lt;/code&gt; or using &lt;code&gt;using std::cout&lt;/code&gt; (for example) is a big no-no in header files. Similar to the above scenarios, this can cause major name collisions. The &lt;a href=&#34;http://stackoverflow.com/questions/4872373/why-is-including-using-namespace-into-a-header-file-a-bad-idea-in-c&#34;&gt;example&lt;/a&gt; below shows what happened if I decided for some silly reason to create a &lt;code&gt;struct&lt;/code&gt; named &lt;code&gt;string&lt;/code&gt; with the &lt;code&gt;std&lt;/code&gt; namespace declared and &lt;code&gt;#include &amp;lt;string&amp;gt;&lt;/code&gt;. The compiler has no clue which &lt;code&gt;string&lt;/code&gt; to use, and you get an error.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;string&amp;gt;
+using namespace std;
+
+struct string {const char* p;};  // hmm, probably a bad name choice
+
+int main() {
+    // declare a string....but from where? Error.
+    string x;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;But wait, there&amp;rsquo;s more!&lt;/em&gt; You can (and should) declare your own namespaces in C++!&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+
+namespace awesomeNamespace {
+    // whatever variable you need!
+    int height = 300;
+}
+
+namespace coolFunc {
+    // functions too!
+    void func() {
+        std::cout &amp;lt;&amp;lt; &amp;quot;heck yeah&amp;quot; &amp;lt;&amp;lt; std:: endl;
+    }
+}
+
+int main() {
+    std::cout &amp;lt;&amp;lt; awesomeNamespace::height &amp;lt;&amp;lt; std::endl;
+    coolFunc::func();
+    return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Why would you want to declare your own namespace? Well, I think this would help differentiate functions with the same name in the same space. If you use the namespace prepend, you can let the compiler know exactly which function you are referring to. Brilliant.&lt;/p&gt;
+
+&lt;p&gt;All this C++ namespace research got me wondering about namespaces in Python. Is there such a thing as a Python namespace? Well, yes but it works much differently than C++ namespaces. Python has &lt;code&gt;local&lt;/code&gt; and &lt;code&gt;global&lt;/code&gt; namespaces. A &lt;code&gt;local&lt;/code&gt; namespace exists in a package, module, class, or function. A &lt;code&gt;global&lt;/code&gt; namespace exists outside of the &lt;code&gt;local&lt;/code&gt; namespace when a name cannot be found in the &lt;code&gt;local&lt;/code&gt; namespace. This wonderful &lt;a href=&#34;http://stackoverflow.com/questions/3913217/what-are-python-namespaces-all-about?answertab=votes#tab-top&#34;&gt;SO answer&lt;/a&gt; sums it up nicely.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Things I Know, Things I Don&#39;t Know, and Things I&#39;m Avoiding</title>

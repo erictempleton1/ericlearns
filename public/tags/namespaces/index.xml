@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Programming on ericlearns</title>
-    <link>http://ericlearns.com/tags/programming/index.xml</link>
-    <description>Recent content in Programming on ericlearns</description>
+    <title>Namespaces on ericlearns</title>
+    <link>http://ericlearns.com/tags/namespaces/index.xml</link>
+    <description>Recent content in Namespaces on ericlearns</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <atom:link href="http://ericlearns.com/tags/programming/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://ericlearns.com/tags/namespaces/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>A Closer Look At Namespaces</title>
@@ -113,70 +113,6 @@ int main() {
 &lt;p&gt;Why would you want to declare your own namespace? Well, I think this would help differentiate functions with the same name in the same space. If you use the namespace prepend, you can let the compiler know exactly which function you are referring to. Brilliant.&lt;/p&gt;
 
 &lt;p&gt;All this C++ namespace research got me wondering about namespaces in Python. Is there such a thing as a Python namespace? Well, yes but it works much differently than C++ namespaces. Python has &lt;code&gt;local&lt;/code&gt; and &lt;code&gt;global&lt;/code&gt; namespaces. A &lt;code&gt;local&lt;/code&gt; namespace exists in a package, module, class, or function. A &lt;code&gt;global&lt;/code&gt; namespace exists outside of the &lt;code&gt;local&lt;/code&gt; namespace when a name cannot be found in the &lt;code&gt;local&lt;/code&gt; namespace. This wonderful &lt;a href=&#34;http://stackoverflow.com/questions/3913217/what-are-python-namespaces-all-about?answertab=votes#tab-top&#34;&gt;SO answer&lt;/a&gt; sums it up nicely.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Things I Know, Things I Don&#39;t Know, and Things I&#39;m Avoiding</title>
-      <link>http://ericlearns.com/post/things-i-know-things-dont-know/</link>
-      <pubDate>Thu, 06 Apr 2017 20:47:16 -0400</pubDate>
-      
-      <guid>http://ericlearns.com/post/things-i-know-things-dont-know/</guid>
-      <description>&lt;p&gt;Let me get the thing I&amp;rsquo;m avoiding in C++ out of the way first: &lt;em&gt;Pointers&lt;/em&gt;. I recently read an article that boldy proclaimed&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;C++ pointers are easy and fun to learn!&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Hmm, this is a strange assertion and I&amp;rsquo;m not entirely convinced that the person who made this statement was entirely in their right mind. To me, pointers are very foreign concept. Even just googling &amp;ldquo;what is a pointer C++?&amp;rdquo; lead me to find many different definitions of &lt;em&gt;what&lt;/em&gt; a pointer actually is. Here is my best definition of a pointer for right now&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;A variable that stores the (memory) address of another variable&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;That seems simple enough but I know that&amp;rsquo;s not all there is to it, so I am storing pointers under &amp;ldquo;Things I&amp;rsquo;m Avoiding&amp;rdquo; for now.&lt;/p&gt;
-
-&lt;p&gt;How about some things I know? Well, I know that C++ is a &lt;em&gt;statically typed&lt;/em&gt; language, and all variable types must be defined as a result of this. Compared to Python and JavaScript (&lt;em&gt;dynamically typed&lt;/em&gt;) where basically anything goes, this is a bit of a change. But I will say that after writing some C++ for few days that having no option but to define the type is sort of refreshing. It&amp;rsquo;s nice to know exactly what is going in and what being returned.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;int myInt, myOtherInt;
-bool myBool;
-
-int awesomeBool() {
-    ...
-    return 100;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Another thing I know, but maybe don&amp;rsquo;t fully understand yet is the &lt;code&gt;main&lt;/code&gt; function. Another foreign concept to me, but it&amp;rsquo;s essentially the &lt;em&gt;entry point&lt;/em&gt; for the program. It must also &lt;em&gt;usually&lt;/em&gt; return an &lt;code&gt;int&lt;/code&gt; even if the &lt;code&gt;int&lt;/code&gt; is just a placeholder zero.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;int main() {
-    return 0;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Of course, &lt;code&gt;main&lt;/code&gt; also exists in Python but it&amp;rsquo;s not really as common and there is no entry point enforcement really. A more common idiom in Python is the &lt;code&gt;if __name__ == &#39;__main__:&lt;/code&gt;, which can take a function named &lt;code&gt;main&lt;/code&gt; or any object of your choice.&lt;/p&gt;
-
-&lt;p&gt;Lastly, something I don&amp;rsquo;t fully understand yet are vectors. I know that vectors are a very important data structure in C++, but I can&amp;rsquo;t stop picturing them as Python dictionaries&amp;hellip;.or maybe a list? They are accessed in a similar fashion to a Python list, but they&amp;rsquo;re not exactly the same. You can iterate them, add (read &lt;code&gt;push_to&lt;/code&gt;) them, and even &lt;em&gt;nest&lt;/em&gt; them. They also need to be &lt;code&gt;#include&lt;/code&gt;&amp;rsquo;d when they&amp;rsquo;re used. Very handy, but I need to explore more.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>An Intro of Sorts</title>
-      <link>http://ericlearns.com/post/an-intro-of-sorts/</link>
-      <pubDate>Wed, 05 Apr 2017 20:57:36 -0400</pubDate>
-      
-      <guid>http://ericlearns.com/post/an-intro-of-sorts/</guid>
-      <description>&lt;p&gt;So, I recently decided that I&amp;rsquo;d like to learn C++. Maybe not to become an expert C++ developer, which I assume takes many years, but to be comfortable enough
-in the language to have it be useful. I think &amp;ldquo;proficient in C++&amp;rdquo; would be the right way to put it. The purpose of this blog will be for me to track my thoughts
-and learning, and I also thought there might be someone else out there like me trying to learn who wants to follow along&amp;hellip;or sympathize with me.&lt;/p&gt;
-
-&lt;p&gt;I should say up front that I am not learning C++ as a &lt;em&gt;new&lt;/em&gt; developer. I am (what I would consider) a relatively experienced Python and JavaScript (Node.js) developer.
-In fact, I currently write code for a living. C++ always seemed like some monstrous beast of a language that was too difficult or not worth the tremendous effort to learn. I think I&amp;rsquo;ve
-come to a point where learning C++ would help me improve as a developer, so why not give it a shot.&lt;/p&gt;
-
-&lt;p&gt;You&amp;rsquo;ll probably see me make reference to idioms and patterns in python &lt;em&gt;a lot&lt;/em&gt;. Python is currently my favorite language, but it is obviously &lt;em&gt;very&lt;/em&gt; different than C++ in many ways. You will
-probably also see me make egregious errors in C++, things that would make a seasoned C++ developer cry out in pain. I think this is part of the learning process, and it&amp;rsquo;s important to make mistakes while
-learning new things, especially programming languages. With that being said, anything I write should NOT be used as a reference or tutorial of any sort. I mostly have no idea what I&amp;rsquo;m doing.&lt;/p&gt;
 </description>
     </item>
     
