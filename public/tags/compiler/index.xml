@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Compiler on ericlearns</title>
+    <link>http://ericlearns.com/tags/compiler/index.xml</link>
+    <description>Recent content in Compiler on ericlearns</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <atom:link href="http://ericlearns.com/tags/compiler/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Learning About the g&#43;&#43; Compiler</title>
+      <link>http://ericlearns.com/post/learning-about-the-compilier/</link>
+      <pubDate>Mon, 10 Apr 2017 20:32:38 -0400</pubDate>
+      
+      <guid>http://ericlearns.com/post/learning-about-the-compilier/</guid>
+      <description>&lt;p&gt;Being that C++ is a &lt;em&gt;compiled&lt;/em&gt; language, we need a &lt;em&gt;compiler&lt;/em&gt; to &lt;em&gt;compile&lt;/em&gt; our code. Phew. For reasons that are not yet clear to me, my computers (Windows &amp;amp; Linux) have &lt;code&gt;g++&lt;/code&gt; already installed on them, so that&amp;rsquo;s what I&amp;rsquo;ve been using. &lt;code&gt;g++&lt;/code&gt; is used primarily via the command line, and takes a few arguments including file names and an output flag. Let&amp;rsquo;s write a simple C++ program and tinker with compiling it. I&amp;rsquo;ll go ahead and create a new file called &lt;code&gt;awesomeCalc.cpp&lt;/code&gt; and add the code below. The program just does a simple tax calculation and prints the results to the command line.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+
+int taxCalc(int price, float taxRate) {
+    return price + (price * taxRate);
+}
+
+void printTotalPrice() {
+    int totalPaid = taxCalc(100, .15);  // $100 at a 15% tax rate
+    std::cout &amp;lt;&amp;lt; &amp;quot;Total price: &amp;quot; &amp;lt;&amp;lt; &amp;quot;$&amp;quot; &amp;lt;&amp;lt; totalPaid &amp;lt;&amp;lt; std::endl;
+}
+
+int main() {
+    printTotalPrice();
+    return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So, if I wanted to &lt;em&gt;compile&lt;/em&gt; this program I would move the location of the file using the command line and type the following:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;g++ awesomeCalc.cpp
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So far so good, but what just happened? The compiler went through the code, checked for errors, translated our C++ code to &lt;em&gt;machine code&lt;/em&gt;, and created an output file (usually) called &lt;code&gt;a.out&lt;/code&gt; or &lt;code&gt;a.exe&lt;/code&gt; depending on the operating system. You could run the executable from the command line at this point if you wanted:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;a.exe
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Which should output the following text in the command prompt:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;Total price: $115
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Nice. But I&amp;rsquo;d like to call the output file something other than &lt;code&gt;a.exe&lt;/code&gt;. How about &lt;code&gt;taxCalculator.exe&lt;/code&gt;? Back in the command prompt I need to &lt;em&gt;re-compile&lt;/em&gt; the code with the &lt;code&gt;g++&lt;/code&gt; optional flag &lt;code&gt;-o&lt;/code&gt; and the filename of my choice.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;g++ awesomeCalc.cpp -o taxCalculator.exe
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now there is a new executable file with the much more &lt;em&gt;meaningful&lt;/em&gt; name &lt;code&gt;taxCaculator.exe&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Things get a little more complicated when there are multiple files to compile. For example, a &lt;code&gt;header&lt;/code&gt; file, a &lt;code&gt;main&lt;/code&gt; file, and &lt;code&gt;logic&lt;/code&gt; file. I&amp;rsquo;ll probably look back at this scenario more in depth pretty soon, but I started writing my C++ programs in multiple files like this recently to keep everything organized (it also seems like best practice) and I really like it. At first I had a hard time figuring out how to get my code to compile though. My code fed into the &lt;code&gt;header&lt;/code&gt; and &lt;code&gt;main&lt;/code&gt; files, but when I ran&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;g++ main.cpp -o awesomeProgram.exe
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I was greeted with a couple pages of error messages. It turns out that what I needed to do instead is compile &lt;code&gt;main.cpp&lt;/code&gt; with the logic file for my program &lt;code&gt;myAwesomeProgram.cpp&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;g++ main.cpp myAwesomeProgram.cpp -o awesomeProgram.exe
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Yes! No pages of errors, and my executable is created. Does the order of the files matter when you compile? As far as I can tell it &lt;em&gt;usually&lt;/em&gt; does not, but this could be a nice surprise for me in the near future.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;g++ myAwesomeProgram.cpp main.cpp -o awesomeProgram.exe
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It turns out that in C++ when you are &lt;code&gt;linking&lt;/code&gt; files using &lt;code&gt;g++&lt;/code&gt; (e.g. including &lt;code&gt;coolExistingFile.o&lt;/code&gt;), the order is very important because one of the &lt;code&gt;.cpp&lt;/code&gt; files could depend on what is in &lt;code&gt;coolExistingFile.o&lt;/code&gt; and needs to reference it first. I haven&amp;rsquo;t had a need to use &lt;code&gt;linking&lt;/code&gt; yet, so for now I am throwing my file names at &lt;code&gt;g++&lt;/code&gt; in whatever order I want.&lt;/p&gt;
+
+&lt;p&gt;Up until I recently started learning C++ I have only worked with &lt;em&gt;interpreted&lt;/em&gt; langauges, so all of this is very new to me. Among other things in C++, I actually really like compiling and checking for errors. The error output in C++ is a huge change from what I&amp;rsquo;m used to seeing in Python but it is teaching me to read the tracebacks very carefully. It seems to be helping me be more careful when writing my code because I have this lingering fear of a 10 page error output from &lt;code&gt;g++&lt;/code&gt;. I tell myself:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Be diligent and check everything over in the code, or face the consequences of trying to understand an enourmous error output at compile time.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Obviously, I could get pages of error messages no matter how thoroughly I check over my code before compiling, but I think it does helps my code quality and code writing efficiency a little bit. Sometimes fear is a good motivator I guess.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta content="ericlearns, learn c&#43;&#43;, c&#43;&#43;, python, programming, learn programming, bicycling, cyclocross" name="keywords">
+<meta content="eric" name="author">
+<meta property="og:title" content="Learning About the g&#43;&#43; Compiler - ericlearns">
+<meta property="og:url" content="http://ericlearns.com/post/learning-about-the-compilier/">
+<meta property="og:description" content="Follow along as I learn new things, including: c&#43;&#43;, and bicycling">
+<meta property="og:type" content="website" />
+<title>Learning About the g&#43;&#43; Compiler | ericlearns</title>
+<link rel="stylesheet" href="http://ericlearns.com/css/style.css">
+<link rel="shortcut icon" href="http://ericlearns.com/wave.ico">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/github.min.css">
+
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="http://ericlearns.com"><h1 class="title is-4">ericlearns</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile">
+          
+          <a class="level-item" href="https://github.com/erictempleton1" target="_blank">
+            <span class="icon">
+              <i class="fa fa-github"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://twitter.com/google" target="_blank">
+            <span class="icon">
+              <i class="fa fa-twitter"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://linkedin.com/in/google" target="_blank">
+            <span class="icon">
+              <i class="fa fa-linkedin-square"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="/index.xml" target="_blank">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+          </a>
+          
+        </nav>
+      </div>
+    </nav>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h1 class="title">Learning About the g&#43;&#43; Compiler</h1>
+    <h2 class="subtitle is-5">April 10, 2017 by eric</h2>
+    
+      <div class="tags">
+    
+        <a class="button is-link" href="/tags/c&#43;&#43;">c&#43;&#43;</a>
+    
+        <a class="button is-link" href="/tags/programming">programming</a>
+    
+        <a class="button is-link" href="/tags/g&#43;&#43;">g&#43;&#43;</a>
+    
+        <a class="button is-link" href="/tags/compiler">compiler</a>
+    
+</div>
+
+    
+    <div class="content">
+      <p>Being that C++ is a <em>compiled</em> language, we need a <em>compiler</em> to <em>compile</em> our code. Phew. For reasons that are not yet clear to me, my computers (Windows &amp; Linux) have <code>g++</code> already installed on them, so that&rsquo;s what I&rsquo;ve been using. <code>g++</code> is used primarily via the command line, and takes a few arguments including file names and an output flag. Let&rsquo;s write a simple C++ program and tinker with compiling it. I&rsquo;ll go ahead and create a new file called <code>awesomeCalc.cpp</code> and add the code below. The program just does a simple tax calculation and prints the results to the command line.</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+
+int taxCalc(int price, float taxRate) {
+    return price + (price * taxRate);
+}
+
+void printTotalPrice() {
+    int totalPaid = taxCalc(100, .15);  // $100 at a 15% tax rate
+    std::cout &lt;&lt; &quot;Total price: &quot; &lt;&lt; &quot;$&quot; &lt;&lt; totalPaid &lt;&lt; std::endl;
+}
+
+int main() {
+    printTotalPrice();
+    return 0;
+}
+</code></pre>
+
+<p>So, if I wanted to <em>compile</em> this program I would move the location of the file using the command line and type the following:</p>
+
+<pre><code class="language-bash">g++ awesomeCalc.cpp
+</code></pre>
+
+<p>So far so good, but what just happened? The compiler went through the code, checked for errors, translated our C++ code to <em>machine code</em>, and created an output file (usually) called <code>a.out</code> or <code>a.exe</code> depending on the operating system. You could run the executable from the command line at this point if you wanted:</p>
+
+<pre><code class="language-bash">a.exe
+</code></pre>
+
+<p>Which should output the following text in the command prompt:</p>
+
+<pre><code class="language-bash">Total price: $115
+</code></pre>
+
+<p>Nice. But I&rsquo;d like to call the output file something other than <code>a.exe</code>. How about <code>taxCalculator.exe</code>? Back in the command prompt I need to <em>re-compile</em> the code with the <code>g++</code> optional flag <code>-o</code> and the filename of my choice.</p>
+
+<pre><code class="language-bash">g++ awesomeCalc.cpp -o taxCalculator.exe
+</code></pre>
+
+<p>Now there is a new executable file with the much more <em>meaningful</em> name <code>taxCaculator.exe</code>.</p>
+
+<p>Things get a little more complicated when there are multiple files to compile. For example, a <code>header</code> file, a <code>main</code> file, and <code>logic</code> file. I&rsquo;ll probably look back at this scenario more in depth pretty soon, but I started writing my C++ programs in multiple files like this recently to keep everything organized (it also seems like best practice) and I really like it. At first I had a hard time figuring out how to get my code to compile though. My code fed into the <code>header</code> and <code>main</code> files, but when I ran</p>
+
+<pre><code class="language-bash">g++ main.cpp -o awesomeProgram.exe
+</code></pre>
+
+<p>I was greeted with a couple pages of error messages. It turns out that what I needed to do instead is compile <code>main.cpp</code> with the logic file for my program <code>myAwesomeProgram.cpp</code>.</p>
+
+<pre><code class="language-bash">g++ main.cpp myAwesomeProgram.cpp -o awesomeProgram.exe
+</code></pre>
+
+<p>Yes! No pages of errors, and my executable is created. Does the order of the files matter when you compile? As far as I can tell it <em>usually</em> does not, but this could be a nice surprise for me in the near future.</p>
+
+<pre><code class="language-bash">g++ myAwesomeProgram.cpp main.cpp -o awesomeProgram.exe
+</code></pre>
+
+<p>It turns out that in C++ when you are <code>linking</code> files using <code>g++</code> (e.g. including <code>coolExistingFile.o</code>), the order is very important because one of the <code>.cpp</code> files could depend on what is in <code>coolExistingFile.o</code> and needs to reference it first. I haven&rsquo;t had a need to use <code>linking</code> yet, so for now I am throwing my file names at <code>g++</code> in whatever order I want.</p>
+
+<p>Up until I recently started learning C++ I have only worked with <em>interpreted</em> langauges, so all of this is very new to me. Among other things in C++, I actually really like compiling and checking for errors. The error output in C++ is a huge change from what I&rsquo;m used to seeing in Python but it is teaching me to read the tracebacks very carefully. It seems to be helping me be more careful when writing my code because I have this lingering fear of a 10 page error output from <code>g++</code>. I tell myself:</p>
+
+<blockquote>
+<p>Be diligent and check everything over in the code, or face the consequences of trying to understand an enourmous error output at compile time.</p>
+</blockquote>
+
+<p>Obviously, I could get pages of error messages no matter how thoroughly I check over my code before compiling, but I think it does helps my code quality and code writing efficiency a little bit. Sometimes fear is a good motivator I guess.</p>
+
+    </div>
+    
+        <div class="nav-left">
+    <a class="nav-item" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fericlearns.com%2fpost%2flearning-about-the-compilier%2f" title="Share on Facebook" target="_blank"><span class="fa fa-facebook fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://plus.google.com/share?url=http%3a%2f%2fericlearns.com%2fpost%2flearning-about-the-compilier%2f" title="Share on Google+" target="_blank"><span class="fa fa-google-plus fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2fericlearns.com%2fpost%2flearning-about-the-compilier%2f" title="Share on LinkedIn" target="_blank"><span class="fa fa-linkedin fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://twitter.com/home?status=Learning%20About%20the%20g%2b%2b%20Compiler - http%3a%2f%2fericlearns.com%2fpost%2flearning-about-the-compilier%2f" title="Tweet this" target="_blank"><span class="fa fa-twitter fa-2x"></span></a>
+    <a class="nav-item" href="http://www.reddit.com/submit?url=http%3a%2f%2fericlearns.com%2fpost%2flearning-about-the-compilier%2f&title=Learning%20About%20the%20g%2b%2b%20Compiler" title="Share on Reddit" target="_blank"><span class="fa fa-reddit-alien fa-2x" aria-hidden="true"></span></a>
+    
+    </div>
+    
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+  </div>
+</section>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/go.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/dockerfile.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-42703121-4', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+
+
