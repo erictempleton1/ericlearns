@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta content="ericlearns, learn c&#43;&#43;, c&#43;&#43;, python, programming, learn programming, bicycling, cyclocross" name="keywords">
+<meta content="eric" name="author">
+<meta property="og:title" content="Starting Out With Structs - ericlearns">
+<meta property="og:url" content="http://ericlearns.com/post/starting-out-with-structs/">
+<meta property="og:description" content="Follow along as I learn new things, including: c&#43;&#43;, and bicycling">
+<meta property="og:type" content="website" />
+<title>Starting Out With Structs | ericlearns</title>
+<link rel="stylesheet" href="http://ericlearns.com/css/style.css">
+<link rel="shortcut icon" href="http://ericlearns.com/wave.ico">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/github.min.css">
+
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="http://ericlearns.com"><h1 class="title is-4">ericlearns</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile">
+          
+          <a class="level-item" href="https://github.com/erictempleton1" target="_blank">
+            <span class="icon">
+              <i class="fa fa-github"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://twitter.com/google" target="_blank">
+            <span class="icon">
+              <i class="fa fa-twitter"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://linkedin.com/in/google" target="_blank">
+            <span class="icon">
+              <i class="fa fa-linkedin-square"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="/index.xml" target="_blank">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+          </a>
+          
+        </nav>
+      </div>
+    </nav>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h1 class="title">Starting Out With Structs</h1>
+    <h2 class="subtitle is-5">April 13, 2017 by eric</h2>
+    
+      <div class="tags">
+    
+        <a class="button is-link" href="/tags/c&#43;&#43;">C&#43;&#43;</a>
+    
+        <a class="button is-link" href="/tags/programming">programming</a>
+    
+        <a class="button is-link" href="/tags/structs">structs</a>
+    
+        <a class="button is-link" href="/tags/data-structures">data structures</a>
+    
+</div>
+
+    
+    <div class="content">
+      <p>From this point on I am going to write all my C++ programs with a minimum of 3 files: <code>main.cpp</code> <code>headerFile.h</code> <code>logicFile.cpp</code></p>
+
+<p><code>main.cpp</code> and <code>logicFile.cpp</code> will contain an <code>#include headerFile.h</code> statement at the top. This seems like the best way to keep everything organized, as well as a C++ best practice.</p>
+
+<p>So, with that out of way let&rsquo;s talk about <code>structs</code>. A <code>struct</code> is a C++ data structure that allows you to store different <em>types</em> of variables together in one place (encapsulation anyone?). That seems pretty handy, but it also seems very similar to a class&hellip;.and it turns out that a <code>struct</code> is <em>very</em> similar to a <code>class</code> in C++. The primary difference between the two being that anything in a <code>struct</code> is <code>public</code> by default.</p>
+
+<p>Ok, interesting. But what does <code>public</code> mean, and why should I care? <code>public</code> means that anything in a <code>struct</code> can be accessed and modified by another function. Sometimes we don&rsquo;t want things in our structs (or classes) to be accessed and modified because when I go to use that thing somewhere else, it might not do or return what I am expecting it to as it is defined. This is where <code>private</code> comes in, but this is a post for another time. Back to <code>struct</code>.</p>
+
+<p>In my header file <code>structDemo.h</code> I will create the following:</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+
+struct BikeRoute {
+    int distance, watts;
+    std::string routeName;
+};
+</code></pre>
+
+<p>Here we defined a <code>struct</code> named <code>BikeRoute</code> that has 3 members: <code>int distance</code> <code>int watts</code> and <code>string routeName</code>. One really important point is the <em>trailing semi-colon</em>. In C++, <code>struct</code>&rsquo;s must have a trailing semi-colon. I <em>always</em> forget this.</p>
+
+<p>In <code>main.cpp</code> I&rsquo;ll add the following code:</p>
+
+<pre><code class="language-C++">#include &quot;structDemo.h&quot;
+
+int main() {
+    BikeRoute tuesdayRide = { 24, 450, &quot;Daily Commute&quot; };
+    std::cout &lt;&lt; tuesdayRide.distance &lt;&lt; std::endl;
+
+    return 0;
+}
+</code></pre>
+
+<p>Now I am <code>instantiating</code> the <code>struct</code> named <code>BikeRoute</code> and setting the values for distance, watts, and routeName that represent my <code>tuesdayCommute</code> in this case. Compiling this program and running the output file would print <code>24</code> to standard out. I could have also definied each member like this (shortened):</p>
+
+<pre><code class="language-C++">...
+BikeRoute tuesdayRide;
+tuesdayRide.distance = 24;
+tuesdayRide.watts = 450;
+tuesdayRide.routeName = &quot;Daily Commute;
+...
+</code></pre>
+
+<p>At this point I have a file called <code>structDemo.cpp</code> that is empty. In my <code>main</code> function I am sending the distance I rode to standard out. I think it would be nice to have a function that printed the details of my ride in a nice format. Let&rsquo;s add a <em>member function</em> to the BikeRoute <code>struct</code>. In <code>structDemo.h</code> I&rsquo;ll add a reference to the yet to be created function <code>prettyPrint();</code>, which will display a nicely formatted output to standard out. Adding the new function to the struct tells the compiler that <code>prettyPrint()</code> is a <em>member</em> function, and it is going to reference items in the BikeRoute <code>struct</code>. My header file now looks as follows:</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+
+struct BikeRoute {
+	int distance, watts;
+	std::string routeName;
+
+	// member function
+	void Time::prettyPrint();
+};
+</code></pre>
+
+<p>And in <code>structDemo.cpp</code> I&rsquo;ll create the <code>prettyPrint()</code> function. Note the <code>#include &quot;structDemo.h</code> at the top of the file.</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+#include &quot;structDemo.h&quot;
+
+void BikeRoute::prettyPrint() {
+	std::cout &lt;&lt; &quot;Route Name: &quot; &lt;&lt; routeName &lt;&lt; std::endl;
+	std::cout &lt;&lt; &quot;Distance: &quot; &lt;&lt; distance &lt;&lt; std::endl;
+	std::cout &lt;&lt; &quot;Watts: &quot; &lt;&lt; watts &lt;&lt; std::endl;
+}
+</code></pre>
+
+<p>Now what&rsquo;s pretty cool here is that I just used <code>routeName</code>, <code>distance</code> and <code>watts</code> directly. I didn&rsquo;t need to instantiate BikeRoute to access them because <code>prettyPrint()</code> is a member function and the compiler knows where to look to get the values.</p>
+
+<p>In <code>main.cpp</code> I have the following:</p>
+
+<pre><code class="language-C++">#include &quot;structDemo.h&quot;
+
+int main() {
+	BikeRoute tuesdayRide = { 24, 450, &quot;Daily Commute&quot; };
+	tuesdayRide.prettyPrint();
+
+	return 0;
+}
+</code></pre>
+
+<p>Here I instantiate an instance of BikeRoute, and <code>call</code> the member function <code>prettyPrint</code>. To compile this program I&rsquo;ll run <code>g++ main.cpp structDemo.cpp</code> from the command line, then run the executable which outputs:</p>
+
+<pre><code>Route Name: Daily Commute
+Distance: 24
+Watts: 450
+</code></pre>
+
+<p>This was a really simple example just to get my feet wet with C++ structs, which is a data structure whos equivalent I haven&rsquo;t really come across in Python. I think I would just use a <code>class</code> in Python, and I think eventually in C++ you just end up using a <code>class</code> too but I am sure there are good use cases for structs.</p>
+
+    </div>
+    
+        <div class="nav-left">
+    <a class="nav-item" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fericlearns.com%2fpost%2fstarting-out-with-structs%2f" title="Share on Facebook" target="_blank"><span class="fa fa-facebook fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://plus.google.com/share?url=http%3a%2f%2fericlearns.com%2fpost%2fstarting-out-with-structs%2f" title="Share on Google+" target="_blank"><span class="fa fa-google-plus fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2fericlearns.com%2fpost%2fstarting-out-with-structs%2f" title="Share on LinkedIn" target="_blank"><span class="fa fa-linkedin fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://twitter.com/home?status=Starting%20Out%20With%20Structs - http%3a%2f%2fericlearns.com%2fpost%2fstarting-out-with-structs%2f" title="Tweet this" target="_blank"><span class="fa fa-twitter fa-2x"></span></a>
+    <a class="nav-item" href="http://www.reddit.com/submit?url=http%3a%2f%2fericlearns.com%2fpost%2fstarting-out-with-structs%2f&title=Starting%20Out%20With%20Structs" title="Share on Reddit" target="_blank"><span class="fa fa-reddit-alien fa-2x" aria-hidden="true"></span></a>
+    
+    </div>
+    
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+  </div>
+</section>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/go.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/dockerfile.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-42703121-4', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+
+
