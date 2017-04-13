@@ -9,6 +9,104 @@
     <atom:link href="http://ericlearns.com/tags/programming/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>Starting Out With Structs</title>
+      <link>http://ericlearns.com/post/starting-out-with-structs/</link>
+      <pubDate>Thu, 13 Apr 2017 06:42:44 -0400</pubDate>
+      
+      <guid>http://ericlearns.com/post/starting-out-with-structs/</guid>
+      <description>&lt;p&gt;From this point on I am going to write all my C++ programs with a minimum of 3 files: &lt;code&gt;main.cpp&lt;/code&gt; &lt;code&gt;headerFile.h&lt;/code&gt; &lt;code&gt;logicFile.cpp&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;main.cpp&lt;/code&gt; and &lt;code&gt;logicFile.cpp&lt;/code&gt; will contain an &lt;code&gt;#include headerFile.h&lt;/code&gt; statement at the top. This seems like the best way to keep everything organized, as well as a C++ best practice.&lt;/p&gt;
+
+&lt;p&gt;So, with that out of way let&amp;rsquo;s talk about &lt;code&gt;structs&lt;/code&gt;. A &lt;code&gt;struct&lt;/code&gt; is a C++ data structure that allows you to store different &lt;em&gt;types&lt;/em&gt; of variables together in one place (encapsulation anyone?). That seems pretty handy, but it also seems very similar to a class&amp;hellip;.and it turns out that a &lt;code&gt;struct&lt;/code&gt; is &lt;em&gt;very&lt;/em&gt; similar to a &lt;code&gt;class&lt;/code&gt; in C++. The primary difference between the two being that anything in a &lt;code&gt;struct&lt;/code&gt; is &lt;code&gt;public&lt;/code&gt; by default.&lt;/p&gt;
+
+&lt;p&gt;Ok, interesting. But what does &lt;code&gt;public&lt;/code&gt; mean, and why should I care? &lt;code&gt;public&lt;/code&gt; means that anything in a &lt;code&gt;struct&lt;/code&gt; can be accessed and modified by another function. Sometimes we don&amp;rsquo;t want things in our structs (or classes) to be accessed and modified because when I go to use that thing somewhere else, it might not do or return what I am expecting it to as it is defined. This is where &lt;code&gt;private&lt;/code&gt; comes in, but this is a post for another time. Back to &lt;code&gt;struct&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;In my header file &lt;code&gt;structDemo.h&lt;/code&gt; I will create the following:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+
+struct BikeRoute {
+    int distance, watts;
+    std::string routeName;
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here we defined a &lt;code&gt;struct&lt;/code&gt; named &lt;code&gt;BikeRoute&lt;/code&gt; that has 3 members: &lt;code&gt;int distance&lt;/code&gt; &lt;code&gt;int watts&lt;/code&gt; and &lt;code&gt;string routeName&lt;/code&gt;. One really important point is the &lt;em&gt;trailing semi-colon&lt;/em&gt;. In C++, &lt;code&gt;struct&lt;/code&gt;&amp;rsquo;s must have a trailing semi-colon. I &lt;em&gt;always&lt;/em&gt; forget this.&lt;/p&gt;
+
+&lt;p&gt;In &lt;code&gt;main.cpp&lt;/code&gt; I&amp;rsquo;ll add the following code:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;quot;structDemo.h&amp;quot;
+
+int main() {
+    BikeRoute tuesdayRide = { 24, 450, &amp;quot;Daily Commute&amp;quot; };
+    std::cout &amp;lt;&amp;lt; tuesdayRide.distance &amp;lt;&amp;lt; std::endl;
+
+    return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now I am &lt;code&gt;instantiating&lt;/code&gt; the &lt;code&gt;struct&lt;/code&gt; named &lt;code&gt;BikeRoute&lt;/code&gt; and setting the values for distance, watts, and routeName that represent my &lt;code&gt;tuesdayCommute&lt;/code&gt; in this case. Compiling this program and running the output file would print &lt;code&gt;24&lt;/code&gt; to standard out. I could have also definied each member like this (shortened):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;...
+BikeRoute tuesdayRide;
+tuesdayRide.distance = 24;
+tuesdayRide.watts = 450;
+tuesdayRide.routeName = &amp;quot;Daily Commute;
+...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;At this point I have a file called &lt;code&gt;structDemo.cpp&lt;/code&gt; that is empty. In my &lt;code&gt;main&lt;/code&gt; function I am sending the distance I rode to standard out. I think it would be nice to have a function that printed the details of my ride in a nice format. Let&amp;rsquo;s add a &lt;em&gt;member function&lt;/em&gt; to the BikeRoute &lt;code&gt;struct&lt;/code&gt;. In &lt;code&gt;structDemo.h&lt;/code&gt; I&amp;rsquo;ll add a reference to the yet to be created function &lt;code&gt;prettyPrint();&lt;/code&gt;, which will display a nicely formatted output to standard out. Adding the new function to the struct tells the compiler that &lt;code&gt;prettyPrint()&lt;/code&gt; is a &lt;em&gt;member&lt;/em&gt; function, and it is going to reference items in the BikeRoute &lt;code&gt;struct&lt;/code&gt;. My header file now looks as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+
+struct BikeRoute {
+	int distance, watts;
+	std::string routeName;
+
+	// member function
+	void Time::prettyPrint();
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And in &lt;code&gt;structDemo.cpp&lt;/code&gt; I&amp;rsquo;ll create the &lt;code&gt;prettyPrint()&lt;/code&gt; function. Note the &lt;code&gt;#include &amp;quot;structDemo.h&lt;/code&gt; at the top of the file.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;quot;structDemo.h&amp;quot;
+
+void BikeRoute::prettyPrint() {
+	std::cout &amp;lt;&amp;lt; &amp;quot;Route Name: &amp;quot; &amp;lt;&amp;lt; routeName &amp;lt;&amp;lt; std::endl;
+	std::cout &amp;lt;&amp;lt; &amp;quot;Distance: &amp;quot; &amp;lt;&amp;lt; distance &amp;lt;&amp;lt; std::endl;
+	std::cout &amp;lt;&amp;lt; &amp;quot;Watts: &amp;quot; &amp;lt;&amp;lt; watts &amp;lt;&amp;lt; std::endl;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now what&amp;rsquo;s pretty cool here is that I just used &lt;code&gt;routeName&lt;/code&gt;, &lt;code&gt;distance&lt;/code&gt; and &lt;code&gt;watts&lt;/code&gt; directly. I didn&amp;rsquo;t need to instantiate BikeRoute to access them because &lt;code&gt;prettyPrint()&lt;/code&gt; is a member function and the compiler knows where to look to get the values.&lt;/p&gt;
+
+&lt;p&gt;In &lt;code&gt;main.cpp&lt;/code&gt; I have the following:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;quot;structDemo.h&amp;quot;
+
+int main() {
+	BikeRoute tuesdayRide = { 24, 450, &amp;quot;Daily Commute&amp;quot; };
+	tuesdayRide.prettyPrint();
+
+	return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here I instantiate an instance of BikeRoute, and &lt;code&gt;call&lt;/code&gt; the member function &lt;code&gt;prettyPrint&lt;/code&gt;. To compile this program I&amp;rsquo;ll run &lt;code&gt;g++ main.cpp structDemo.cpp&lt;/code&gt; from the command line, then run the executable which outputs:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Route Name: Daily Commute
+Distance: 24
+Watts: 450
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This was a really simple example just to get my feet wet with C++ structs, which is a data structure whos equivalent I haven&amp;rsquo;t really come across in Python. I think I would just use a &lt;code&gt;class&lt;/code&gt; in Python, and I think eventually in C++ you just end up using a &lt;code&gt;class&lt;/code&gt; too but I am sure there are good use cases for structs.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Learning About the g&#43;&#43; Compiler</title>
       <link>http://ericlearns.com/post/learning-about-the-compilier/</link>
       <pubDate>Mon, 10 Apr 2017 20:32:38 -0400</pubDate>
