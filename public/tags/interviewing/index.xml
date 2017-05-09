@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Interviewing on ericlearns</title>
+    <link>http://ericlearns.com/tags/interviewing/index.xml</link>
+    <description>Recent content in Interviewing on ericlearns</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <atom:link href="http://ericlearns.com/tags/interviewing/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Failing the Whiteboard Interview</title>
+      <link>http://ericlearns.com/post/failing-whiteboard-interview/</link>
+      <pubDate>Tue, 09 May 2017 06:26:12 -0400</pubDate>
+      
+      <guid>http://ericlearns.com/post/failing-whiteboard-interview/</guid>
+      <description>&lt;p&gt;Whiteboard interviews are tough. Although I work as a developer, I&amp;rsquo;ve never had a whiteboard interview until recently. I went on an interview for a Software Developer role at a company I was interested in, and the interview went pretty terrible&amp;hellip;particularly the whiteboard portion. It&amp;rsquo;s the same old story that&amp;rsquo;s been told a thousand times before- I was super nervous, the questions were basically puzzles unrelated to the job, and the interviewers (although experienced developers) were probably not experienced interviewers. All of this together resulted in:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Thanks for your interest, but we need someone with more experience.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;This decision is of course based on the fact that I could only come up with brute force solutions to their puzzles and couldn&amp;rsquo;t name the asymptotic (Big O) runtimes, and not my ability to produce production ready code or my day to day development experience. Fair enough I guess. If they looked at actual code I&amp;rsquo;ve written and said&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Wow, this code is shit!&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;then maybe I&amp;rsquo;d be more broken up about the whole thing, but that didn&amp;rsquo;t happen. Instead I got puzzles and frustrated interviewers. I did  actually study and practice prior to this interview, but I&amp;rsquo;ve come to the conclusion that trying to &lt;em&gt;learn&lt;/em&gt; new things in preperation for an interview is probably a bad idea and maybe even a red flag. Cramming isn&amp;rsquo;t going to make up for lack of experience. I am not saying that you shouldn&amp;rsquo;t prepare for an interview (far from it), but I think a good fit is going to come naturally with the experience and knowledge you already have.&lt;/p&gt;
+
+&lt;p&gt;So what happens for me next? &lt;em&gt;Learn more and keep going&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;This interview was definitely a failure and a blow to me, but it was also an awesome learning opportunity. I do not have a CS degree, so there are definitely some areas I am really lacking in and I need to address. I also got some great experience being up at the whiteboard and trying to work through a problem while someone (usually a more senior developer) watches on. It&amp;rsquo;s hard (impossible?) to replicate this scenario without actually being in an interview. At the end of the day I am going to get a lot from this interview failure because it&amp;rsquo;s going to push me even more to learn and grow. Maybe I should send someone a thank you for that? Eh, maybe not.&lt;/p&gt;
+
+&lt;p&gt;So there are some things I am going to work on. Specifically, algorithms and data structures as well as studying up runtimes and optimizations. I&amp;rsquo;ll be doing a series of posts on what I&amp;rsquo;m learning, while writing solutions in &lt;code&gt;Python&lt;/code&gt; and &lt;code&gt;C++&lt;/code&gt; the best I can.&lt;/p&gt;
+
+&lt;p&gt;If you&amp;rsquo;re reading this and you&amp;rsquo;ve recently had a technical interview that went poorly I&amp;rsquo;d encourage you to &lt;em&gt;really&lt;/em&gt; evaluate where the interview went wrong and what areas you can improve on. Although there was no job offer, and that hurts I know, you got a &lt;em&gt;huge&lt;/em&gt; amount of experience going through the process even if it doesn&amp;rsquo;t feel like it right now. Your efforts weren&amp;rsquo;t all for nothing.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

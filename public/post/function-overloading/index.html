@@ -1,0 +1,210 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta content="ericlearns, learn c&#43;&#43;, c&#43;&#43;, python, programming, learn programming, bicycling, cyclocross" name="keywords">
+<meta content="eric" name="author">
+<meta property="og:title" content="Function Overloading - A Quick Intro - ericlearns">
+<meta property="og:url" content="http://ericlearns.com/post/function-overloading/">
+<meta property="og:description" content="Follow along as I learn new things, including: c&#43;&#43;, and bicycling">
+<meta property="og:type" content="website" />
+<title>Function Overloading - A Quick Intro | ericlearns</title>
+<link rel="stylesheet" href="http://ericlearns.com/css/style.css">
+<link rel="shortcut icon" href="http://ericlearns.com/wave.ico">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/github.min.css">
+
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="http://ericlearns.com"><h1 class="title is-4">ericlearns</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile">
+          
+          <a class="level-item" href="https://github.com/erictempleton1" target="_blank">
+            <span class="icon">
+              <i class="fa fa-github"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://twitter.com/google" target="_blank">
+            <span class="icon">
+              <i class="fa fa-twitter"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://linkedin.com/in/google" target="_blank">
+            <span class="icon">
+              <i class="fa fa-linkedin-square"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="/index.xml" target="_blank">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+          </a>
+          
+        </nav>
+      </div>
+    </nav>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h1 class="title">Function Overloading - A Quick Intro</h1>
+    <h2 class="subtitle is-5">April 16, 2017 by eric</h2>
+    
+      <div class="tags">
+    
+        <a class="button is-link" href="/tags/c&#43;&#43;">C&#43;&#43;</a>
+    
+        <a class="button is-link" href="/tags/programming">programming</a>
+    
+        <a class="button is-link" href="/tags/overloading">overloading</a>
+    
+</div>
+
+    
+    <div class="content">
+      <p>C++ function overloading is an interesting concept. It allows you to create many functions with the same name but that take different arguments. The compiler knows which function you are referencing based on the arguments passed to the function. Hey, that&rsquo;s pretty cool! Using my old friend <code>struct BikeRoute</code> (remember the trailing <code>;</code>) I&rsquo;ll try out some basic function overloading:</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+
+struct BikeRoute {
+	int distance, watts;
+	double time;
+	std::string routeName;
+
+        // member functions
+	int accountForHills(int gradient, int multiplier);
+	int accountForHills(int gradient, int timeMultiplier);
+};
+</code></pre>
+
+<p>But there is a problem here. I defined the function <code>accountForHills</code> that takes two <code>int</code> parameters twice. Even though the parameter is <em>named</em> differently, the compiler only knows which function I am referencing based on the parameter <em>type</em>. The name of the parameter itself is meaningless to the compiler for function overloading reference purposes.</p>
+
+<p>Really though, the second instance of <code>accountForHills</code> is not needed because it&rsquo;s exactly the same as the first, but let&rsquo;s say instead that there are some cases where I don&rsquo;t need the <code>multiplier</code> parameter and <em>only</em> need the gradient. Now my code looks as follows:</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+
+struct BikeRoute {
+	int distance, watts;
+	double time;
+	std::string routeName;
+
+        // member functions
+	int accountForHills(int gradient);
+
+        // sometimes I pedal harder than usual, so use multiplier to account for effort
+	int accountForHills(int gradient, int multiplier);
+};
+</code></pre>
+
+<p>So, let&rsquo;s create the member functions and put everything together.</p>
+
+<p><code>ov1.h</code>:</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+
+struct BikeRoute {
+	int distance, watts;
+	double time;
+	std::string routeName;
+
+        // member functions
+	int accountForHills(int gradient);
+        // sometimes I pedal harder than usual, so use multiplier to account for effort
+	int accountForHills(int gradient, int multiplier);
+};
+</code></pre>
+
+<p><code>ov1.cpp</code>:</p>
+
+<pre><code class="language-C++">#include &quot;ov1.h&quot;
+
+int BikeRoute::accountForHills(int gradient) {
+	return distance * gradient;
+}
+
+int BikeRoute::accountForHills(int gradient, int multiplier) {
+	return (distance * gradient) * multiplier;
+}
+</code></pre>
+
+<p><code>main.cpp</code>:</p>
+
+<pre><code class="language-C++">#include &quot;ov1.h&quot;
+
+int main() {
+	BikeRoute dailyCommute = { 25, 450, 25.5, &quot;Friday Commute&quot; };
+	int hillGradient = dailyCommute.accountForHills(2);
+	int hillGradientWithMultiplier = dailyCommute.accountForHills(2, 2);
+
+	std::cout &lt;&lt; &quot;Distance factoring in hills: &quot; &lt;&lt; hillGradient &lt;&lt; std::endl;
+	std::cout &lt;&lt; &quot;Distance factoring in hills and effort: &quot; &lt;&lt; hillGradientWithMultiplier &lt;&lt; std::endl;
+}
+</code></pre>
+
+<p>We can compile this program from the command line with <code>g++ main.cpp ov1.cpp -o bikeCalcs.exe</code>, and running the resulting executable called <code>bikeCalcs.exe</code> will show the following in standard out:</p>
+
+<pre><code>Distance factoring in hills: 50
+Distance factoring in hills and effort: 100
+</code></pre>
+
+<p>Now of course, this is a really simple example with calculations that don&rsquo;t really make sense but the point was to show how C++ function overloading works, as well as building on my previous blog post on <code>C++ structs</code>.</p>
+
+<p>Is function overloading possible in Python? Well, no not really. Python is <em>not</em> statically typed, so there is no way to know which method is being referenced based on the arguments. Python does however lend itself to the concept of function overloading by allowing optional arguments:</p>
+
+<pre><code class="language-python">def account_for_hills(distance, gradient, multiplier=None):
+    if multiplier:
+        return (distance * gradient) * multiplier
+    return distance * gradient
+</code></pre>
+
+<p>Not exactly the same as C++ function overloading, but I think it&rsquo;s still similar and obviously useful. I think just as having many functions with the same name in C++ could get confusing and hard to maintain, having many optional arguments in a Python function will also become confusing and hard to maintain. It&rsquo;s a give and a take in the end, extensibility vs readability as they say.</p>
+
+    </div>
+    
+        <div class="nav-left">
+    <a class="nav-item" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fericlearns.com%2fpost%2ffunction-overloading%2f" title="Share on Facebook" target="_blank"><span class="fa fa-facebook fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://plus.google.com/share?url=http%3a%2f%2fericlearns.com%2fpost%2ffunction-overloading%2f" title="Share on Google+" target="_blank"><span class="fa fa-google-plus fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2fericlearns.com%2fpost%2ffunction-overloading%2f" title="Share on LinkedIn" target="_blank"><span class="fa fa-linkedin fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://twitter.com/home?status=Function%20Overloading%20-%20A%20Quick%20Intro - http%3a%2f%2fericlearns.com%2fpost%2ffunction-overloading%2f" title="Tweet this" target="_blank"><span class="fa fa-twitter fa-2x"></span></a>
+    <a class="nav-item" href="http://www.reddit.com/submit?url=http%3a%2f%2fericlearns.com%2fpost%2ffunction-overloading%2f&title=Function%20Overloading%20-%20A%20Quick%20Intro" title="Share on Reddit" target="_blank"><span class="fa fa-reddit-alien fa-2x" aria-hidden="true"></span></a>
+    
+    </div>
+    
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+  </div>
+</section>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/go.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/dockerfile.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-42703121-4', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+
+

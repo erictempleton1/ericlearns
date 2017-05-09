@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://ericlearns.com/post/failing-whiteboard-interview/</loc>
+    <lastmod>2017-05-09T06:26:12-04:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://ericlearns.com/post/function-overloading/</loc>
+    <lastmod>2017-04-16T07:20:57-04:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>http://ericlearns.com/post/starting-out-with-structs/</loc>
     <lastmod>2017-04-13T06:42:44-04:00</lastmod>
     <changefreq>monthly</changefreq>
@@ -38,7 +52,7 @@
   
   <url>
     <loc>http://ericlearns.com/tags/c&#43;&#43;/</loc>
-    <lastmod>2017-04-13T06:42:44-04:00</lastmod>
+    <lastmod>2017-04-16T07:20:57-04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0</priority>
   </url>
@@ -65,6 +79,13 @@
   </url>
   
   <url>
+    <loc>http://ericlearns.com/tags/interviewing/</loc>
+    <lastmod>2017-05-09T06:26:12-04:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>http://ericlearns.com/tags/namespaces/</loc>
     <lastmod>2017-04-08T07:06:45-04:00</lastmod>
     <changefreq>monthly</changefreq>
@@ -72,15 +93,22 @@
   </url>
   
   <url>
+    <loc>http://ericlearns.com/tags/overloading/</loc>
+    <lastmod>2017-04-16T07:20:57-04:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>http://ericlearns.com/post/</loc>
-    <lastmod>2017-04-13T06:42:44-04:00</lastmod>
+    <lastmod>2017-05-09T06:26:12-04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>http://ericlearns.com/tags/programming/</loc>
-    <lastmod>2017-04-13T06:42:44-04:00</lastmod>
+    <lastmod>2017-04-16T07:20:57-04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0</priority>
   </url>
@@ -100,7 +128,7 @@
   
   <url>
     <loc>http://ericlearns.com/</loc>
-    <lastmod>2017-04-13T06:42:44-04:00</lastmod>
+    <lastmod>2017-05-09T06:26:12-04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0</priority>
   </url>

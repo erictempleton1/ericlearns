@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Overloading on ericlearns</title>
+    <link>http://ericlearns.com/tags/overloading/index.xml</link>
+    <description>Recent content in Overloading on ericlearns</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <atom:link href="http://ericlearns.com/tags/overloading/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Function Overloading - A Quick Intro</title>
+      <link>http://ericlearns.com/post/function-overloading/</link>
+      <pubDate>Sun, 16 Apr 2017 07:20:57 -0400</pubDate>
+      
+      <guid>http://ericlearns.com/post/function-overloading/</guid>
+      <description>&lt;p&gt;C++ function overloading is an interesting concept. It allows you to create many functions with the same name but that take different arguments. The compiler knows which function you are referencing based on the arguments passed to the function. Hey, that&amp;rsquo;s pretty cool! Using my old friend &lt;code&gt;struct BikeRoute&lt;/code&gt; (remember the trailing &lt;code&gt;;&lt;/code&gt;) I&amp;rsquo;ll try out some basic function overloading:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+
+struct BikeRoute {
+	int distance, watts;
+	double time;
+	std::string routeName;
+
+        // member functions
+	int accountForHills(int gradient, int multiplier);
+	int accountForHills(int gradient, int timeMultiplier);
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;But there is a problem here. I defined the function &lt;code&gt;accountForHills&lt;/code&gt; that takes two &lt;code&gt;int&lt;/code&gt; parameters twice. Even though the parameter is &lt;em&gt;named&lt;/em&gt; differently, the compiler only knows which function I am referencing based on the parameter &lt;em&gt;type&lt;/em&gt;. The name of the parameter itself is meaningless to the compiler for function overloading reference purposes.&lt;/p&gt;
+
+&lt;p&gt;Really though, the second instance of &lt;code&gt;accountForHills&lt;/code&gt; is not needed because it&amp;rsquo;s exactly the same as the first, but let&amp;rsquo;s say instead that there are some cases where I don&amp;rsquo;t need the &lt;code&gt;multiplier&lt;/code&gt; parameter and &lt;em&gt;only&lt;/em&gt; need the gradient. Now my code looks as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+
+struct BikeRoute {
+	int distance, watts;
+	double time;
+	std::string routeName;
+
+        // member functions
+	int accountForHills(int gradient);
+
+        // sometimes I pedal harder than usual, so use multiplier to account for effort
+	int accountForHills(int gradient, int multiplier);
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So, let&amp;rsquo;s create the member functions and put everything together.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;ov1.h&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+
+struct BikeRoute {
+	int distance, watts;
+	double time;
+	std::string routeName;
+
+        // member functions
+	int accountForHills(int gradient);
+        // sometimes I pedal harder than usual, so use multiplier to account for effort
+	int accountForHills(int gradient, int multiplier);
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;ov1.cpp&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;quot;ov1.h&amp;quot;
+
+int BikeRoute::accountForHills(int gradient) {
+	return distance * gradient;
+}
+
+int BikeRoute::accountForHills(int gradient, int multiplier) {
+	return (distance * gradient) * multiplier;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;main.cpp&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;quot;ov1.h&amp;quot;
+
+int main() {
+	BikeRoute dailyCommute = { 25, 450, 25.5, &amp;quot;Friday Commute&amp;quot; };
+	int hillGradient = dailyCommute.accountForHills(2);
+	int hillGradientWithMultiplier = dailyCommute.accountForHills(2, 2);
+
+	std::cout &amp;lt;&amp;lt; &amp;quot;Distance factoring in hills: &amp;quot; &amp;lt;&amp;lt; hillGradient &amp;lt;&amp;lt; std::endl;
+	std::cout &amp;lt;&amp;lt; &amp;quot;Distance factoring in hills and effort: &amp;quot; &amp;lt;&amp;lt; hillGradientWithMultiplier &amp;lt;&amp;lt; std::endl;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We can compile this program from the command line with &lt;code&gt;g++ main.cpp ov1.cpp -o bikeCalcs.exe&lt;/code&gt;, and running the resulting executable called &lt;code&gt;bikeCalcs.exe&lt;/code&gt; will show the following in standard out:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Distance factoring in hills: 50
+Distance factoring in hills and effort: 100
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now of course, this is a really simple example with calculations that don&amp;rsquo;t really make sense but the point was to show how C++ function overloading works, as well as building on my previous blog post on &lt;code&gt;C++ structs&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Is function overloading possible in Python? Well, no not really. Python is &lt;em&gt;not&lt;/em&gt; statically typed, so there is no way to know which method is being referenced based on the arguments. Python does however lend itself to the concept of function overloading by allowing optional arguments:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def account_for_hills(distance, gradient, multiplier=None):
+    if multiplier:
+        return (distance * gradient) * multiplier
+    return distance * gradient
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Not exactly the same as C++ function overloading, but I think it&amp;rsquo;s still similar and obviously useful. I think just as having many functions with the same name in C++ could get confusing and hard to maintain, having many optional arguments in a Python function will also become confusing and hard to maintain. It&amp;rsquo;s a give and a take in the end, extensibility vs readability as they say.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
