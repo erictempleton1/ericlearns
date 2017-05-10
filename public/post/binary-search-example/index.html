@@ -1,0 +1,310 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta content="ericlearns, learn c&#43;&#43;, c&#43;&#43;, python, programming, learn programming, bicycling, cyclocross" name="keywords">
+<meta content="eric" name="author">
+<meta property="og:title" content="Binary Search Example - ericlearns">
+<meta property="og:url" content="http://ericlearns.com/post/binary-search-example/">
+<meta property="og:description" content="Follow along as I learn new things, including: c&#43;&#43;, and bicycling">
+<meta property="og:type" content="website" />
+<title>Binary Search Example | ericlearns</title>
+<link rel="stylesheet" href="http://ericlearns.com/css/style.css">
+<link rel="shortcut icon" href="http://ericlearns.com/wave.ico">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/github.min.css">
+
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="http://ericlearns.com"><h1 class="title is-4">ericlearns</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile">
+          
+          <a class="level-item" href="https://github.com/erictempleton1" target="_blank">
+            <span class="icon">
+              <i class="fa fa-github"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://twitter.com/google" target="_blank">
+            <span class="icon">
+              <i class="fa fa-twitter"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://linkedin.com/in/google" target="_blank">
+            <span class="icon">
+              <i class="fa fa-linkedin-square"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="/index.xml" target="_blank">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+          </a>
+          
+        </nav>
+      </div>
+    </nav>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h1 class="title">Binary Search Example</h1>
+    <h2 class="subtitle is-5">May 10, 2017 by eric</h2>
+    
+      <div class="tags">
+    
+        <a class="button is-link" href="/tags/algorithms">algorithms</a>
+    
+        <a class="button is-link" href="/tags/c&#43;&#43;">c&#43;&#43;</a>
+    
+        <a class="button is-link" href="/tags/python">python</a>
+    
+</div>
+
+    
+    <div class="content">
+      <p>I want to talk about <code>logarithms</code> briefly to lay some of the ground work for Binary Search. What is a logarithm exactly? At a basic level it&rsquo;s how times we can multiply a number to get another number. For example, how many times can we multiply 2 to get 8? 3 times.</p>
+
+<pre><code>2 x 2 x 2 = 8
+</code></pre>
+
+<p>Ok, that makes sense but what does it have to do with Binary Search? Binary Search is essentially searching for an element in an list by cutting the list in half multiple times to narrow in on the target. So, if we look at the logarithm question above another way- if we had an array of length 8, how many times can it be cut in half?</p>
+
+<pre><code class="language-python">[1, 2, 3, 4, 5, 6, 7, 8]  # starting point
+[5, 6, 7, 8]  # cut in half once
+[7, 8]  # cut in half twice
+[8]  # cut in half a third time
+</code></pre>
+
+<p>If we wanted to know if the number 7 was in the list above, using binary search it would take us <em>at worst</em> 4 or <code>log(8) + 1</code> (including first guess) guesses to determine which index the 7 was at or if it was in the list at all. Written another way  in Python using the list above, it would take us at worst <code>log(len(my_nums)) + 1</code> guesses.</p>
+
+<p>One of the most important requirements of binary search is that your list <em>must</em> be sorted. The reason for this is because you will always start with a first guess that the middle element of your list is your target, and if it&rsquo;s not you need to know if you should search left (larger) or right (smaller) of the middle next. The next element to the left <em>must</em> be greater than or equal to the target, and the element next to the right <em>must</em> less than or equal to the target.</p>
+
+<p>So, lets talk through the steps a little bit. We have a sorted list with 8 numbers in it, and the number are checking for (our target) is going to be 13.</p>
+
+<pre><code class="language-python">target = 13
+my_nums = [1, 3, 5, 6, 11, 13, 17, 21]
+</code></pre>
+
+<p>The first element in a list is always going to be at index 0, so we create a variable to represent the starting point that will be updated as we search through the list.</p>
+
+<pre><code class="language-python">target = 13
+my_nums = [1, 3, 5, 6, 11, 13, 17, 21]
+min_index = 0
+</code></pre>
+
+<p>We also need to know what the index of the last element in our list is. Since lists start with an index of 0, we can assume that the last index is going to be the length of list (8 in this case) minus 1.</p>
+
+<pre><code class="language-python">target = 13
+my_nums = [1, 3, 5, 6, 11, 13, 17, 21]
+min_index = 0
+max_index = len(my_nums) -1
+</code></pre>
+
+<p>Now, we are going to need to keep making guesses until we find the target in the list or we determine that the target is not in the list. A <code>while</code> loop is probably a good candidate for making repeated guess until a condition is met.</p>
+
+<pre><code class="language-python">target = 13
+my_nums = [1, 3, 5, 6, 11, 13, 17, 21]
+min_index = 0
+max_index = len(my_nums) -1
+while True:
+    # todo do some checking
+    break
+</code></pre>
+
+<p>Let&rsquo;s set a variable to represent our first guess, the middle element in our list. How do we get the middle element in our list? We can assume that it is going to be the <code>min_index</code> plus the <code>max_index</code> divided in half, which is index 3 in our example. We&rsquo;ll represent the first guess as a variable called <code>index_guess</code>.</p>
+
+<pre><code class="language-python">target = 13
+my_nums = [1, 3, 5, 6, 11, 13, 17, 21]
+min_index = 0
+max_index = len(my_nums) -1
+while True:
+    index_guess = (min_index + max_index)/2
+</code></pre>
+
+<p>Now let&rsquo;s do an equality check to see if our first guess was correct.</p>
+
+<pre><code class="language-python">target = 13
+my_nums = [1, 3, 5, 6, 11, 13, 17, 21]
+min_index = 0
+max_index = len(my_nums) -1
+while True:
+    index_guess = (min_index + max_index)/2
+    if my_nums[index_guess] == target:
+        print 'found the target at index ', index_guess
+        break
+    break
+</code></pre>
+
+<p>If we were lucky enough to have our first guess be correct, then we&rsquo;d get a nice output to congratulate us on our success. Unfortunately, we are not going to be so lucky today and we need to search again. Let&rsquo;s check if the target is larger or than our first guess.</p>
+
+<pre><code class="language-python">target = 13
+my_nums = [1, 3, 5, 6, 11, 13, 17, 21]
+min_index = 0
+max_index = len(my_nums) -1
+while True:
+    index_guess = (min_index + max_index)/2
+    if target == my_nums[index_guess]:
+        print 'found the target at index ', index_guess
+        break
+    elif target &gt; search_list[index_guess]:
+        # todo decide where to look next
+        print 'larger'
+        break
+    break
+</code></pre>
+
+<p>This is where binary search gets really interesting and efficient! Since our target is larger than the middle index in this case, we are guaranteed that our target will not be to the left of <code>index_guess</code> and we can ignore all of those values and focus on the values to the right. This eliminates searching in half of the list! Pretty cool. This also illustrates why a sorted list for binary search is so crucial. You cannot make any guarantees about the next element to check with an unsorted list.</p>
+
+<p>So at this point our target is larger than our first guess, so we need to check again but we only care about checking values to the right now. We also know that the middle index value is not a match, so let&rsquo;s increment our <code>min_index</code> to be one index position larger than our first guess. If you can picture it, we are basically sliding our search window over to the right by one index position.</p>
+
+<pre><code class="language-python">target = 13
+my_nums = [1, 3, 5, 6, 11, 13, 17, 21]
+min_index = 0
+max_index = len(my_nums) -1
+while True:
+    index_guess = (min_index + max_index)/2
+    if target == my_nums[index_guess]:
+        print 'found the target at index ', index_guess
+        break
+    elif target &gt; my_nums[index_guess]:
+        print 'larger'
+        min_index = index_guess + 1
+    break
+</code></pre>
+
+<p>Our target was larger than our first guess, but our target could be smaller than our next guess so we need to handle that situation. If the target is smaller than our guess then we need to check the next index position to the left, or one minus <code>index_guess</code>. I&rsquo;ll also remove the additional <code>break</code> statement at this point so our <code>while</code> loop will keep checking.</p>
+
+<pre><code class="language-python">target = 13
+my_nums = [1, 3, 5, 6, 11, 13, 17, 21]
+min_index = 0
+max_index = len(my_nums) -1
+while True:
+    index_guess = (min_index + max_index)/2
+    if target == my_nums[index_guess]:
+        print 'found the target at index ', index_guess
+        break
+    elif target &gt; my_nums[index_guess]:
+        print 'larger'
+        min_index = index_guess + 1
+    elif target &lt; my_nums[index_guess]:
+        print 'smaller'
+        max_index = index_guess - 1
+</code></pre>
+
+<p>As this binary search algorithm is defined above, the target will be found at index 5. But what if we are searching for a target that is not in the list? The <code>while</code> loop is going to keep executing and we&rsquo;ll be stuck in an infinite loop. While this is happening, our <code>min_index</code> value is going to keep increasing and eventually become greater than the value for <code>max_index</code>. When our <code>min_index</code> is larger than our <code>max_index</code> we can be sure that our target is not in the list and we can break out of the loop. Lets add a check for this condition.</p>
+
+<pre><code class="language-python">target = 13
+my_nums = [1, 3, 5, 6, 11, 13, 17, 21]
+min_index = 0
+max_index = len(my_nums) -1
+while True:
+    index_guess = (min_index + max_index)/2
+    if max_index &lt; min_index:
+        print 'not in list'
+        break
+    elif target == my_nums[index_guess]:
+        print 'found the target at index ', index_guess
+        break
+    elif target &gt; my_nums[index_guess]:
+        print 'larger'
+        min_index = index_guess + 1
+    elif target &lt; my_nums[index_guess]:
+        print 'smaller'
+        max_index = index_guess - 1
+</code></pre>
+
+<p>What will happen to our performance as the size of the list increases? Our performance will decrease, and it will decrease a specific rate. Right now our 8 element list has a worst case scenario of 4 guesses to find the target. What if we doubled the length of our list?</p>
+
+<pre><code class="language-python">[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]  # first guess
+[9, 10, 11, 12, 13, 14, 15, 16]  # cut in half once
+[13, 14, 15, 16]  # cut in half twice
+[15, 16]  # cut in half three times
+[16]  # cut in half a final fourth time
+</code></pre>
+
+<p>When we double the length of the list we add a guess, and now we have a worst case of 5 guesses to get our target element. This pattern continues as you add more elements to the list. If our first guess is a match then we remain in constant time, but if not our runtime in big-o notation is going to be <code>O(log(n))</code>.</p>
+
+<p>Just for fun, here is binary search implemented in C++ and using strings instead of integers in the search vector. I also included a <code>guesses</code> variable to keep track of how many guess it took to find the target.</p>
+
+<pre><code class="language-c++">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+void binarySearch(std::string target, std::vector&lt;std::string&gt; searchVec) {
+    int minIndex = 0;
+    int maxIndex = searchVec.size();
+    int guesses = 0;
+    while (true) {
+        guesses += 1;
+        int indexGuess = (minIndex + maxIndex)/2;
+        if (maxIndex &lt; minIndex) {
+            std::cout &lt;&lt; &quot;not in list&quot; &lt;&lt; std::endl;
+            break;
+        } else if (searchVec[indexGuess] == target) {
+            std::cout &lt;&lt; &quot;found it at pos &quot; &lt;&lt; indexGuess &lt;&lt; std::endl;
+            break;
+        } else if (target &gt; searchVec[indexGuess]) {
+            minIndex = indexGuess + 1;
+            std::cout &lt;&lt; &quot;bigger&quot; &lt;&lt; std::endl;
+        } else if (target &lt; searchVec[indexGuess]) {
+            maxIndex = indexGuess - 1;
+            std::cout &lt;&lt; &quot;smaller&quot; &lt;&lt; std::endl;
+        }
+    };
+    std::cout &lt;&lt; &quot;total guesses: &quot; &lt;&lt; guesses &lt;&lt; std::endl;
+}
+
+int main() {
+    std::vector&lt;std::string&gt; primeVec {&quot;abs&quot;, &quot;babs&quot;, &quot;cabs&quot;, &quot;dabs&quot;, &quot;eabs&quot;, &quot;fabs&quot;, &quot;gabs&quot;, &quot;habs&quot;};
+    binarySearch(&quot;fabs&quot;, primeVec);
+}
+</code></pre>
+
+    </div>
+    
+        <div class="nav-left">
+    <a class="nav-item" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fericlearns.com%2fpost%2fbinary-search-example%2f" title="Share on Facebook" target="_blank"><span class="fa fa-facebook fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://plus.google.com/share?url=http%3a%2f%2fericlearns.com%2fpost%2fbinary-search-example%2f" title="Share on Google+" target="_blank"><span class="fa fa-google-plus fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2fericlearns.com%2fpost%2fbinary-search-example%2f" title="Share on LinkedIn" target="_blank"><span class="fa fa-linkedin fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://twitter.com/home?status=Binary%20Search%20Example - http%3a%2f%2fericlearns.com%2fpost%2fbinary-search-example%2f" title="Tweet this" target="_blank"><span class="fa fa-twitter fa-2x"></span></a>
+    <a class="nav-item" href="http://www.reddit.com/submit?url=http%3a%2f%2fericlearns.com%2fpost%2fbinary-search-example%2f&title=Binary%20Search%20Example" title="Share on Reddit" target="_blank"><span class="fa fa-reddit-alien fa-2x" aria-hidden="true"></span></a>
+    
+    </div>
+    
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+  </div>
+</section>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/go.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/dockerfile.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-42703121-4', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+
+
