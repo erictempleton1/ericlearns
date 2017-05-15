@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://ericlearns.com/post/selection_sort/</loc>
+    <lastmod>2017-05-15T06:50:06-04:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://ericlearns.com/post/classes_intro/</loc>
+    <lastmod>2017-05-15T06:43:48-04:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>http://ericlearns.com/post/binary-search-example/</loc>
     <lastmod>2017-05-10T06:18:05-04:00</lastmod>
     <changefreq>monthly</changefreq>
@@ -59,14 +73,14 @@
   
   <url>
     <loc>http://ericlearns.com/tags/algorithms/</loc>
-    <lastmod>2017-05-10T06:18:05-04:00</lastmod>
+    <lastmod>2017-05-15T06:50:06-04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>http://ericlearns.com/tags/c&#43;&#43;/</loc>
-    <lastmod>2017-05-10T06:18:05-04:00</lastmod>
+    <lastmod>2017-05-15T06:43:48-04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0</priority>
   </url>
@@ -115,14 +129,14 @@
   
   <url>
     <loc>http://ericlearns.com/post/</loc>
-    <lastmod>2017-05-10T06:18:05-04:00</lastmod>
+    <lastmod>2017-05-15T06:50:06-04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>http://ericlearns.com/tags/programming/</loc>
-    <lastmod>2017-04-16T07:20:57-04:00</lastmod>
+    <lastmod>2017-05-15T06:43:48-04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0</priority>
   </url>
@@ -149,7 +163,7 @@
   
   <url>
     <loc>http://ericlearns.com/</loc>
-    <lastmod>2017-05-10T06:18:05-04:00</lastmod>
+    <lastmod>2017-05-15T06:50:06-04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0</priority>
   </url>

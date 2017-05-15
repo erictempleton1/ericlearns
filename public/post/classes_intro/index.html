@@ -1,0 +1,286 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta content="ericlearns, learn c&#43;&#43;, c&#43;&#43;, python, programming, learn programming, bicycling, cyclocross" name="keywords">
+<meta content="eric" name="author">
+<meta property="og:title" content="A Quick Intro to Classes in C&#43;&#43; - ericlearns">
+<meta property="og:url" content="http://ericlearns.com/post/classes_intro/">
+<meta property="og:description" content="Follow along as I learn new things, including: c&#43;&#43;, and bicycling">
+<meta property="og:type" content="website" />
+<title>A Quick Intro to Classes in C&#43;&#43; | ericlearns</title>
+<link rel="stylesheet" href="http://ericlearns.com/css/style.css">
+<link rel="shortcut icon" href="http://ericlearns.com/wave.ico">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/github.min.css">
+
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="http://ericlearns.com"><h1 class="title is-4">ericlearns</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile">
+          
+          <a class="level-item" href="https://github.com/erictempleton1" target="_blank">
+            <span class="icon">
+              <i class="fa fa-github"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://twitter.com/google" target="_blank">
+            <span class="icon">
+              <i class="fa fa-twitter"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://linkedin.com/in/google" target="_blank">
+            <span class="icon">
+              <i class="fa fa-linkedin-square"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="/index.xml" target="_blank">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+          </a>
+          
+        </nav>
+      </div>
+    </nav>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h1 class="title">A Quick Intro to Classes in C&#43;&#43;</h1>
+    <h2 class="subtitle is-5">May 15, 2017 by eric</h2>
+    
+      <div class="tags">
+    
+        <a class="button is-link" href="/tags/c&#43;&#43;">C&#43;&#43;</a>
+    
+        <a class="button is-link" href="/tags/programming">programming</a>
+    
+</div>
+
+    
+    <div class="content">
+      <p>Classes are a powerful data structure in C++ (and many other programming languages). But classes in C++ are a bit different from classes in Python, or even JavaScript (gasp) if that&rsquo;s your thing. C++ allows you to set <code>private</code> members in your class that can only be accessed by member functions in the class. This is really handy for a few reasons, one of them being if you need to change the value or behavior of a private member you can do so without breaking every member function that uses that private member. The concept of changing the value of private members is called <code>getting and setting</code>. Getting and setting exists in Python, but it is not as common of a pattern as in C++.</p>
+
+<p>Let&rsquo;s go through a really simple class example to get the idea of how this data structure works in C++. I am going to create three files- <code>main.cpp</code>, <code>pracClass.cpp</code>, and <code>pracClass.h</code>. In this simple example I am going to create a class to represent a bank, and it will contain some methods to handle transactions. In <code>pracClass.h</code> I&rsquo;ll go ahead and create the class.</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+
+class Bank {
+    private:
+        int balance;
+    public:
+        // todo - add public members
+};
+</code></pre>
+
+<p>Here we have created our class with a private member <code>balance</code> whos value can only be set by members of the Bank class. In <code>pracClass.cpp</code> we can go ahead and create a member function to set the value for <code>balance</code> as needed.</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+#include &quot;pracClass.h&quot;
+
+void Bank::setBalance(int amt) {
+    balance = amt;
+}
+</code></pre>
+
+<p>And we&rsquo;ll add it to our Bank class as a member function.</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+
+class Bank {
+    private:
+        int balance;
+    public:
+        void setBalance(int amt);
+};
+</code></pre>
+
+<p>It would be nice if we could see what the balance is at any given time, so I&rsquo;ll go ahead and add another member function that prints the balance to standard out. In <code>pracClass.cpp</code> I&rsquo;ll add the function <code>printBalance</code>.</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+#include &quot;pracClass.h&quot;
+
+void Bank::setBalance(int amt) {
+    balance = amt;
+}
+
+void Bank::printBalance() {
+    std::cout &lt;&lt; &quot;Balance: $&quot; &lt;&lt; balance &lt;&lt; std::endl;
+}
+</code></pre>
+
+<p>And add the new member function to the Bank class</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+
+class Bank {
+    private:
+        int balance;
+    public:
+        void setBalance(int amt);
+        void printBalance();
+};
+</code></pre>
+
+<p>Next we can add a member function for making a withdrawl and making a deposit, which we&rsquo;ll call <code>makeWithdrawl</code> and <code>makeDeposit</code> respectively and add them to <code>printClass.cpp</code>.</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+#include &quot;pracClass.h&quot;
+
+void Bank::setBalance(int amt) {
+    balance = amt;
+}
+
+void Bank::printBalance() {
+    std::cout &lt;&lt; &quot;Balance: $&quot; &lt;&lt; balance &lt;&lt; std::endl;
+}
+
+void Bank::makeWithdrawl(int amt) {
+    balance -= amt;
+}
+
+void Bank::makeDeposit(int amt) {
+    balance += amt;
+}
+</code></pre>
+
+<p>Adding both of these new member functions to the Bank class in our header file</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+
+class Bank {
+    private:
+        int balance;
+    public:
+        void setBalance(int amt);
+        void printBalance();
+        void makeWithdrawl(int amt);
+        void makeDeposit(int amt);
+};
+</code></pre>
+
+<p>Now, this is a really simply example so I am going to the leave the member functions as they are and assume they won&rsquo;t be passed an int value that will result in an error. But, we should really consider some scenarios that <em>could</em> break e.g. withdrawing more money than available. Maybe an exception could be thrown for that case? For now, they are ok as-is to illustrate the basics of classes.</p>
+
+<p>We&rsquo;ll switch over to our <code>main.cpp</code> file and start using our Bank class. First we&rsquo;ll create an instance of the Bank class called <code>myBank</code>, then we&rsquo;ll set the balance in our account. This is where the <code>private</code> member really shines. We can set the balance to be whatever we want at any given time, and someone else using the class can set the balance to a completely different value if they needed to without effecting us. That is pretty awesome!</p>
+
+<p>An important point here is that <em>do</em> need to actually set the value for the balance though. If we forgot to do this we&rsquo;d get an integer we weren&rsquo;t expecting, the memory space representation for the variable.</p>
+
+<p>In <code>main.cpp</code></p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+#include &quot;pracClass.h&quot;
+
+int main() {
+    Bank myBank;
+    myBank.setBalance(0);
+    myBank.printBalance();
+
+    myBank.makeDeposit(150);
+    myBank.printBalance();
+
+    myBank.makeWithdrawl(100);
+    myBank.printBalance();
+}
+</code></pre>
+
+<p>From the command line we can compile this program with</p>
+
+<pre><code>g++ prac_class.cpp main.cpp -o bank.exe
+</code></pre>
+
+<p>Running <code>bank.exe</code> results in the output</p>
+
+<pre><code>Balance: $0
+Balance: $150
+Balance: $50
+</code></pre>
+
+<p>Classes in C++ can obviously get much more complex than this and I&rsquo;ll probably do a post soon on inheritance in C++, but this quick example shows just how flexible and powerful of a data structure they can be and how private members provide <code>encapsulation</code> for your program.</p>
+
+<p>But what about Python?! Well, there are no public or private attributes in Python. You could add an underscore to your variable name, but it does nothing more than signal to the user that you <em>intend</em> for this variable to private, they can still access or modify it however they like. Python does allow <code>@property</code> decorators for getters and setters, but this is not a common pattern. Anyways, here&rsquo;s an similar example written in Python.</p>
+
+<pre><code class="language-python">class Bank(object):
+
+    def __init__(self, balance):
+        self.balance = balance
+
+    def make_deposit(self, amt):
+        self.balance += amt
+
+    def make_withdrawl(self, amt):
+        self.balance -= amt
+
+    def print_balance(self):
+        print 'Balance: ${}'.format(self.balance)
+
+
+my_bank = Bank(0)
+my_bank.print_balance()
+
+# oh crap, the attribute value changed
+my_bank.balance = 200
+
+my_bank.make_deposit(100)
+my_bank.print_balance()
+
+my_bank.make_withdrawl(50)
+my_bank.print_balance()
+</code></pre>
+
+<p>Which outputs</p>
+
+<pre><code>Balance: $0
+Balance: $300
+Balance: $250
+</code></pre>
+
+    </div>
+    
+        <div class="nav-left">
+    <a class="nav-item" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fericlearns.com%2fpost%2fclasses_intro%2f" title="Share on Facebook" target="_blank"><span class="fa fa-facebook fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://plus.google.com/share?url=http%3a%2f%2fericlearns.com%2fpost%2fclasses_intro%2f" title="Share on Google+" target="_blank"><span class="fa fa-google-plus fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2fericlearns.com%2fpost%2fclasses_intro%2f" title="Share on LinkedIn" target="_blank"><span class="fa fa-linkedin fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://twitter.com/home?status=A%20Quick%20Intro%20to%20Classes%20in%20C%2b%2b - http%3a%2f%2fericlearns.com%2fpost%2fclasses_intro%2f" title="Tweet this" target="_blank"><span class="fa fa-twitter fa-2x"></span></a>
+    <a class="nav-item" href="http://www.reddit.com/submit?url=http%3a%2f%2fericlearns.com%2fpost%2fclasses_intro%2f&title=A%20Quick%20Intro%20to%20Classes%20in%20C%2b%2b" title="Share on Reddit" target="_blank"><span class="fa fa-reddit-alien fa-2x" aria-hidden="true"></span></a>
+    
+    </div>
+    
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+  </div>
+</section>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/go.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/dockerfile.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-42703121-4', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+
+

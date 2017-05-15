@@ -6,8 +6,349 @@
     <description>Recent content in Posts on ericlearns</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 10 May 2017 06:18:05 -0400</lastBuildDate>
+    <lastBuildDate>Mon, 15 May 2017 06:50:06 -0400</lastBuildDate>
     <atom:link href="http://ericlearns.com/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Understanding Selection Sort</title>
+      <link>http://ericlearns.com/post/selection_sort/</link>
+      <pubDate>Mon, 15 May 2017 06:50:06 -0400</pubDate>
+      
+      <guid>http://ericlearns.com/post/selection_sort/</guid>
+      <description>&lt;p&gt;Alright selection sort algorithm, let&amp;rsquo;s dance.&lt;/p&gt;
+
+&lt;p&gt;This algorithm is one type of many sorting algorithms used to sort values in an array. While I &lt;em&gt;understand&lt;/em&gt; how it works it might be a little hard to put into words, but I&amp;rsquo;ll give it a go either way. The main idea is that you start at the first index in an array (usually always 0), then compare it to the element in the next index position. If the element in the next index position is larger than the previous than you check that element against the rest of the elements in the array to see if a smaller element exists. If no smaller element exists then you &lt;em&gt;swap&lt;/em&gt; the positions and repeat the process for the next element until the list is sorted. Phew.&lt;/p&gt;
+
+&lt;p&gt;Here is a quick visual tour. We&amp;rsquo;ll start with the following array (or list if you&amp;rsquo;re into Python)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;[18, 19, 66, 44, 9, 22, 14]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So we&amp;rsquo;ll start with index 0, which is 18.&lt;/p&gt;
+
+&lt;p&gt;Is 18 larger than the next element after 18, which is 19? Nope.&lt;/p&gt;
+
+&lt;p&gt;Is 18 larger than the next element after 19, which is 66? Nope.&lt;/p&gt;
+
+&lt;p&gt;Is 18 larger than the next element after 66, which is 44? Nope.&lt;/p&gt;
+
+&lt;p&gt;Is 18 larger than the next element after 44, which is 9? Yep!&lt;/p&gt;
+
+&lt;p&gt;Ok, this is where things get interesting. Since 18 is larger than 9, we now we need check if any other elements in the list are larger than 9. But we already know that the elements so far &lt;em&gt;must&lt;/em&gt; greater than 18 or we wouldn&amp;rsquo;t have gotten so far. With that in mind, we only need to check the elements to the right of 9 to ensure that 9 is the smallest. Let&amp;rsquo;s do that.&lt;/p&gt;
+
+&lt;p&gt;Is 9 larger than the next element after 9, which is 22? Nope.&lt;/p&gt;
+
+&lt;p&gt;Is 9 larger than the next element after 22, which is 14? Nope.&lt;/p&gt;
+
+&lt;p&gt;We&amp;rsquo;ve reached the end of our array. At this point we now know that 9 is the smallest number, so we need to &lt;em&gt;swap&lt;/em&gt; the first element, 18, with 9. Once we&amp;rsquo;ve made the swap, we can move to the next element and repeat the steps again. Our array now looks as follows&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;[9, 19, 66, 44, 18, 22, 14]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We should go through the steps again one more time with the next element just to be sure this is all making sense.&lt;/p&gt;
+
+&lt;p&gt;We are now at index 1, which is 19 now since we performed a &lt;em&gt;swap&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Is 19 larger than the next element after 19, which is  66?  Nope.&lt;/p&gt;
+
+&lt;p&gt;Is 19 larger than the next element after 66, which is  44? Nope.&lt;/p&gt;
+
+&lt;p&gt;Is 19 larger than the next element after 44, which is  18? Yep!&lt;/p&gt;
+
+&lt;p&gt;Ding ding ding! Now we check everything after 18 to see if 18 is the smallest.&lt;/p&gt;
+
+&lt;p&gt;Is 18 larger than the next element after 18, which is  22? Nope.&lt;/p&gt;
+
+&lt;p&gt;Is 18 larger than the next element after 22, which is  14? Yep!&lt;/p&gt;
+
+&lt;p&gt;Now check to see if 14 is the smallest&amp;hellip;.but wait! 14 is the last element, so it has to be the next smallest after 9. We&amp;rsquo;ll make another swap and restart the process again with index 2, 66. Our array now looks as follows&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;[9, 14, 66, 44, 18, 22, 19]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That&amp;rsquo;s pretty cool if you ask me. With that terrible explanation out of the way, let&amp;rsquo;s take a look at how this is actually implemented and hopefully that will help clarify. Let me add a big &lt;em&gt;NOTE&lt;/em&gt; here that you should run this code in a debugger with a breakpoint set so you can step through each line and see what&amp;rsquo;s actually happening. I found this to be the most helpful way of actually understanding this algorithm. Text explanations really don&amp;rsquo;t do a great job or clarifying what is actually happening, even though this explanation is clearly top notch.&lt;/p&gt;
+
+&lt;p&gt;I am going to show this first in Python. In selection sort we are mostly going to be working with list indexes, so we&amp;rsquo;ll use a &lt;code&gt;for loop&lt;/code&gt; with &lt;code&gt;range&lt;/code&gt; based on the length of the unsorted list&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def sel_sort(unsorted_list):
+    for i in range(len(unsorted_list)):
+        ...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We are going to need to increment the index &lt;code&gt;i&lt;/code&gt; when we find larger elements in the list. Probably not a good idea to change the value of &lt;code&gt;i&lt;/code&gt; directly in this case, so we&amp;rsquo;ll set a variable to represent the minimum index value.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def sel_sort(unsorted_list):
+    for i in range(len(unsorted_list)):
+        min_index = i
+        ...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;All of the elements to the right of &lt;code&gt;min_index&lt;/code&gt; we can consider to be in a &lt;code&gt;sub list&lt;/code&gt; or &lt;code&gt;sub array&lt;/code&gt; that we&amp;rsquo;ll need to iterate over and check. We&amp;rsquo;ll create another &lt;code&gt;for loop&lt;/code&gt; inside of our first to check these elements and update &lt;code&gt;min_index&lt;/code&gt; as needed. &lt;em&gt;But&lt;/em&gt;, we only want to check elements one index position to the right of &lt;code&gt;min_index&lt;/code&gt; so we need to increment &lt;code&gt;i&lt;/code&gt; in our next loop to start at the next position. This is what creates our &lt;code&gt;sub list&lt;/code&gt;. Note the &lt;code&gt;range(i+1, len(unsorted_list))&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def sel_sort(unsorted_list):
+    for i in range(len(unsorted_list)):
+        min_index = i
+        for j in range(i+1, len(unsorted_list)):
+            current_elem = nums[min_index]
+            next_elem = nums[j]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we can perform the greater than check and decide if we need to move to the next element or not.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def sel_sort(unsorted_list):
+    for i in range(len(unsorted_list)):
+        min_index = i
+        for j in range(i+1, len(unsorted_list)):
+            current_elem = unsorted_list[min_index]
+            next_elem = unsorted_list[j]
+            if current_elem &amp;gt; next_elem:
+                min_index = 1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The reason I created the variables &lt;code&gt;current_elem&lt;/code&gt; and  &lt;code&gt;next_elem&lt;/code&gt; is for debugging purposes. Everything makes more sense when stepping through the code if you set a variable to represent the values that you can see in the debugger.&lt;/p&gt;
+
+&lt;p&gt;There is one important portion of this algorithm we should take a closer look at now, and that is the &lt;em&gt;swap&lt;/em&gt;. In Python, swapping elements in a list is as simple as&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# swap first and second elements in a list
+my_list[0], my_list[1] = my_list[1], my_list[0]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;But in other languages, specifically C++, we need an extra variable to hold the value of the first item. I&amp;rsquo;ll represent this in Python here because later you&amp;rsquo;ll see it in the C++ selection sort example. So here is the full selection sort algorithm implemented in Python.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def sel_sort(unsorted_list):
+    for i in range(len(unsorted_list)):
+        min_index = i
+        for j in range(i+i, len(unsorted_list)):
+            current_elem = unsorted_list[min_index]
+            next_elem = unsorted_list[j]
+            if current_elem &amp;gt; next_elem:
+                min_index = 1
+        tmp = unsorted_list[i]
+        unsorted_list[i] = unsorted_list[min_index]
+        unsorted_list[min_index] = tmp
+    return unsorted_list
+
+nums = [18, 19, 66, 44, 9, 22, 14]
+print sel_sort(nums)
+
+# prints [9, 14, 18, 19, 22, 44, 66]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And there you have it. Below is an example of selection sort in C++. This example creates a copy of the vector, mostly because I don&amp;rsquo;t know how to do it a better way yet. Soon.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;lt;vector&amp;gt;
+
+std::vector&amp;lt;int&amp;gt; selectSort(std::vector&amp;lt;int&amp;gt; myVec) {
+    for (int i = 0; i &amp;lt; myVec.size(); i++) {
+        int minIndex = i;
+        for (int j = i + 1; j &amp;lt; myVec.size(); j++) {
+            if (myVec[minIndex] &amp;gt; myVec[j]) {
+                minIndex = j;
+            }
+        }
+        int tmp = myVec[i];
+        myVec[i] = myVec[minIndex];
+        myVec[minIndex] = tmp;
+    }
+    return myVec;
+}
+
+int main() {
+    std::vector&amp;lt;int&amp;gt; vec {6, 55, 22, 4, 1, 88};
+    std::vector&amp;lt;int&amp;gt; myVecSorted = selectSort(vec);
+    for (int i = 0; i &amp;lt; myVecSorted.size(); i++) {
+        std::cout &amp;lt;&amp;lt; myVecSorted[i] &amp;lt;&amp;lt; std::endl;
+    };
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So what&amp;rsquo;s the efficieny of the selection sort algorithm? As the length of your array grows, so does the time complexity. For this algorithm, the time complexity in big O notation is &lt;code&gt;0(n^2)&lt;/code&gt;. Did I just google that and paste it in here without fully understanding it? I sure did. Another post soon on time and space complexity.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>A Quick Intro to Classes in C&#43;&#43;</title>
+      <link>http://ericlearns.com/post/classes_intro/</link>
+      <pubDate>Mon, 15 May 2017 06:43:48 -0400</pubDate>
+      
+      <guid>http://ericlearns.com/post/classes_intro/</guid>
+      <description>&lt;p&gt;Classes are a powerful data structure in C++ (and many other programming languages). But classes in C++ are a bit different from classes in Python, or even JavaScript (gasp) if that&amp;rsquo;s your thing. C++ allows you to set &lt;code&gt;private&lt;/code&gt; members in your class that can only be accessed by member functions in the class. This is really handy for a few reasons, one of them being if you need to change the value or behavior of a private member you can do so without breaking every member function that uses that private member. The concept of changing the value of private members is called &lt;code&gt;getting and setting&lt;/code&gt;. Getting and setting exists in Python, but it is not as common of a pattern as in C++.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s go through a really simple class example to get the idea of how this data structure works in C++. I am going to create three files- &lt;code&gt;main.cpp&lt;/code&gt;, &lt;code&gt;pracClass.cpp&lt;/code&gt;, and &lt;code&gt;pracClass.h&lt;/code&gt;. In this simple example I am going to create a class to represent a bank, and it will contain some methods to handle transactions. In &lt;code&gt;pracClass.h&lt;/code&gt; I&amp;rsquo;ll go ahead and create the class.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+
+class Bank {
+    private:
+        int balance;
+    public:
+        // todo - add public members
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here we have created our class with a private member &lt;code&gt;balance&lt;/code&gt; whos value can only be set by members of the Bank class. In &lt;code&gt;pracClass.cpp&lt;/code&gt; we can go ahead and create a member function to set the value for &lt;code&gt;balance&lt;/code&gt; as needed.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;quot;pracClass.h&amp;quot;
+
+void Bank::setBalance(int amt) {
+    balance = amt;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And we&amp;rsquo;ll add it to our Bank class as a member function.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+
+class Bank {
+    private:
+        int balance;
+    public:
+        void setBalance(int amt);
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It would be nice if we could see what the balance is at any given time, so I&amp;rsquo;ll go ahead and add another member function that prints the balance to standard out. In &lt;code&gt;pracClass.cpp&lt;/code&gt; I&amp;rsquo;ll add the function &lt;code&gt;printBalance&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;quot;pracClass.h&amp;quot;
+
+void Bank::setBalance(int amt) {
+    balance = amt;
+}
+
+void Bank::printBalance() {
+    std::cout &amp;lt;&amp;lt; &amp;quot;Balance: $&amp;quot; &amp;lt;&amp;lt; balance &amp;lt;&amp;lt; std::endl;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And add the new member function to the Bank class&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+
+class Bank {
+    private:
+        int balance;
+    public:
+        void setBalance(int amt);
+        void printBalance();
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next we can add a member function for making a withdrawl and making a deposit, which we&amp;rsquo;ll call &lt;code&gt;makeWithdrawl&lt;/code&gt; and &lt;code&gt;makeDeposit&lt;/code&gt; respectively and add them to &lt;code&gt;printClass.cpp&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;quot;pracClass.h&amp;quot;
+
+void Bank::setBalance(int amt) {
+    balance = amt;
+}
+
+void Bank::printBalance() {
+    std::cout &amp;lt;&amp;lt; &amp;quot;Balance: $&amp;quot; &amp;lt;&amp;lt; balance &amp;lt;&amp;lt; std::endl;
+}
+
+void Bank::makeWithdrawl(int amt) {
+    balance -= amt;
+}
+
+void Bank::makeDeposit(int amt) {
+    balance += amt;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Adding both of these new member functions to the Bank class in our header file&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+
+class Bank {
+    private:
+        int balance;
+    public:
+        void setBalance(int amt);
+        void printBalance();
+        void makeWithdrawl(int amt);
+        void makeDeposit(int amt);
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now, this is a really simply example so I am going to the leave the member functions as they are and assume they won&amp;rsquo;t be passed an int value that will result in an error. But, we should really consider some scenarios that &lt;em&gt;could&lt;/em&gt; break e.g. withdrawing more money than available. Maybe an exception could be thrown for that case? For now, they are ok as-is to illustrate the basics of classes.&lt;/p&gt;
+
+&lt;p&gt;We&amp;rsquo;ll switch over to our &lt;code&gt;main.cpp&lt;/code&gt; file and start using our Bank class. First we&amp;rsquo;ll create an instance of the Bank class called &lt;code&gt;myBank&lt;/code&gt;, then we&amp;rsquo;ll set the balance in our account. This is where the &lt;code&gt;private&lt;/code&gt; member really shines. We can set the balance to be whatever we want at any given time, and someone else using the class can set the balance to a completely different value if they needed to without effecting us. That is pretty awesome!&lt;/p&gt;
+
+&lt;p&gt;An important point here is that &lt;em&gt;do&lt;/em&gt; need to actually set the value for the balance though. If we forgot to do this we&amp;rsquo;d get an integer we weren&amp;rsquo;t expecting, the memory space representation for the variable.&lt;/p&gt;
+
+&lt;p&gt;In &lt;code&gt;main.cpp&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;quot;pracClass.h&amp;quot;
+
+int main() {
+    Bank myBank;
+    myBank.setBalance(0);
+    myBank.printBalance();
+
+    myBank.makeDeposit(150);
+    myBank.printBalance();
+
+    myBank.makeWithdrawl(100);
+    myBank.printBalance();
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;From the command line we can compile this program with&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;g++ prac_class.cpp main.cpp -o bank.exe
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Running &lt;code&gt;bank.exe&lt;/code&gt; results in the output&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Balance: $0
+Balance: $150
+Balance: $50
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Classes in C++ can obviously get much more complex than this and I&amp;rsquo;ll probably do a post soon on inheritance in C++, but this quick example shows just how flexible and powerful of a data structure they can be and how private members provide &lt;code&gt;encapsulation&lt;/code&gt; for your program.&lt;/p&gt;
+
+&lt;p&gt;But what about Python?! Well, there are no public or private attributes in Python. You could add an underscore to your variable name, but it does nothing more than signal to the user that you &lt;em&gt;intend&lt;/em&gt; for this variable to private, they can still access or modify it however they like. Python does allow &lt;code&gt;@property&lt;/code&gt; decorators for getters and setters, but this is not a common pattern. Anyways, here&amp;rsquo;s an similar example written in Python.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Bank(object):
+
+    def __init__(self, balance):
+        self.balance = balance
+
+    def make_deposit(self, amt):
+        self.balance += amt
+
+    def make_withdrawl(self, amt):
+        self.balance -= amt
+
+    def print_balance(self):
+        print &#39;Balance: ${}&#39;.format(self.balance)
+
+
+my_bank = Bank(0)
+my_bank.print_balance()
+
+# oh crap, the attribute value changed
+my_bank.balance = 200
+
+my_bank.make_deposit(100)
+my_bank.print_balance()
+
+my_bank.make_withdrawl(50)
+my_bank.print_balance()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Which outputs&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Balance: $0
+Balance: $300
+Balance: $250
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
     
     <item>
       <title>Binary Search Example</title>

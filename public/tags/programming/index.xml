@@ -9,6 +9,189 @@
     <atom:link href="http://ericlearns.com/tags/programming/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>A Quick Intro to Classes in C&#43;&#43;</title>
+      <link>http://ericlearns.com/post/classes_intro/</link>
+      <pubDate>Mon, 15 May 2017 06:43:48 -0400</pubDate>
+      
+      <guid>http://ericlearns.com/post/classes_intro/</guid>
+      <description>&lt;p&gt;Classes are a powerful data structure in C++ (and many other programming languages). But classes in C++ are a bit different from classes in Python, or even JavaScript (gasp) if that&amp;rsquo;s your thing. C++ allows you to set &lt;code&gt;private&lt;/code&gt; members in your class that can only be accessed by member functions in the class. This is really handy for a few reasons, one of them being if you need to change the value or behavior of a private member you can do so without breaking every member function that uses that private member. The concept of changing the value of private members is called &lt;code&gt;getting and setting&lt;/code&gt;. Getting and setting exists in Python, but it is not as common of a pattern as in C++.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s go through a really simple class example to get the idea of how this data structure works in C++. I am going to create three files- &lt;code&gt;main.cpp&lt;/code&gt;, &lt;code&gt;pracClass.cpp&lt;/code&gt;, and &lt;code&gt;pracClass.h&lt;/code&gt;. In this simple example I am going to create a class to represent a bank, and it will contain some methods to handle transactions. In &lt;code&gt;pracClass.h&lt;/code&gt; I&amp;rsquo;ll go ahead and create the class.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+
+class Bank {
+    private:
+        int balance;
+    public:
+        // todo - add public members
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here we have created our class with a private member &lt;code&gt;balance&lt;/code&gt; whos value can only be set by members of the Bank class. In &lt;code&gt;pracClass.cpp&lt;/code&gt; we can go ahead and create a member function to set the value for &lt;code&gt;balance&lt;/code&gt; as needed.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;quot;pracClass.h&amp;quot;
+
+void Bank::setBalance(int amt) {
+    balance = amt;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And we&amp;rsquo;ll add it to our Bank class as a member function.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+
+class Bank {
+    private:
+        int balance;
+    public:
+        void setBalance(int amt);
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It would be nice if we could see what the balance is at any given time, so I&amp;rsquo;ll go ahead and add another member function that prints the balance to standard out. In &lt;code&gt;pracClass.cpp&lt;/code&gt; I&amp;rsquo;ll add the function &lt;code&gt;printBalance&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;quot;pracClass.h&amp;quot;
+
+void Bank::setBalance(int amt) {
+    balance = amt;
+}
+
+void Bank::printBalance() {
+    std::cout &amp;lt;&amp;lt; &amp;quot;Balance: $&amp;quot; &amp;lt;&amp;lt; balance &amp;lt;&amp;lt; std::endl;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And add the new member function to the Bank class&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+
+class Bank {
+    private:
+        int balance;
+    public:
+        void setBalance(int amt);
+        void printBalance();
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next we can add a member function for making a withdrawl and making a deposit, which we&amp;rsquo;ll call &lt;code&gt;makeWithdrawl&lt;/code&gt; and &lt;code&gt;makeDeposit&lt;/code&gt; respectively and add them to &lt;code&gt;printClass.cpp&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;quot;pracClass.h&amp;quot;
+
+void Bank::setBalance(int amt) {
+    balance = amt;
+}
+
+void Bank::printBalance() {
+    std::cout &amp;lt;&amp;lt; &amp;quot;Balance: $&amp;quot; &amp;lt;&amp;lt; balance &amp;lt;&amp;lt; std::endl;
+}
+
+void Bank::makeWithdrawl(int amt) {
+    balance -= amt;
+}
+
+void Bank::makeDeposit(int amt) {
+    balance += amt;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Adding both of these new member functions to the Bank class in our header file&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+
+class Bank {
+    private:
+        int balance;
+    public:
+        void setBalance(int amt);
+        void printBalance();
+        void makeWithdrawl(int amt);
+        void makeDeposit(int amt);
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now, this is a really simply example so I am going to the leave the member functions as they are and assume they won&amp;rsquo;t be passed an int value that will result in an error. But, we should really consider some scenarios that &lt;em&gt;could&lt;/em&gt; break e.g. withdrawing more money than available. Maybe an exception could be thrown for that case? For now, they are ok as-is to illustrate the basics of classes.&lt;/p&gt;
+
+&lt;p&gt;We&amp;rsquo;ll switch over to our &lt;code&gt;main.cpp&lt;/code&gt; file and start using our Bank class. First we&amp;rsquo;ll create an instance of the Bank class called &lt;code&gt;myBank&lt;/code&gt;, then we&amp;rsquo;ll set the balance in our account. This is where the &lt;code&gt;private&lt;/code&gt; member really shines. We can set the balance to be whatever we want at any given time, and someone else using the class can set the balance to a completely different value if they needed to without effecting us. That is pretty awesome!&lt;/p&gt;
+
+&lt;p&gt;An important point here is that &lt;em&gt;do&lt;/em&gt; need to actually set the value for the balance though. If we forgot to do this we&amp;rsquo;d get an integer we weren&amp;rsquo;t expecting, the memory space representation for the variable.&lt;/p&gt;
+
+&lt;p&gt;In &lt;code&gt;main.cpp&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;quot;pracClass.h&amp;quot;
+
+int main() {
+    Bank myBank;
+    myBank.setBalance(0);
+    myBank.printBalance();
+
+    myBank.makeDeposit(150);
+    myBank.printBalance();
+
+    myBank.makeWithdrawl(100);
+    myBank.printBalance();
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;From the command line we can compile this program with&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;g++ prac_class.cpp main.cpp -o bank.exe
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Running &lt;code&gt;bank.exe&lt;/code&gt; results in the output&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Balance: $0
+Balance: $150
+Balance: $50
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Classes in C++ can obviously get much more complex than this and I&amp;rsquo;ll probably do a post soon on inheritance in C++, but this quick example shows just how flexible and powerful of a data structure they can be and how private members provide &lt;code&gt;encapsulation&lt;/code&gt; for your program.&lt;/p&gt;
+
+&lt;p&gt;But what about Python?! Well, there are no public or private attributes in Python. You could add an underscore to your variable name, but it does nothing more than signal to the user that you &lt;em&gt;intend&lt;/em&gt; for this variable to private, they can still access or modify it however they like. Python does allow &lt;code&gt;@property&lt;/code&gt; decorators for getters and setters, but this is not a common pattern. Anyways, here&amp;rsquo;s an similar example written in Python.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Bank(object):
+
+    def __init__(self, balance):
+        self.balance = balance
+
+    def make_deposit(self, amt):
+        self.balance += amt
+
+    def make_withdrawl(self, amt):
+        self.balance -= amt
+
+    def print_balance(self):
+        print &#39;Balance: ${}&#39;.format(self.balance)
+
+
+my_bank = Bank(0)
+my_bank.print_balance()
+
+# oh crap, the attribute value changed
+my_bank.balance = 200
+
+my_bank.make_deposit(100)
+my_bank.print_balance()
+
+my_bank.make_withdrawl(50)
+my_bank.print_balance()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Which outputs&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Balance: $0
+Balance: $300
+Balance: $250
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Function Overloading - A Quick Intro</title>
       <link>http://ericlearns.com/post/function-overloading/</link>
       <pubDate>Sun, 16 Apr 2017 07:20:57 -0400</pubDate>

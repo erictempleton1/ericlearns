@@ -1,0 +1,259 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta content="ericlearns, learn c&#43;&#43;, c&#43;&#43;, python, programming, learn programming, bicycling, cyclocross" name="keywords">
+<meta content="eric" name="author">
+<meta property="og:title" content="Understanding Selection Sort - ericlearns">
+<meta property="og:url" content="http://ericlearns.com/post/selection_sort/">
+<meta property="og:description" content="Follow along as I learn new things, including: c&#43;&#43;, and bicycling">
+<meta property="og:type" content="website" />
+<title>Understanding Selection Sort | ericlearns</title>
+<link rel="stylesheet" href="http://ericlearns.com/css/style.css">
+<link rel="shortcut icon" href="http://ericlearns.com/wave.ico">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/github.min.css">
+
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="http://ericlearns.com"><h1 class="title is-4">ericlearns</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile">
+          
+          <a class="level-item" href="https://github.com/erictempleton1" target="_blank">
+            <span class="icon">
+              <i class="fa fa-github"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://twitter.com/google" target="_blank">
+            <span class="icon">
+              <i class="fa fa-twitter"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://linkedin.com/in/google" target="_blank">
+            <span class="icon">
+              <i class="fa fa-linkedin-square"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="/index.xml" target="_blank">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+          </a>
+          
+        </nav>
+      </div>
+    </nav>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h1 class="title">Understanding Selection Sort</h1>
+    <h2 class="subtitle is-5">May 15, 2017 by eric</h2>
+    
+      <div class="tags">
+    
+        <a class="button is-link" href="/tags/algorithms">algorithms</a>
+    
+</div>
+
+    
+    <div class="content">
+      <p>Alright selection sort algorithm, let&rsquo;s dance.</p>
+
+<p>This algorithm is one type of many sorting algorithms used to sort values in an array. While I <em>understand</em> how it works it might be a little hard to put into words, but I&rsquo;ll give it a go either way. The main idea is that you start at the first index in an array (usually always 0), then compare it to the element in the next index position. If the element in the next index position is larger than the previous than you check that element against the rest of the elements in the array to see if a smaller element exists. If no smaller element exists then you <em>swap</em> the positions and repeat the process for the next element until the list is sorted. Phew.</p>
+
+<p>Here is a quick visual tour. We&rsquo;ll start with the following array (or list if you&rsquo;re into Python)</p>
+
+<pre><code class="language-python">[18, 19, 66, 44, 9, 22, 14]
+</code></pre>
+
+<p>So we&rsquo;ll start with index 0, which is 18.</p>
+
+<p>Is 18 larger than the next element after 18, which is 19? Nope.</p>
+
+<p>Is 18 larger than the next element after 19, which is 66? Nope.</p>
+
+<p>Is 18 larger than the next element after 66, which is 44? Nope.</p>
+
+<p>Is 18 larger than the next element after 44, which is 9? Yep!</p>
+
+<p>Ok, this is where things get interesting. Since 18 is larger than 9, we now we need check if any other elements in the list are larger than 9. But we already know that the elements so far <em>must</em> greater than 18 or we wouldn&rsquo;t have gotten so far. With that in mind, we only need to check the elements to the right of 9 to ensure that 9 is the smallest. Let&rsquo;s do that.</p>
+
+<p>Is 9 larger than the next element after 9, which is 22? Nope.</p>
+
+<p>Is 9 larger than the next element after 22, which is 14? Nope.</p>
+
+<p>We&rsquo;ve reached the end of our array. At this point we now know that 9 is the smallest number, so we need to <em>swap</em> the first element, 18, with 9. Once we&rsquo;ve made the swap, we can move to the next element and repeat the steps again. Our array now looks as follows</p>
+
+<pre><code class="language-python">[9, 19, 66, 44, 18, 22, 14]
+</code></pre>
+
+<p>We should go through the steps again one more time with the next element just to be sure this is all making sense.</p>
+
+<p>We are now at index 1, which is 19 now since we performed a <em>swap</em>.</p>
+
+<p>Is 19 larger than the next element after 19, which is  66?  Nope.</p>
+
+<p>Is 19 larger than the next element after 66, which is  44? Nope.</p>
+
+<p>Is 19 larger than the next element after 44, which is  18? Yep!</p>
+
+<p>Ding ding ding! Now we check everything after 18 to see if 18 is the smallest.</p>
+
+<p>Is 18 larger than the next element after 18, which is  22? Nope.</p>
+
+<p>Is 18 larger than the next element after 22, which is  14? Yep!</p>
+
+<p>Now check to see if 14 is the smallest&hellip;.but wait! 14 is the last element, so it has to be the next smallest after 9. We&rsquo;ll make another swap and restart the process again with index 2, 66. Our array now looks as follows</p>
+
+<pre><code class="language-python">[9, 14, 66, 44, 18, 22, 19]
+</code></pre>
+
+<p>That&rsquo;s pretty cool if you ask me. With that terrible explanation out of the way, let&rsquo;s take a look at how this is actually implemented and hopefully that will help clarify. Let me add a big <em>NOTE</em> here that you should run this code in a debugger with a breakpoint set so you can step through each line and see what&rsquo;s actually happening. I found this to be the most helpful way of actually understanding this algorithm. Text explanations really don&rsquo;t do a great job or clarifying what is actually happening, even though this explanation is clearly top notch.</p>
+
+<p>I am going to show this first in Python. In selection sort we are mostly going to be working with list indexes, so we&rsquo;ll use a <code>for loop</code> with <code>range</code> based on the length of the unsorted list</p>
+
+<pre><code class="language-python">def sel_sort(unsorted_list):
+    for i in range(len(unsorted_list)):
+        ...
+</code></pre>
+
+<p>We are going to need to increment the index <code>i</code> when we find larger elements in the list. Probably not a good idea to change the value of <code>i</code> directly in this case, so we&rsquo;ll set a variable to represent the minimum index value.</p>
+
+<pre><code class="language-python">def sel_sort(unsorted_list):
+    for i in range(len(unsorted_list)):
+        min_index = i
+        ...
+</code></pre>
+
+<p>All of the elements to the right of <code>min_index</code> we can consider to be in a <code>sub list</code> or <code>sub array</code> that we&rsquo;ll need to iterate over and check. We&rsquo;ll create another <code>for loop</code> inside of our first to check these elements and update <code>min_index</code> as needed. <em>But</em>, we only want to check elements one index position to the right of <code>min_index</code> so we need to increment <code>i</code> in our next loop to start at the next position. This is what creates our <code>sub list</code>. Note the <code>range(i+1, len(unsorted_list))</code>.</p>
+
+<pre><code class="language-python">def sel_sort(unsorted_list):
+    for i in range(len(unsorted_list)):
+        min_index = i
+        for j in range(i+1, len(unsorted_list)):
+            current_elem = nums[min_index]
+            next_elem = nums[j]
+</code></pre>
+
+<p>Now we can perform the greater than check and decide if we need to move to the next element or not.</p>
+
+<pre><code class="language-python">def sel_sort(unsorted_list):
+    for i in range(len(unsorted_list)):
+        min_index = i
+        for j in range(i+1, len(unsorted_list)):
+            current_elem = unsorted_list[min_index]
+            next_elem = unsorted_list[j]
+            if current_elem &gt; next_elem:
+                min_index = 1
+</code></pre>
+
+<p>The reason I created the variables <code>current_elem</code> and  <code>next_elem</code> is for debugging purposes. Everything makes more sense when stepping through the code if you set a variable to represent the values that you can see in the debugger.</p>
+
+<p>There is one important portion of this algorithm we should take a closer look at now, and that is the <em>swap</em>. In Python, swapping elements in a list is as simple as</p>
+
+<pre><code class="language-python"># swap first and second elements in a list
+my_list[0], my_list[1] = my_list[1], my_list[0]
+</code></pre>
+
+<p>But in other languages, specifically C++, we need an extra variable to hold the value of the first item. I&rsquo;ll represent this in Python here because later you&rsquo;ll see it in the C++ selection sort example. So here is the full selection sort algorithm implemented in Python.</p>
+
+<pre><code class="language-python">def sel_sort(unsorted_list):
+    for i in range(len(unsorted_list)):
+        min_index = i
+        for j in range(i+i, len(unsorted_list)):
+            current_elem = unsorted_list[min_index]
+            next_elem = unsorted_list[j]
+            if current_elem &gt; next_elem:
+                min_index = 1
+        tmp = unsorted_list[i]
+        unsorted_list[i] = unsorted_list[min_index]
+        unsorted_list[min_index] = tmp
+    return unsorted_list
+
+nums = [18, 19, 66, 44, 9, 22, 14]
+print sel_sort(nums)
+
+# prints [9, 14, 18, 19, 22, 44, 66]
+</code></pre>
+
+<p>And there you have it. Below is an example of selection sort in C++. This example creates a copy of the vector, mostly because I don&rsquo;t know how to do it a better way yet. Soon.</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+std::vector&lt;int&gt; selectSort(std::vector&lt;int&gt; myVec) {
+    for (int i = 0; i &lt; myVec.size(); i++) {
+        int minIndex = i;
+        for (int j = i + 1; j &lt; myVec.size(); j++) {
+            if (myVec[minIndex] &gt; myVec[j]) {
+                minIndex = j;
+            }
+        }
+        int tmp = myVec[i];
+        myVec[i] = myVec[minIndex];
+        myVec[minIndex] = tmp;
+    }
+    return myVec;
+}
+
+int main() {
+    std::vector&lt;int&gt; vec {6, 55, 22, 4, 1, 88};
+    std::vector&lt;int&gt; myVecSorted = selectSort(vec);
+    for (int i = 0; i &lt; myVecSorted.size(); i++) {
+        std::cout &lt;&lt; myVecSorted[i] &lt;&lt; std::endl;
+    };
+}
+</code></pre>
+
+<p>So what&rsquo;s the efficieny of the selection sort algorithm? As the length of your array grows, so does the time complexity. For this algorithm, the time complexity in big O notation is <code>0(n^2)</code>. Did I just google that and paste it in here without fully understanding it? I sure did. Another post soon on time and space complexity.</p>
+
+    </div>
+    
+        <div class="nav-left">
+    <a class="nav-item" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fericlearns.com%2fpost%2fselection_sort%2f" title="Share on Facebook" target="_blank"><span class="fa fa-facebook fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://plus.google.com/share?url=http%3a%2f%2fericlearns.com%2fpost%2fselection_sort%2f" title="Share on Google+" target="_blank"><span class="fa fa-google-plus fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2fericlearns.com%2fpost%2fselection_sort%2f" title="Share on LinkedIn" target="_blank"><span class="fa fa-linkedin fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://twitter.com/home?status=Understanding%20Selection%20Sort - http%3a%2f%2fericlearns.com%2fpost%2fselection_sort%2f" title="Tweet this" target="_blank"><span class="fa fa-twitter fa-2x"></span></a>
+    <a class="nav-item" href="http://www.reddit.com/submit?url=http%3a%2f%2fericlearns.com%2fpost%2fselection_sort%2f&title=Understanding%20Selection%20Sort" title="Share on Reddit" target="_blank"><span class="fa fa-reddit-alien fa-2x" aria-hidden="true"></span></a>
+    
+    </div>
+    
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+  </div>
+</section>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/go.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/dockerfile.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-42703121-4', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+
+
