@@ -1,0 +1,219 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta content="ericlearns, learn c&#43;&#43;, c&#43;&#43;, python, programming, learn programming, bicycling, cyclocross" name="keywords">
+<meta content="eric" name="author">
+<meta property="og:title" content="References in C&#43;&#43; - ericlearns">
+<meta property="og:url" content="http://ericlearns.com/post/cpp_references/">
+<meta property="og:description" content="Follow along as I learn new things, including: c&#43;&#43;, and bicycling">
+<meta property="og:type" content="website" />
+<title>References in C&#43;&#43; | ericlearns</title>
+<link rel="stylesheet" href="http://ericlearns.com/css/style.css">
+<link rel="shortcut icon" href="http://ericlearns.com/wave.ico">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/github.min.css">
+
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="http://ericlearns.com"><h1 class="title is-4">ericlearns</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile">
+          
+          <a class="level-item" href="https://github.com/erictempleton1" target="_blank">
+            <span class="icon">
+              <i class="fa fa-github"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://twitter.com/google" target="_blank">
+            <span class="icon">
+              <i class="fa fa-twitter"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://linkedin.com/in/google" target="_blank">
+            <span class="icon">
+              <i class="fa fa-linkedin-square"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="/index.xml" target="_blank">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+          </a>
+          
+        </nav>
+      </div>
+    </nav>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h1 class="title">References in C&#43;&#43;</h1>
+    <h2 class="subtitle is-5">May 17, 2017 by eric</h2>
+    
+      <div class="tags">
+    
+        <a class="button is-link" href="/tags/c&#43;&#43;">C&#43;&#43;</a>
+    
+        <a class="button is-link" href="/tags/programming">programming</a>
+    
+</div>
+
+    
+    <div class="content">
+      <p>Another new C++ concept, references! I recently google <code>C++ references</code> and <a href="https://en.wikipedia.org/wiki/Reference_(C%2B%2B)">found</a> the following definition</p>
+
+<blockquote>
+<p>The definition of a reference in C++ is such that it does not need to exist.</p>
+</blockquote>
+
+<p>What in the actual fuck does that even mean? I have no idea. Maybe it&rsquo;s just a bad definition (likely), or maybe it will make more sense later. Anyways, on to references. A reference in C++ is defined with an ampersand <code>&amp;</code> as well as the type and name, but the <code>&amp;</code> is not used again after the variable has been defined.</p>
+
+<pre><code class="language-C++"> int &amp;myRef
+</code></pre>
+
+<p>But if you popped the above variable declaration into a program and compiled it, you would be greeted with the following message</p>
+
+<blockquote>
+<p>error: &lsquo;myRef&rsquo; declared as reference but not initialized</p>
+</blockquote>
+
+<p>The <code>reference</code> needs to <em>reference</em> something. Let&rsquo;s give it something to refer to, and create a little program below to keep track of things and actually do something. The code below <em>will</em> compile, but it&rsquo;s not really doing anything meaningful just yet. If you go ahead and compile the program and run the executable you should get two lines of identical output. What it&rsquo;s showing you is <code>myVar</code>&rsquo;s memory location, and that the reference variable <code>myVarRef</code> is basically now a second label for that memory location.</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+
+int main() {
+    int myVar;
+    int &amp;myVarRef = myVar;
+
+    std::cout &lt;&lt; myVar &lt;&lt; std::endl;
+    std::cout &lt;&lt; myVarRef &lt;&lt; std::endl;
+}
+</code></pre>
+
+<p>We can go ahead and give the same code above some values to work with. Compiling this program and running the executable will result in two identical lines again, but this time with the actual value, 500 in this case, for both the referencee and referencer.</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+
+int main() {
+    int myVar = 500;
+    int &amp;myVarRef = myVar;
+
+    std::cout &lt;&lt; myVar &lt;&lt; std::endl;
+    std::cout &lt;&lt; myVarRef &lt;&lt; std::endl;
+}
+</code></pre>
+
+<pre><code>500
+500
+</code></pre>
+
+<p>Here is where things get interesting. If we change the value of <code>myVarRef</code>, something I was not expecting to happen to <code>myVar</code> happens.</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+
+int main() {
+	int myVar = 500;
+	int &amp;myVarRef = myVar;
+
+	std::cout &lt;&lt; &quot;Original value of myVar: &quot; &lt;&lt; myVar &lt;&lt; std::endl;
+
+	myVarRef = 20;
+	std::cout &lt;&lt; &quot;Value of myVar after changing the reference value: &quot; &lt;&lt; myVar &lt;&lt; std::endl;
+	std::cout &lt;&lt; &quot;Reference var value: &quot; &lt;&lt; myVarRef &lt;&lt; std::endl;
+}
+</code></pre>
+
+<pre><code>Original value of myVar: 500
+Value of myVar after changing the reference value: 20
+Reference var value: 20
+</code></pre>
+
+<p>The original value of <code>myVar</code> was changed when I changed the value of the reference variable! Holy crap. So the original variable and the reference variable both refer to the same value and as such, you can perform the same operations through the reference variable as you could with the original. That is amazing.</p>
+
+<p>Let&rsquo;s try to expand on this and change the value of <code>myVar</code>. I&rsquo;m curious to see what impact that will have on <code>myVarRef</code>.</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+
+int main() {
+	int myVar = 500;
+	int &amp;myVarRef = myVar;
+
+	std::cout &lt;&lt; &quot;Original value of myVar: &quot; &lt;&lt; myVar &lt;&lt; std::endl;
+
+	myVarRef = 20;
+	std::cout &lt;&lt; &quot;Value of myVar after changing the reference value: &quot; &lt;&lt; myVar &lt;&lt; std::endl;
+	std::cout &lt;&lt; &quot;Reference var value: &quot; &lt;&lt; myVarRef &lt;&lt; std::endl;
+
+	myVar = 200;
+	std::cout &lt;&lt; &quot;Value of myVar after changing it's value: &quot; &lt;&lt; myVar &lt;&lt; std::endl;
+	std::cout &lt;&lt; &quot;Update reference var value: &quot; &lt;&lt; myVarRef &lt;&lt; std::endl;
+}
+</code></pre>
+
+<pre><code>Value of myVar after changing the reference value: 20
+Reference var value: 20
+Value of myVar after changing it's value: 200
+Update reference var value: 200
+</code></pre>
+
+<p>So that changes the values going both ways! Ok, great. But when am I actually going to use this? For one thing, it&rsquo;s really handy when passing arguments to functions. When you do not include the argument as a reference, you are <code>passing by value</code> and depending on the size this can be very expensive and slow down your program. Using a reference in your argument, you are <code>passing by reference</code> which is much more memory efficient.</p>
+
+<p>Couldn&rsquo;t we just use pointers instead of references? Well, yeah but one major difference is that the compiler handles allocating and deallocating memory for references, but it does not do this pointers. Memory management is up to you when using pointers. Probably pros and cons to that difference, but I think using references also helps with the always important code readability.</p>
+
+<p>Let me revisit that C++ references definition from the very beginning of this post really quick. Does it make sense now? Hell no. This is a bad definition in my opinion. I would define C++ references as</p>
+
+<blockquote>
+<p>An alias (or another name) for an existing variable.</p>
+</blockquote>
+
+<p>More to come on references. I&rsquo;ll be trying to include them more and more in my code.</p>
+
+    </div>
+    
+        <div class="nav-left">
+    <a class="nav-item" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fericlearns.com%2fpost%2fcpp_references%2f" title="Share on Facebook" target="_blank"><span class="fa fa-facebook fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://plus.google.com/share?url=http%3a%2f%2fericlearns.com%2fpost%2fcpp_references%2f" title="Share on Google+" target="_blank"><span class="fa fa-google-plus fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2fericlearns.com%2fpost%2fcpp_references%2f" title="Share on LinkedIn" target="_blank"><span class="fa fa-linkedin fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://twitter.com/home?status=References%20in%20C%2b%2b - http%3a%2f%2fericlearns.com%2fpost%2fcpp_references%2f" title="Tweet this" target="_blank"><span class="fa fa-twitter fa-2x"></span></a>
+    <a class="nav-item" href="http://www.reddit.com/submit?url=http%3a%2f%2fericlearns.com%2fpost%2fcpp_references%2f&title=References%20in%20C%2b%2b" title="Share on Reddit" target="_blank"><span class="fa fa-reddit-alien fa-2x" aria-hidden="true"></span></a>
+    
+    </div>
+    
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+  </div>
+</section>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/go.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/dockerfile.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-42703121-4', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+
+

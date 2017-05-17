@@ -6,8 +6,124 @@
     <description>Recent content in Posts on ericlearns</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 15 May 2017 06:50:06 -0400</lastBuildDate>
+    <lastBuildDate>Wed, 17 May 2017 06:47:07 -0400</lastBuildDate>
     <atom:link href="http://ericlearns.com/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>References in C&#43;&#43;</title>
+      <link>http://ericlearns.com/post/cpp_references/</link>
+      <pubDate>Wed, 17 May 2017 06:47:07 -0400</pubDate>
+      
+      <guid>http://ericlearns.com/post/cpp_references/</guid>
+      <description>&lt;p&gt;Another new C++ concept, references! I recently google &lt;code&gt;C++ references&lt;/code&gt; and &lt;a href=&#34;https://en.wikipedia.org/wiki/Reference_(C%2B%2B)&#34;&gt;found&lt;/a&gt; the following definition&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;The definition of a reference in C++ is such that it does not need to exist.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;What in the actual fuck does that even mean? I have no idea. Maybe it&amp;rsquo;s just a bad definition (likely), or maybe it will make more sense later. Anyways, on to references. A reference in C++ is defined with an ampersand &lt;code&gt;&amp;amp;&lt;/code&gt; as well as the type and name, but the &lt;code&gt;&amp;amp;&lt;/code&gt; is not used again after the variable has been defined.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt; int &amp;amp;myRef
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;But if you popped the above variable declaration into a program and compiled it, you would be greeted with the following message&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;error: &amp;lsquo;myRef&amp;rsquo; declared as reference but not initialized&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The &lt;code&gt;reference&lt;/code&gt; needs to &lt;em&gt;reference&lt;/em&gt; something. Let&amp;rsquo;s give it something to refer to, and create a little program below to keep track of things and actually do something. The code below &lt;em&gt;will&lt;/em&gt; compile, but it&amp;rsquo;s not really doing anything meaningful just yet. If you go ahead and compile the program and run the executable you should get two lines of identical output. What it&amp;rsquo;s showing you is &lt;code&gt;myVar&lt;/code&gt;&amp;rsquo;s memory location, and that the reference variable &lt;code&gt;myVarRef&lt;/code&gt; is basically now a second label for that memory location.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+
+int main() {
+    int myVar;
+    int &amp;amp;myVarRef = myVar;
+
+    std::cout &amp;lt;&amp;lt; myVar &amp;lt;&amp;lt; std::endl;
+    std::cout &amp;lt;&amp;lt; myVarRef &amp;lt;&amp;lt; std::endl;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We can go ahead and give the same code above some values to work with. Compiling this program and running the executable will result in two identical lines again, but this time with the actual value, 500 in this case, for both the referencee and referencer.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+
+int main() {
+    int myVar = 500;
+    int &amp;amp;myVarRef = myVar;
+
+    std::cout &amp;lt;&amp;lt; myVar &amp;lt;&amp;lt; std::endl;
+    std::cout &amp;lt;&amp;lt; myVarRef &amp;lt;&amp;lt; std::endl;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;500
+500
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here is where things get interesting. If we change the value of &lt;code&gt;myVarRef&lt;/code&gt;, something I was not expecting to happen to &lt;code&gt;myVar&lt;/code&gt; happens.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+
+int main() {
+	int myVar = 500;
+	int &amp;amp;myVarRef = myVar;
+
+	std::cout &amp;lt;&amp;lt; &amp;quot;Original value of myVar: &amp;quot; &amp;lt;&amp;lt; myVar &amp;lt;&amp;lt; std::endl;
+
+	myVarRef = 20;
+	std::cout &amp;lt;&amp;lt; &amp;quot;Value of myVar after changing the reference value: &amp;quot; &amp;lt;&amp;lt; myVar &amp;lt;&amp;lt; std::endl;
+	std::cout &amp;lt;&amp;lt; &amp;quot;Reference var value: &amp;quot; &amp;lt;&amp;lt; myVarRef &amp;lt;&amp;lt; std::endl;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;Original value of myVar: 500
+Value of myVar after changing the reference value: 20
+Reference var value: 20
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The original value of &lt;code&gt;myVar&lt;/code&gt; was changed when I changed the value of the reference variable! Holy crap. So the original variable and the reference variable both refer to the same value and as such, you can perform the same operations through the reference variable as you could with the original. That is amazing.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s try to expand on this and change the value of &lt;code&gt;myVar&lt;/code&gt;. I&amp;rsquo;m curious to see what impact that will have on &lt;code&gt;myVarRef&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+
+int main() {
+	int myVar = 500;
+	int &amp;amp;myVarRef = myVar;
+
+	std::cout &amp;lt;&amp;lt; &amp;quot;Original value of myVar: &amp;quot; &amp;lt;&amp;lt; myVar &amp;lt;&amp;lt; std::endl;
+
+	myVarRef = 20;
+	std::cout &amp;lt;&amp;lt; &amp;quot;Value of myVar after changing the reference value: &amp;quot; &amp;lt;&amp;lt; myVar &amp;lt;&amp;lt; std::endl;
+	std::cout &amp;lt;&amp;lt; &amp;quot;Reference var value: &amp;quot; &amp;lt;&amp;lt; myVarRef &amp;lt;&amp;lt; std::endl;
+
+	myVar = 200;
+	std::cout &amp;lt;&amp;lt; &amp;quot;Value of myVar after changing it&#39;s value: &amp;quot; &amp;lt;&amp;lt; myVar &amp;lt;&amp;lt; std::endl;
+	std::cout &amp;lt;&amp;lt; &amp;quot;Update reference var value: &amp;quot; &amp;lt;&amp;lt; myVarRef &amp;lt;&amp;lt; std::endl;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;Value of myVar after changing the reference value: 20
+Reference var value: 20
+Value of myVar after changing it&#39;s value: 200
+Update reference var value: 200
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So that changes the values going both ways! Ok, great. But when am I actually going to use this? For one thing, it&amp;rsquo;s really handy when passing arguments to functions. When you do not include the argument as a reference, you are &lt;code&gt;passing by value&lt;/code&gt; and depending on the size this can be very expensive and slow down your program. Using a reference in your argument, you are &lt;code&gt;passing by reference&lt;/code&gt; which is much more memory efficient.&lt;/p&gt;
+
+&lt;p&gt;Couldn&amp;rsquo;t we just use pointers instead of references? Well, yeah but one major difference is that the compiler handles allocating and deallocating memory for references, but it does not do this pointers. Memory management is up to you when using pointers. Probably pros and cons to that difference, but I think using references also helps with the always important code readability.&lt;/p&gt;
+
+&lt;p&gt;Let me revisit that C++ references definition from the very beginning of this post really quick. Does it make sense now? Hell no. This is a bad definition in my opinion. I would define C++ references as&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;An alias (or another name) for an existing variable.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;More to come on references. I&amp;rsquo;ll be trying to include them more and more in my code.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Understanding Selection Sort</title>
