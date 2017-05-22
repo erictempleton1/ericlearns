@@ -1,0 +1,361 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta content="ericlearns, learn c&#43;&#43;, c&#43;&#43;, python, programming, learn programming, bicycling, cyclocross" name="keywords">
+<meta content="eric" name="author">
+<meta property="og:title" content="Build a Thing Friday: CSV Parser - ericlearns">
+<meta property="og:url" content="http://ericlearns.com/post/build-a-thing/">
+<meta property="og:description" content="Follow along as I learn new things, including: c&#43;&#43;, and bicycling">
+<meta property="og:type" content="website" />
+<title>Build a Thing Friday: CSV Parser | ericlearns</title>
+<link rel="stylesheet" href="http://ericlearns.com/css/style.css">
+<link rel="shortcut icon" href="http://ericlearns.com/wave.ico">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/github.min.css">
+
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="http://ericlearns.com"><h1 class="title is-4">ericlearns</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile">
+          
+          <a class="level-item" href="https://github.com/erictempleton1" target="_blank">
+            <span class="icon">
+              <i class="fa fa-github"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://twitter.com/google" target="_blank">
+            <span class="icon">
+              <i class="fa fa-twitter"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://linkedin.com/in/google" target="_blank">
+            <span class="icon">
+              <i class="fa fa-linkedin-square"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="/index.xml" target="_blank">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+          </a>
+          
+        </nav>
+      </div>
+    </nav>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h1 class="title">Build a Thing Friday: CSV Parser</h1>
+    <h2 class="subtitle is-5">May 19, 2017 by eric</h2>
+    
+      <div class="tags">
+    
+        <a class="button is-link" href="/tags/bat">bat</a>
+    
+        <a class="button is-link" href="/tags/programming">programming</a>
+    
+        <a class="button is-link" href="/tags/c&#43;&#43;">c&#43;&#43;</a>
+    
+</div>
+
+    
+    <div class="content">
+      <p>One of the keys to learning a new programming language is to <em>build</em> things in the language you are trying to learn. Even if the thing is really small project or just a few lines of code, just keep writing code in the new language. With that in mind, I&rsquo;m going to start what I&rsquo;d like to call &ldquo;Build a Thing Friday&rdquo; where every Friday I try to build something small or large (probably small) in the language I am focusing on (C++ at this moment).</p>
+
+<p>One little project that I have been tinkering with in C++ is a CSV file parser. My day job sometimes requires me to work directly with CSV files, but almost always in Python. Wouldn&rsquo;t it be fun to write a CSV parser in C++ though? Turns out it&rsquo;s not the most fun I&rsquo;ve had to do, but it was interesting. Admittedly, parsing a file with C++ felt a little like hammering a nail with a sledgehammer but maybe this would be useful if you were dealing with <em>massive</em> CSV files. The complete code is at the bottom if you don&rsquo;t want to read through everything.</p>
+
+<p>Anyways, let&rsquo;s get started. I&rsquo;ll create three files - <code>main.cpp</code>, <code>parseIt.h</code>, and <code>parseIt.cpp</code>. Starting with the header file I&rsquo;ll add a <code>class</code> called <code>ParseCsv</code> with a private member called <code>filePath</code> and a public member function to set the file path for the file we want to work with.</p>
+
+<p><strong>parseIt.h</strong></p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+class ParseCsv {
+    private:
+        std::string filePath;
+    public:
+        void setFilePath(std::string path);
+};
+</code></pre>
+
+<p>Let&rsquo;s jump over to <code>parseIt.cpp</code> and create the member function we added in the header file. <code>setFilePath</code> will be a function that just takes a string argument and sets the private variable <code>filePath</code>.</p>
+
+<p><strong>parseIt.cpp</strong></p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+
+void ParseCsv::setFilePath(std::string path) {
+    filePath = path;
+}
+</code></pre>
+
+<p>Now we can move over to <code>main.cpp</code> to add the header file and instantiate the class. We will also want to set the <code>filePath</code> for the file we want to work with here. This can be any file, but I am using one called <code>data2.csv</code> in my project root directory. It&rsquo;s really important to set the file path here so our parser knows which file to grab. You&rsquo;ll see pages of errors later if you forget to set <code>filePath</code>.</p>
+
+<p><strong>main.cpp</strong></p>
+
+<pre><code class="language-C++">#include &quot;parseIt.h&quot;
+
+
+int main() {
+    // instantiate and set file path
+    ParseCsv parseCsv;
+    parseCsv.setFilePath(&quot;data2.csv&quot;);
+}
+</code></pre>
+
+<p>Ok, so now we get to the good stuff. Let&rsquo;s work on the parser function itself. There are probably lots of different ways to do this, and mine is likely less than optimal but for now it works pretty good. The goal is to create a <code>2d vector</code> where the inner vector represents a row of data in the CSV file. From there you can access each row, cell, or column by iterating the 2d vector. My personal goal was to get to the columns so I could perform analysis on the data within the columns e.g. counts, sum, averages, ect. In our header file we can add a member function for the parser, which takes no arguments but returns a 2d vector containing our CSV data.</p>
+
+<p><strong>parseIt.h</strong></p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+
+class ParseCsv {
+    private:
+        std::string filePath;
+    public:
+        void setFilePath(std::string path);
+        std::vector&lt;std::vector&lt;std::string&gt; &gt; parser();
+};
+</code></pre>
+
+<p>Our parser function is going to utilize the standard library string stream and file stream modules. We&rsquo;ll use <code>ifstream</code> to read the file. On my machine I run an older version of C++ so my <code>filePath</code> string needs to be converted to <code>char</code> using <code>c_str()</code>, but this shouldn&rsquo;t be an issue on newer versions of C++.</p>
+
+<p>Here&rsquo;s what we have so far for our parser function that returns a 2d vector:</p>
+
+<pre><code class="language-C++">std::vector&lt;std::vector&lt;std::string&gt; &gt; ParseCsv::parser() {
+    std::ifstream file(filePath.c_str());
+}
+</code></pre>
+
+<p>So far we just read the file, but we&rsquo;ll need a variable to represent each line of the file which will strings. We&rsquo;ll also want to instantiate the 2d vector to hold our data that we&rsquo;ll call <code>fullData</code>.</p>
+
+<pre><code class="language-C++">std::vector&lt;std::vector&lt;std::string&gt; &gt; ParseCsv::parser() {
+    std::ifstream file(filePath.c_str());
+    std::string line;
+    std::vector&lt;std::vector&lt;std::string&gt; &gt; fullData;
+}
+</code></pre>
+
+<p>Next we need to get each line (or row) in the file. A <code>while</code> loop is a good candidate for this, and C++&rsquo;s <code>getline</code> will allow us to iterate through the file until we reach the last line and gracefully exit.</p>
+
+<pre><code class="language-C++">std::vector&lt;std::vector&lt;std::string&gt; &gt; ParseCsv::parser() {
+    std::ifstream file(filePath.c_str());
+    std::string line;
+    std::vector&lt;std::vector&lt;std::string&gt; &gt; fullData;
+    while (std::getline(file, line) {
+        // todo ...
+    }
+    return fullData;
+}
+</code></pre>
+
+<p>What this gets us is a string representation of each line in the CSV file. But what we&rsquo;re really after is the &ldquo;cells&rdquo; or comma seperate values, which we can later access as columns. Inside the while loop we can operate on each line (row) of data by entering another while loop.</p>
+
+<p>Since we are going to be operating on strings, we can use <code>isstringstream</code> to represent each line. We&rsquo;ll also instantiate a string variable called <code>field</code> that we&rsquo;ll set in a moment. Most importantly, we can now create a new vector that will contain all of the data from the row in the second while loop. We&rsquo;ll be using <code>getline</code> again, but this time we are telling getline that we want the values between the commas by passing the optional delimiter argument <code>','</code> (comma). As we loop we&rsquo;ll push our results to the inner vector.</p>
+
+<pre><code class="language-C++">std::vector&lt;std::vector&lt;std::string&gt; &gt; ParseCsv::parser() {
+    std::ifstream file(filePath.c_str());
+    std::string line;
+    std::vector&lt;std::vector&lt;std::string&gt; &gt; fullData;
+    while (std::getline(file, line) {
+        std::istringstream s(line);
+        std::string field;
+        std::vector&lt;std::string&gt; fullLine;
+        while (std::getLine(s, field, ',')) {
+            fullLine.push_back(field);
+        }
+    }
+    return fullData;
+}
+</code></pre>
+
+<p>Awesome! So far we iterate through the file to get each line, then enter another while loop to get each cell on the line and push the cells on the line to their own vector. Now we just need to build the 2d array by pushing each line vector to the main <code>fullData</code> 2d vector we instantiated earlier. We&rsquo;ll need to push the new <code>fullLine</code> vector after each iteration of the outer while loop.</p>
+
+<pre><code class="language-C++">std::vector&lt;std::vector&lt;std::string&gt; &gt; ParseCsv::parser() {
+    std::ifstream file(filePath.c_str());
+    std::string line;
+    std::vector&lt;std::vector&lt;std::string&gt; &gt; fullData;
+    while (std::getline(file, line) {
+        std::istringstream s(line);
+        std::string field;
+        std::vector&lt;std::string&gt; fullLine;
+        while (std::getLine(s, field, ',')) {
+            fullLine.push_back(field);
+        }
+        fullData.push_back(fullLine);
+    }
+    return fullData;
+}
+</code></pre>
+
+<p>Now we have the contents of the entire file parsed line by line and cell by cell into a 2d vector. I mentioned it above, but my goal was to get to a single column of data at a time, so let&rsquo;s add a function for that. Basically, we just need to know which column index to get and then we can iterate the 2d vector, access the data, and store it in it&rsquo;s own vector. We&rsquo;ll add this new member function to our header file.</p>
+
+<p>This function will be called <code>singleCol</code> and it will return a vector containing string values, as well at take a 2d vector and column number integer as arguments. Here is how our header file looks now:</p>
+
+<p><strong>parseIt.h</strong></p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+
+class ParseCsv {
+    private:
+        std::string filePath;
+    public:
+        void setFilePath(std::string path);
+        std::vector&lt;std::vector&lt;std::string&gt; &gt; parser();
+        std::vector&lt;std::string&gt; singleCol(std::vector&lt;std::vector&lt;std::string&gt; &gt; &amp;fullFile, int colNum);
+};
+</code></pre>
+
+<p>We&rsquo;ll iterate the 2d vector and access each &ldquo;line&rdquo; of the file, but only access elements in the inner vectors at the position specified by the <code>colNum</code> argument. This will give us only the data from the given column at a time. We&rsquo;ll go ahead and push this data to a new vector and return it. The left most column in your file is going to have an index (colNum) of zero and increase by one from there.</p>
+
+<pre><code class="language-C++">std::vector&lt;std::string&gt; ParseCsv::singleCol(std::vector&lt;std::vector&lt;std::string&gt; &gt; &amp;fullFile, int colNum) {
+	std::vector&lt;std::string&gt; col;
+	for (int i = 0; i &lt; fullFile.size(); i++) {
+		col.push_back(fullFile[i][colNum]);
+	}
+	return col;
+}
+</code></pre>
+
+<p>Now we can do whatever we want with the column data! But, remember there could be a header cell in the data, so be sure to account for that too. For parsing and access specific columns. So here is the final code for each of our three files. The program can be compiled using a command like:</p>
+
+<blockquote>
+<p>g++ main.cpp parseIt.cpp -o parser.exe</p>
+</blockquote>
+
+<p><strong>parseIt.h</strong></p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+
+class ParseCsv {
+    private:
+        std::string filePath;
+    public:
+        void setFilePath(std::string path);
+        std::vector&lt;std::vector&lt;std::string&gt; &gt; parser();
+        std::vector&lt;std::string&gt; singleCol(std::vector&lt;std::vector&lt;std::string&gt; &gt; &amp;fullFile, int colNum);
+};
+</code></pre>
+
+<p><strong>parseIt.cpp</strong></p>
+
+<pre><code class="language-C++">#include &quot;parseIt.h&quot;
+#include &lt;iostream&gt;
+#include &lt;sstream&gt;
+#include &lt;fstream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+
+
+void ParseCsv::setFilePath(std::string path) {
+    filePath = path;
+}
+
+std::vector&lt;std::vector&lt;std::string&gt; &gt; ParseCsv::parser() {
+    std::ifstream file(filePath.c_str());
+    std::string line;
+    std::vector&lt;std::vector&lt;std::string&gt; &gt; fullData;
+    while (std::getline(file, line) {
+        std::istringstream s(line);
+        std::string field;
+        std::vector&lt;std::string&gt; fullLine;
+        while (std::getLine(s, field, ',')) {
+            fullLine.push_back(field);
+        }
+        fullData.push_back(fullLine);
+    }
+    return fullData;
+}
+
+std::vector&lt;std::string&gt; ParseCsv::singleCol(std::vector&lt;std::vector&lt;std::string&gt; &gt; &amp;fullFile, int colNum) {
+	std::vector&lt;std::string&gt; col;
+	for (int i = 0; i &lt; fullFile.size(); i++) {
+		col.push_back(fullFile[i][colNum]);
+	}
+	return col;
+}
+</code></pre>
+
+<p><strong>main.cpp</strong></p>
+
+<pre><code class="language-C++">#include &quot;parseIt.h&quot;
+
+
+int main() {
+    // instantiate and set file path
+    ParseCsv parseCsv;
+    parseCsv.setFilePath(&quot;data2.csv&quot;);
+
+    // parse file and select certain column
+    std::vector&lt;std::vector&lt;std::string&gt; &gt; parsed = parseCsv.parser();
+    std::vector&lt;std::string&gt; firstCol = parseCsv.singleCol(parsed, 0);
+
+    // print a column
+    for (int i = 0; i &lt; firstCol.size(); i++) {
+        std::cout &lt;&lt; firstCol[i] &lt;&lt; std::endl;
+    }
+}
+</code></pre>
+
+<p>Well, that wasn&rsquo;t so bad! I think I&rsquo;ll expand on this little program in the next few weeks by adding some functions for data analyis&hellip;oooh exciting! Maybe on the next edition of Build a Thing Friday?! Could come in handy anyways.</p>
+
+    </div>
+    
+        <div class="nav-left">
+    <a class="nav-item" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fericlearns.com%2fpost%2fbuild-a-thing%2f" title="Share on Facebook" target="_blank"><span class="fa fa-facebook fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://plus.google.com/share?url=http%3a%2f%2fericlearns.com%2fpost%2fbuild-a-thing%2f" title="Share on Google+" target="_blank"><span class="fa fa-google-plus fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2fericlearns.com%2fpost%2fbuild-a-thing%2f" title="Share on LinkedIn" target="_blank"><span class="fa fa-linkedin fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://twitter.com/home?status=Build%20a%20Thing%20Friday%3a%20CSV%20Parser - http%3a%2f%2fericlearns.com%2fpost%2fbuild-a-thing%2f" title="Tweet this" target="_blank"><span class="fa fa-twitter fa-2x"></span></a>
+    <a class="nav-item" href="http://www.reddit.com/submit?url=http%3a%2f%2fericlearns.com%2fpost%2fbuild-a-thing%2f&title=Build%20a%20Thing%20Friday%3a%20CSV%20Parser" title="Share on Reddit" target="_blank"><span class="fa fa-reddit-alien fa-2x" aria-hidden="true"></span></a>
+    
+    </div>
+    
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+  </div>
+</section>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/go.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/dockerfile.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-42703121-4', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+
+
