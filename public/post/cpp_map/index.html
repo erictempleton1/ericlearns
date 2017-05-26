@@ -1,0 +1,245 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta content="ericlearns, learn c&#43;&#43;, c&#43;&#43;, python, programming, learn programming, bicycling, cyclocross" name="keywords">
+<meta content="eric" name="author">
+<meta property="og:title" content="Taking a Look at Map in C&#43;&#43; - ericlearns">
+<meta property="og:url" content="http://ericlearns.com/post/cpp_map/">
+<meta property="og:description" content="Follow along as I learn new things, including: c&#43;&#43;, and bicycling">
+<meta property="og:type" content="website" />
+<title>Taking a Look at Map in C&#43;&#43; | ericlearns</title>
+<link rel="stylesheet" href="http://ericlearns.com/css/style.css">
+<link rel="shortcut icon" href="http://ericlearns.com/wave.ico">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/github.min.css">
+
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="http://ericlearns.com"><h1 class="title is-4">ericlearns</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile">
+          
+          <a class="level-item" href="https://github.com/erictempleton1" target="_blank">
+            <span class="icon">
+              <i class="fa fa-github"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://twitter.com/google" target="_blank">
+            <span class="icon">
+              <i class="fa fa-twitter"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://linkedin.com/in/google" target="_blank">
+            <span class="icon">
+              <i class="fa fa-linkedin-square"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="/index.xml" target="_blank">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+          </a>
+          
+        </nav>
+      </div>
+    </nav>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h1 class="title">Taking a Look at Map in C&#43;&#43;</h1>
+    <h2 class="subtitle is-5">May 25, 2017 by eric</h2>
+    
+      <div class="tags">
+    
+        <a class="button is-link" href="/tags/programming">programming</a>
+    
+        <a class="button is-link" href="/tags/c&#43;&#43;">c&#43;&#43;</a>
+    
+</div>
+
+    
+    <div class="content">
+      <p>I recently stumbled across <code>map</code> in C++, and I thought I&rsquo;d do a little write-up about this powerful little container. Maps basically store elements as <em>key value</em> and <em>mapped value</em> in a certain order. There is also an <code>unordered_map</code> which is faster than <code>map</code> if the key order is not important to you. So how do you declare a map? Let&rsquo;s take a look at the format with an example:</p>
+
+<pre><code class="language-C++">std::map &lt;std::string, int&gt; myMap;
+</code></pre>
+
+<p>Here we have declared a map called <code>myMap</code> that takes a string as the key and an int as the value. I think this format is fairly common, espcecially if you&rsquo;re implementing any type of counter. Given the nature of maps, you can&rsquo;t have duplicate keys which is why they are handy for counting (among other things). Let&rsquo;s tinker around with <code>maps</code> a little bit. First we&rsquo;ll build a <code>main</code> function containing our example map shown above.</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+#include &lt;map&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+
+int main() {
+    std::map &lt;std::string, int&gt; myMap;
+}
+</code></pre>
+
+<p>That&rsquo;s nice, but we should add some keys and values to our map. We can do this by defining the key name (a string in our case) and the associated value.</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+#include &lt;map&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+
+int main() {
+    std::map &lt;std::string, int&gt; myMap;
+    myMap[&quot;first value&quot;] = 100;
+}
+</code></pre>
+
+<p>In most cases you will usually want to use this syntax for adding keys and values, but you can also use <code>std::insert()</code>. One thing to be aware of with insert is that if a key you are trying to insert already exists in the map, the value of that key <em>will not</em> be replaced. Seems like a huge headache if you weren&rsquo;t expecting this behaviour or hunting down a bug, so choose wisely.</p>
+
+<p>So what about accessing a key value in our map? Well, you would just reference the key in the map you are looking for with <code>[]</code> notation.</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+#include &lt;map&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+
+int main() {
+    std::map &lt;std::string, int&gt; myMap;
+    myMap[&quot;first value&quot;] = 100;
+
+    std::cout &lt;&lt; myMap[&quot;first value&quot;] &lt;&lt; std::endl;
+}
+</code></pre>
+
+<p>Compiling this program and running the executable should display <code>100</code> in the command line. What if we went looking for a key that was <em>not</em> in our map?</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+#include &lt;map&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+
+int main() {
+    std::map &lt;std::string, int&gt; myMap;
+    myMap[&quot;first value&quot;] = 100;
+
+    std::cout &lt;&lt; myMap[&quot;first value&quot;] &lt;&lt; std::endl;
+    std::cout &lt;&lt; myMap[&quot;missing value&quot;] &lt;&lt; std::endl;
+}
+</code></pre>
+
+<p>You might expect an error to be thrown or the program to not compile, but you would be wrong. In Python you get a <code>KeyError</code> thrown for trying to access a dictionary with a key that doesn&rsquo;t exist, but in a C++ map you would just get a 0 returned. If you&rsquo;re to access the keys directly, then checking for the key first is probably a good habit to get into. We can do this using <code>std::find()</code> and <code>std::end()</code> in an <code>if</code> statement.</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+#include &lt;map&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+
+int main() {
+    std::map &lt;std::string, int&gt; myMap;
+    myMap[&quot;first value&quot;] = 100;
+
+    if (myMap.find(&quot;first value&quot;) == myMap.end()) {
+        std::cout &lt;&lt; &quot;first value key not found!&quot; &lt;&lt; std::endl;
+    } else {
+        std::cout &lt;&lt; myMap[&quot;first value&quot;] &lt;&lt; std::endl;
+    }
+}
+</code></pre>
+
+<p>Nice, now we have a better idea of what is actually in our <code>map</code>. It&rsquo;s also possible to iterate over a <code>map</code> in C++ to display the keys or values. There are a few different ways to handle this depending on your version of C++, but for my purposes (using an older version) I&rsquo;ll use an <code>iterator</code>. First I&rsquo;ll declare the iterator, then use <code>begin()</code> and <code>end()</code> to loop through and access the values.</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+#include &lt;map&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+
+int main() {
+	std::map &lt;std::string, int&gt; myMap;
+	myMap[&quot;first value&quot;] = 100;
+
+	if (myMap.find(&quot;first value&quot;) == myMap.end()) {
+		std::cout &lt;&lt; &quot;first value key not found!&quot; &lt;&lt; std::endl;
+	} else {
+		std::cout &lt;&lt; myMap[&quot;first value&quot;] &lt;&lt; std::endl;
+	}
+
+	// add a few more key values
+	myMap[&quot;second value&quot;] = 200;
+	myMap[&quot;third value&quot;] = 300;
+
+
+	// iterator example
+	std::map &lt;std::string, int&gt;::iterator it;
+	for (it = myMap.begin(); it != myMap.end(); it++) {
+		std::cout &lt;&lt; it-&gt;first &lt;&lt; &quot; : &quot; &lt;&lt; it-&gt;second &lt;&lt; std::endl;
+	}
+}
+</code></pre>
+
+<p>Above I added a couple more key values than printed the contents of the map to standard out. The <code>-&gt;</code> notation is used to access a member through a pointer. I haven&rsquo;t <em>really</em> come across this notation yet, so I am not entirely clear on the reasoning for this. More to come on that topic.</p>
+
+<p>Lastly, if I wanted to <em>change</em> the value of key I&rsquo;d simply need to re-assign it.</p>
+
+<pre><code class="language-C++">myMap[&quot;first value&quot;] = 500;
+</code></pre>
+
+<p>Maps are really useful I think. Very similar to Python&rsquo;s <code>dictionary</code>, but I think C++ maps are a little less obvious. Here is similar code in Python:</p>
+
+<pre><code class="language-Python"># create dict
+my_dict = {&quot;first value&quot;: 100, &quot;second value&quot;: 200, &quot;third value&quot;: 300}
+
+# print contents of my_dict
+for k, v in my_dict.iteritems():
+    print k, v
+
+# update dict
+my_dict[&quot;first value&quot;] = 500
+</code></pre>
+
+<p>I plan to use C++ <code>map</code> to expand on my <a href="http://ericlearns.com/post/build-a-thing/">last</a> &ldquo;Build a Thing Friday&rdquo; post to implement a counter, and transferring the contents of the map to a vector for sorting. Should be interesting.</p>
+
+    </div>
+    
+        <div class="nav-left">
+    <a class="nav-item" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fericlearns.com%2fpost%2fcpp_map%2f" title="Share on Facebook" target="_blank"><span class="fa fa-facebook fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://plus.google.com/share?url=http%3a%2f%2fericlearns.com%2fpost%2fcpp_map%2f" title="Share on Google+" target="_blank"><span class="fa fa-google-plus fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2fericlearns.com%2fpost%2fcpp_map%2f" title="Share on LinkedIn" target="_blank"><span class="fa fa-linkedin fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://twitter.com/home?status=Taking%20a%20Look%20at%20Map%20in%20C%2b%2b - http%3a%2f%2fericlearns.com%2fpost%2fcpp_map%2f" title="Tweet this" target="_blank"><span class="fa fa-twitter fa-2x"></span></a>
+    <a class="nav-item" href="http://www.reddit.com/submit?url=http%3a%2f%2fericlearns.com%2fpost%2fcpp_map%2f&title=Taking%20a%20Look%20at%20Map%20in%20C%2b%2b" title="Share on Reddit" target="_blank"><span class="fa fa-reddit-alien fa-2x" aria-hidden="true"></span></a>
+    
+    </div>
+    
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+  </div>
+</section>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/go.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/dockerfile.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-42703121-4', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+
+
