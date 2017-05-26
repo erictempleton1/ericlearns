@@ -171,7 +171,7 @@ std::vector<std::string> ParseCsv::singleCol(std::vector<std::vector<std::string
 	return col;
 }
 ```
-Now we can do whatever we want with the column data! But, remember there could be a header cell in the data, so be sure to account for that too. For parsing and access specific columns. So here is the final code for each of our three files. The program can be compiled using a command like:
+Now we can do whatever we want with the column data! But, remember there could be a header cell in the data, so be sure to account for that too. So here is the final code for each of our three files. The program can be compiled using a command like:
 
 > g++ main.cpp parseIt.cpp -o parser.exe
 

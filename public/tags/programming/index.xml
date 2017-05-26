@@ -9,6 +9,148 @@
     <atom:link href="http://ericlearns.com/tags/programming/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>Taking a Look at Map in C&#43;&#43;</title>
+      <link>http://ericlearns.com/post/cpp_map/</link>
+      <pubDate>Thu, 25 May 2017 07:34:35 -0400</pubDate>
+      
+      <guid>http://ericlearns.com/post/cpp_map/</guid>
+      <description>&lt;p&gt;I recently stumbled across &lt;code&gt;map&lt;/code&gt; in C++, and I thought I&amp;rsquo;d do a little write-up about this powerful little container. Maps basically store elements as &lt;em&gt;key value&lt;/em&gt; and &lt;em&gt;mapped value&lt;/em&gt; in a certain order. There is also an &lt;code&gt;unordered_map&lt;/code&gt; which is faster than &lt;code&gt;map&lt;/code&gt; if the key order is not important to you. So how do you declare a map? Let&amp;rsquo;s take a look at the format with an example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;std::map &amp;lt;std::string, int&amp;gt; myMap;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here we have declared a map called &lt;code&gt;myMap&lt;/code&gt; that takes a string as the key and an int as the value. I think this format is fairly common, espcecially if you&amp;rsquo;re implementing any type of counter. Given the nature of maps, you can&amp;rsquo;t have duplicate keys which is why they are handy for counting (among other things). Let&amp;rsquo;s tinker around with &lt;code&gt;maps&lt;/code&gt; a little bit. First we&amp;rsquo;ll build a &lt;code&gt;main&lt;/code&gt; function containing our example map shown above.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;lt;map&amp;gt;
+#include &amp;lt;vector&amp;gt;
+#include &amp;lt;string&amp;gt;
+
+int main() {
+    std::map &amp;lt;std::string, int&amp;gt; myMap;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That&amp;rsquo;s nice, but we should add some keys and values to our map. We can do this by defining the key name (a string in our case) and the associated value.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;lt;map&amp;gt;
+#include &amp;lt;vector&amp;gt;
+#include &amp;lt;string&amp;gt;
+
+int main() {
+    std::map &amp;lt;std::string, int&amp;gt; myMap;
+    myMap[&amp;quot;first value&amp;quot;] = 100;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In most cases you will usually want to use this syntax for adding keys and values, but you can also use &lt;code&gt;std::insert()&lt;/code&gt;. One thing to be aware of with insert is that if a key you are trying to insert already exists in the map, the value of that key &lt;em&gt;will not&lt;/em&gt; be replaced. Seems like a huge headache if you weren&amp;rsquo;t expecting this behaviour or hunting down a bug, so choose wisely.&lt;/p&gt;
+
+&lt;p&gt;So what about accessing a key value in our map? Well, you would just reference the key in the map you are looking for with &lt;code&gt;[]&lt;/code&gt; notation.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;lt;map&amp;gt;
+#include &amp;lt;vector&amp;gt;
+#include &amp;lt;string&amp;gt;
+
+int main() {
+    std::map &amp;lt;std::string, int&amp;gt; myMap;
+    myMap[&amp;quot;first value&amp;quot;] = 100;
+
+    std::cout &amp;lt;&amp;lt; myMap[&amp;quot;first value&amp;quot;] &amp;lt;&amp;lt; std::endl;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Compiling this program and running the executable should display &lt;code&gt;100&lt;/code&gt; in the command line. What if we went looking for a key that was &lt;em&gt;not&lt;/em&gt; in our map?&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;lt;map&amp;gt;
+#include &amp;lt;vector&amp;gt;
+#include &amp;lt;string&amp;gt;
+
+int main() {
+    std::map &amp;lt;std::string, int&amp;gt; myMap;
+    myMap[&amp;quot;first value&amp;quot;] = 100;
+
+    std::cout &amp;lt;&amp;lt; myMap[&amp;quot;first value&amp;quot;] &amp;lt;&amp;lt; std::endl;
+    std::cout &amp;lt;&amp;lt; myMap[&amp;quot;missing value&amp;quot;] &amp;lt;&amp;lt; std::endl;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You might expect an error to be thrown or the program to not compile, but you would be wrong. In Python you get a &lt;code&gt;KeyError&lt;/code&gt; thrown for trying to access a dictionary with a key that doesn&amp;rsquo;t exist, but in a C++ map you would just get a 0 returned. If you&amp;rsquo;re to access the keys directly, then checking for the key first is probably a good habit to get into. We can do this using &lt;code&gt;std::find()&lt;/code&gt; and &lt;code&gt;std::end()&lt;/code&gt; in an &lt;code&gt;if&lt;/code&gt; statement.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;lt;map&amp;gt;
+#include &amp;lt;vector&amp;gt;
+#include &amp;lt;string&amp;gt;
+
+int main() {
+    std::map &amp;lt;std::string, int&amp;gt; myMap;
+    myMap[&amp;quot;first value&amp;quot;] = 100;
+
+    if (myMap.find(&amp;quot;first value&amp;quot;) == myMap.end()) {
+        std::cout &amp;lt;&amp;lt; &amp;quot;first value key not found!&amp;quot; &amp;lt;&amp;lt; std::endl;
+    } else {
+        std::cout &amp;lt;&amp;lt; myMap[&amp;quot;first value&amp;quot;] &amp;lt;&amp;lt; std::endl;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Nice, now we have a better idea of what is actually in our &lt;code&gt;map&lt;/code&gt;. It&amp;rsquo;s also possible to iterate over a &lt;code&gt;map&lt;/code&gt; in C++ to display the keys or values. There are a few different ways to handle this depending on your version of C++, but for my purposes (using an older version) I&amp;rsquo;ll use an &lt;code&gt;iterator&lt;/code&gt;. First I&amp;rsquo;ll declare the iterator, then use &lt;code&gt;begin()&lt;/code&gt; and &lt;code&gt;end()&lt;/code&gt; to loop through and access the values.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;lt;map&amp;gt;
+#include &amp;lt;vector&amp;gt;
+#include &amp;lt;string&amp;gt;
+
+int main() {
+	std::map &amp;lt;std::string, int&amp;gt; myMap;
+	myMap[&amp;quot;first value&amp;quot;] = 100;
+
+	if (myMap.find(&amp;quot;first value&amp;quot;) == myMap.end()) {
+		std::cout &amp;lt;&amp;lt; &amp;quot;first value key not found!&amp;quot; &amp;lt;&amp;lt; std::endl;
+	} else {
+		std::cout &amp;lt;&amp;lt; myMap[&amp;quot;first value&amp;quot;] &amp;lt;&amp;lt; std::endl;
+	}
+
+	// add a few more key values
+	myMap[&amp;quot;second value&amp;quot;] = 200;
+	myMap[&amp;quot;third value&amp;quot;] = 300;
+
+
+	// iterator example
+	std::map &amp;lt;std::string, int&amp;gt;::iterator it;
+	for (it = myMap.begin(); it != myMap.end(); it++) {
+		std::cout &amp;lt;&amp;lt; it-&amp;gt;first &amp;lt;&amp;lt; &amp;quot; : &amp;quot; &amp;lt;&amp;lt; it-&amp;gt;second &amp;lt;&amp;lt; std::endl;
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Above I added a couple more key values than printed the contents of the map to standard out. The &lt;code&gt;-&amp;gt;&lt;/code&gt; notation is used to access a member through a pointer. I haven&amp;rsquo;t &lt;em&gt;really&lt;/em&gt; come across this notation yet, so I am not entirely clear on the reasoning for this. More to come on that topic.&lt;/p&gt;
+
+&lt;p&gt;Lastly, if I wanted to &lt;em&gt;change&lt;/em&gt; the value of key I&amp;rsquo;d simply need to re-assign it.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;myMap[&amp;quot;first value&amp;quot;] = 500;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Maps are really useful I think. Very similar to Python&amp;rsquo;s &lt;code&gt;dictionary&lt;/code&gt;, but I think C++ maps are a little less obvious. Here is similar code in Python:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-Python&#34;&gt;# create dict
+my_dict = {&amp;quot;first value&amp;quot;: 100, &amp;quot;second value&amp;quot;: 200, &amp;quot;third value&amp;quot;: 300}
+
+# print contents of my_dict
+for k, v in my_dict.iteritems():
+    print k, v
+
+# update dict
+my_dict[&amp;quot;first value&amp;quot;] = 500
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I plan to use C++ &lt;code&gt;map&lt;/code&gt; to expand on my &lt;a href=&#34;http://ericlearns.com/post/build-a-thing/&#34;&gt;last&lt;/a&gt; &amp;ldquo;Build a Thing Friday&amp;rdquo; post to implement a counter, and transferring the contents of the map to a vector for sorting. Should be interesting.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Build a Thing Friday: CSV Parser</title>
       <link>http://ericlearns.com/post/build-a-thing/</link>
       <pubDate>Fri, 19 May 2017 19:18:11 -0400</pubDate>
@@ -178,7 +320,7 @@ class ParseCsv {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Now we can do whatever we want with the column data! But, remember there could be a header cell in the data, so be sure to account for that too. For parsing and access specific columns. So here is the final code for each of our three files. The program can be compiled using a command like:&lt;/p&gt;
+&lt;p&gt;Now we can do whatever we want with the column data! But, remember there could be a header cell in the data, so be sure to account for that too. So here is the final code for each of our three files. The program can be compiled using a command like:&lt;/p&gt;
 
 &lt;blockquote&gt;
 &lt;p&gt;g++ main.cpp parseIt.cpp -o parser.exe&lt;/p&gt;
