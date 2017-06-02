@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://ericlearns.com/post/batf-improve-parser/</loc>
+    <lastmod>2017-06-02T06:44:04-04:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>http://ericlearns.com/post/cpp_map/</loc>
     <lastmod>2017-05-25T07:34:35-04:00</lastmod>
     <changefreq>monthly</changefreq>
@@ -107,8 +114,15 @@
   </url>
   
   <url>
+    <loc>http://ericlearns.com/tags/batf/</loc>
+    <lastmod>2017-06-02T06:44:04-04:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>http://ericlearns.com/tags/c&#43;&#43;/</loc>
-    <lastmod>2017-05-25T07:34:35-04:00</lastmod>
+    <lastmod>2017-06-02T06:44:04-04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0</priority>
   </url>
@@ -157,14 +171,14 @@
   
   <url>
     <loc>http://ericlearns.com/post/</loc>
-    <lastmod>2017-05-25T07:34:35-04:00</lastmod>
+    <lastmod>2017-06-02T06:44:04-04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>http://ericlearns.com/tags/programming/</loc>
-    <lastmod>2017-05-25T07:34:35-04:00</lastmod>
+    <lastmod>2017-06-02T06:44:04-04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0</priority>
   </url>
@@ -191,7 +205,7 @@
   
   <url>
     <loc>http://ericlearns.com/</loc>
-    <lastmod>2017-05-25T07:34:35-04:00</lastmod>
+    <lastmod>2017-06-02T06:44:04-04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0</priority>
   </url>

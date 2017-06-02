@@ -9,6 +9,112 @@
     <atom:link href="http://ericlearns.com/tags/c&#43;&#43;/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>Build a Thing Friday: Improving the CSV Parser</title>
+      <link>http://ericlearns.com/post/batf-improve-parser/</link>
+      <pubDate>Fri, 02 Jun 2017 06:44:04 -0400</pubDate>
+      
+      <guid>http://ericlearns.com/post/batf-improve-parser/</guid>
+      <description>&lt;p&gt;Welcome to this week&amp;rsquo;s edition of Build a Thing Friday! &lt;a href=&#34;http://ericlearns.com/post/build-a-thing/&#34;&gt;Last Friday&lt;/a&gt; I started building a CSV parser with the goal of accessing individual columns in a CSV file. I&amp;rsquo;ve actually posted this code (although a little changed) to &lt;a href=&#34;https://github.com/erictempleton1/parseIt&#34;&gt;GitHub&lt;/a&gt;, and the code there will also include the work I do today. This week I&amp;rsquo;d like to expand on what I did last week by adding functionality that will &lt;code&gt;aggregate&lt;/code&gt; data in a column returning the count for each item. Once I have the count of each item I&amp;rsquo;d also like to &lt;code&gt;sort&lt;/code&gt; the results in ascending order. At this point I am truly tiptoeing into data analytics with C++ territory. Sort of a scary thought, but here we are anyways. So let&amp;rsquo;s get started.&lt;/p&gt;
+
+&lt;p&gt;My usual disclaimer should be mentioned here that I mostly have no idea what I&amp;rsquo;m doing, so take any code displayed here with a grain of salt. There is almost certainly a better way to do everything I am attempting, I&amp;rsquo;m learning.&lt;/p&gt;
+
+&lt;p&gt;Last Friday I finished with a function called &lt;code&gt;singleCol&lt;/code&gt; that returns all of the values from the given column in a vector. This function is a member function to the &lt;code&gt;ParseCsv&lt;/code&gt; class. Basically, it iterates a 2d vector and pulls out the values at the column index specified.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;std::vector&amp;lt;std::string&amp;gt; ParseCsv::singleCol(std::vector&amp;lt;std::vector&amp;lt;std::string&amp;gt; &amp;gt; &amp;amp;fullFile, int colNum) {
+	std::vector&amp;lt;std::string&amp;gt; col;
+	for (int i = 0; i &amp;lt; fullFile.size(); i++) {
+		col.push_back(fullFile[i][colNum]);
+	}
+	return col;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;What I&amp;rsquo;d like to do now with that single column is the count the &lt;code&gt;occurances&lt;/code&gt; of each value. I would think that implementing a &lt;code&gt;counter&lt;/code&gt; would be the best approach for this. But which C++ structure would be best? In a &lt;a href=&#34;http://ericlearns.com/post/cpp_map/&#34;&gt;previous post&lt;/a&gt; I looked at &lt;code&gt;map&lt;/code&gt;, and I think this would be a really good candidate to use for counting occurances. What I&amp;rsquo;ll need the map to do is take the &lt;code&gt;string&lt;/code&gt; value of each item in our single column then use an &lt;code&gt;int&lt;/code&gt; to keep count of the count. Our map declaration will look like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;std::map&amp;lt;std::string, int&amp;gt; count;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We are going to add a member function to &lt;code&gt;ParseCsv&lt;/code&gt; called &lt;code&gt;counter&lt;/code&gt; that takes a vector (the column we are working with). Let&amp;rsquo;s start building the function and declare our map.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;std::map&amp;lt;std::string, int&amp;gt; ParseCsv::counter(std::vector&amp;lt;std::string&amp;gt; &amp;amp;col) {
+    std::map&amp;lt;std::string, int&amp;gt; count;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next we&amp;rsquo;ll want to iterate the vector, check if the value exists already in the map, and increment the count accordingly. If a value does not exist already, we need to set the count to 0 first otherwise we are incrementing the memory location and that is not something we want to do. A simple way to check if a value exists in a map already is to use &lt;code&gt;std::find()&lt;/code&gt; and compare it to &lt;code&gt;std::end()&lt;/code&gt;. One we are finished iterating the vector we&amp;rsquo;ll return our new map. Here&amp;rsquo;s what the finished code for this function looks like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;std::map&amp;lt;std::string, int&amp;gt; ParseCsv::counter(std::vector&amp;lt;std::string&amp;gt; &amp;amp;col) {
+	std::map&amp;lt;std::string, int&amp;gt; count;
+	for (int i = 0; i &amp;lt; col.size(); i++) {
+		if (count.find(col[i]) == count.end()) {
+			count[col[i]] = 0;
+			count[col[i]] += 1;
+		} else {
+			count[col[i]] += 1;
+		}
+	}
+	return count;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Sweet! We now have an aggregated count total of the values in our column. As this map is now it is sorted by the key, alphabetically in our case since our key is a string. It would be awesome if we could sort by the &lt;code&gt;int&lt;/code&gt; count though, so let&amp;rsquo;s give that a try. Maps by nature can&amp;rsquo;t be sorted other than the default sorting by value, so we need another way. C++ allows for &lt;code&gt;pairs&lt;/code&gt; in vectors and we could use the second value in the pair to sort the vector.&lt;/p&gt;
+
+&lt;p&gt;We&amp;rsquo;ll use &lt;code&gt;std::sort&lt;/code&gt; provided by the algorithm library. In order to sort ascending we need to specificy a &lt;code&gt;comparision&lt;/code&gt; function to tell the compiler how we&amp;rsquo;d like to sort. The comparison function needs to take two parameters that can&amp;rsquo;t be modified (const) and return a &lt;code&gt;bool&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here is what our comparison member function will look like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;bool ParseCsv::comparison(const std::pair&amp;lt;std::string, int&amp;gt; &amp;amp;a, const std::pair&amp;lt;std::string, int&amp;gt; &amp;amp;b) {
+    return (a.second &amp;gt; b.second);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Something new to me is that we&amp;rsquo;ll be using this function in another function in our program. When you intended to use a member function somewhere else it needs to be declared as &lt;code&gt;static&lt;/code&gt;. It took me a few tries to get this right, but we&amp;rsquo;d add it as a member function like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;static bool ParseCsv::comparison(const std::pair&amp;lt;std::string, int&amp;gt; &amp;amp;a, const std::pair&amp;lt;std::string, int&amp;gt; &amp;amp;b);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;static&lt;/code&gt; tells the compiler that we intend to use this function within other functions.&lt;/p&gt;
+
+&lt;p&gt;Now that we have our &lt;code&gt;comparison&lt;/code&gt; function for the sort we can start creating our sorting function that we&amp;rsquo;ll call &lt;code&gt;sortCounts&lt;/code&gt;. We&amp;rsquo;ll start by creating a new vector to hold our pairs, and we&amp;rsquo;ll create an iterator for looping through the map.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;std::vector&amp;lt;std::pair&amp;lt;std::string, int&amp;gt; &amp;gt; ParseCsv::sortCounts(std::map&amp;lt;std::string, int &amp;amp;countMap) {
+    std::vector&amp;lt;std::pair&amp;lt;std::string, int&amp;gt; &amp;gt; pairs;
+    std::map&amp;lt;std::string, int&amp;gt;::iterator it;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We can use the iterator &lt;code&gt;it&lt;/code&gt; to loop through the map, access the keys and values and add them as pairs in our vector using &lt;code&gt;std::make_pair&lt;/code&gt; and the &lt;code&gt;-&amp;gt;&lt;/code&gt; operator to get the first (key) and second (value) items. After we&amp;rsquo;ve finished looping through the map we&amp;rsquo;ll sort our resulting vector of pairs using &lt;code&gt;std::begin()&lt;/code&gt;, &lt;code&gt;std::end()&lt;/code&gt;, and our handy new &lt;code&gt;comparison&lt;/code&gt; function.&lt;/p&gt;
+
+&lt;p&gt;Our final code for this function will be as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;std::vector&amp;lt;std::pair&amp;lt;std::string, int&amp;gt; &amp;gt; ParseCsv::sortCounts(std::map&amp;lt;std::string, int&amp;gt; &amp;amp;countMap) {
+	std::vector&amp;lt;std::pair&amp;lt;std::string, int&amp;gt; &amp;gt; pairs;
+	std::map&amp;lt;std::string, int&amp;gt;::iterator it;
+	for (it = countMap.begin(); it != countMap.end(); it++) {
+		pairs.push_back(std::make_pair(it-&amp;gt;first, it-&amp;gt;second));
+	}
+
+	std::sort(pairs.begin(), pairs.end(), comparison);
+	return pairs;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Nice! So if we wanted to print the sorted results to the console we would just need to iterate our sorted vector of pairs like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;for (int i = 0; i &amp;lt; sortedVecPair.size(); i++) {
+		std::cout &amp;lt;&amp;lt; sortedVecPair[i].first &amp;lt;&amp;lt; &amp;quot; &amp;quot; &amp;lt;&amp;lt; sortedVecPair[i].second &amp;lt;&amp;lt; std::endl;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You could wrap this for loop up in another member function if you&amp;rsquo;d like, because it&amp;rsquo;s probably pretty handy to have around.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;But wait&lt;/em&gt;, couldn&amp;rsquo;t we have just skipped the map and gone directly to a vector of pairs?! Probably. But I didn&amp;rsquo;t realize it until afterwards. You would only need the vector of pairs if you were sorting by the key or wanted didn&amp;rsquo;t want the default map sorting. I&amp;rsquo;ll likely re-visit this to see if any efficiency can be gained, but for now it was a good learning experience to see how you can move from a map to a vector of pairs and sort in C++.&lt;/p&gt;
+
+&lt;p&gt;Anyways, as I mentioned above the full code is on &lt;a href=&#34;https://github.com/erictempleton1/parseIt&#34;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Taking a Look at Map in C&#43;&#43;</title>
       <link>http://ericlearns.com/post/cpp_map/</link>
       <pubDate>Thu, 25 May 2017 07:34:35 -0400</pubDate>
