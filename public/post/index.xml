@@ -6,8 +6,82 @@
     <description>Recent content in Posts on ericlearns</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 02 Jun 2017 06:44:04 -0400</lastBuildDate>
+    <lastBuildDate>Fri, 09 Jun 2017 06:35:20 -0400</lastBuildDate>
     <atom:link href="http://ericlearns.com/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>What does this Vector Contain?</title>
+      <link>http://ericlearns.com/post/check-vector/</link>
+      <pubDate>Fri, 09 Jun 2017 06:35:20 -0400</pubDate>
+      
+      <guid>http://ericlearns.com/post/check-vector/</guid>
+      <description>&lt;p&gt;I was doing some work with C++ vectors today and I ended up needing to check if an element was in a vector. This seemed simple enough at first, but it turned out to be slightly more complicated than I expected.&lt;/p&gt;
+
+&lt;p&gt;Here is how I&amp;rsquo;d check if an item is in a list in Python:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;my_list = [&#39;test&#39;, &#39;items&#39;, &#39;go&#39;, &#39;here&#39;]
+if &#39;test&#39; in my_list:
+    # it&#39;s here. do some stuff...
+else:
+    # dang, not here. do some other stuff...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Or if we wanted to check if an element is in an array in JavaScript:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-JavaScript&#34;&gt;myArr = [&amp;quot;test&amp;quot;, &amp;quot;items&amp;quot;, &amp;quot;go&amp;quot;, &amp;quot;here&amp;quot;]
+if (myArr.indexOf(&amp;quot;test&amp;quot;) &amp;gt; -1) {
+    // it&#39;s here. do some stuff...
+} else {
+    // dang, not here. do some other stuff...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Easy enough, right? No way it&amp;rsquo;s going to be that easy in C++. Here&amp;rsquo;s the equivalent to the above in element checks in C++:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;vector&amp;gt;
+#include &amp;lt;algorithm&amp;gt;
+
+int main() {
+    std::vector&amp;lt;std::string&amp;gt; myVec {&amp;quot;test&amp;quot;, &amp;quot;items&amp;quot;, &amp;quot;go&amp;quot;, &amp;quot;here&amp;quot;};
+    if (std::find(myVec.begin(), myVec.end(), &amp;quot;test&amp;quot;) != myVec.end()) {
+        std::cout &amp;lt;&amp;lt; &amp;quot;it&#39;s here!&amp;quot; &amp;lt;&amp;lt; std::endl;
+    } else {
+        std::cout &amp;lt;&amp;lt; &amp;quot;dang, it&#39;s not here!&amp;quot; &amp;lt;&amp;lt; std::endl;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Actually, that&amp;rsquo;s not &lt;em&gt;too&lt;/em&gt; bad. Everything is very verbose in C++, so I was actually expecting worse. Basically what the above C++ code does is use the &lt;code&gt;algorithm&lt;/code&gt; library&amp;rsquo;s &lt;code&gt;find()&lt;/code&gt; method which creates an iterator to search through the vector. It them compares the results with &lt;code&gt;end()&lt;/code&gt;, the last element in the vector.&lt;/p&gt;
+
+&lt;p&gt;Hey, you could wrap this up in a handy function!&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;vector&amp;gt;
+#include &amp;lt;algorithm&amp;gt;
+
+bool vectorContains(std::vector&amp;lt;std::string&amp;gt; &amp;amp;myVec, std::string myElem) {
+    if (std::find(myVec.begin(), myVec.end(), myElem) != myVec.end()) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+int main() {
+    std::vector&amp;lt;std::string&amp;gt; myVec {&amp;quot;hello&amp;quot;, &amp;quot;vector&amp;quot;};
+    bool contains = vectorContains(myVec, &amp;quot;hello&amp;quot;);
+    std::string result;
+    if (contains) {
+        result = &amp;quot;it&#39;s here!&amp;quot;;
+    } else {
+        result = &amp;quot;dang, it&#39;s not here!&amp;quot;;
+    }
+    std::cout &amp;lt;&amp;lt; result &amp;lt;&amp;lt; std::endl;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Pretty nice! Anyways, keep tinkering and writing more code.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Build a Thing Friday: Improving the CSV Parser</title>
