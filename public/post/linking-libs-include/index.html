@@ -1,0 +1,192 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta content="ericlearns, learn c&#43;&#43;, c&#43;&#43;, python, programming, learn programming, bicycling, cyclocross" name="keywords">
+<meta content="eric" name="author">
+<meta property="og:title" content="Linking and Including in C&#43;&#43; - ericlearns">
+<meta property="og:url" content="http://ericlearns.com/post/linking-libs-include/">
+<meta property="og:description" content="Follow along as I learn new things, including: c&#43;&#43;, and bicycling">
+<meta property="og:type" content="website" />
+<title>Linking and Including in C&#43;&#43; | ericlearns</title>
+<link rel="stylesheet" href="http://ericlearns.com/css/style.css">
+<link rel="shortcut icon" href="http://ericlearns.com/wave.ico">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/github.min.css">
+
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="http://ericlearns.com"><h1 class="title is-4">ericlearns</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile">
+          
+          <a class="level-item" href="https://github.com/erictempleton1" target="_blank">
+            <span class="icon">
+              <i class="fa fa-github"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://twitter.com/google" target="_blank">
+            <span class="icon">
+              <i class="fa fa-twitter"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://linkedin.com/in/google" target="_blank">
+            <span class="icon">
+              <i class="fa fa-linkedin-square"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="/index.xml" target="_blank">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+          </a>
+          
+        </nav>
+      </div>
+    </nav>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h1 class="title">Linking and Including in C&#43;&#43;</h1>
+    <h2 class="subtitle is-5">June 15, 2017 by eric</h2>
+    
+      <div class="tags">
+    
+        <a class="button is-link" href="/tags/c&#43;&#43;">c&#43;&#43;</a>
+    
+        <a class="button is-link" href="/tags/programming">programming</a>
+    
+        <a class="button is-link" href="/tags/g&#43;&#43;">g&#43;&#43;</a>
+    
+</div>
+
+    
+    <div class="content">
+      <p>So, you want to <code>include</code> a 3rd party library in your C++ program? Cool. I wanted to do this too, but it turned out to be not as straight forward as I thought it would be. Why I thought it would be straight forward I am not sure, but I needed to do it either way.</p>
+
+<p>I wanted to connect to a postgres database on my local machine, so I decided to use <code>libpq-fe.h</code> which comes with the postgres download.</p>
+
+<p>Here was my first attempt:</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+#include &quot;libpq-fe.h&quot;
+
+int main() {
+    // my code here...
+}
+</code></pre>
+
+<p>And compiled with:</p>
+
+<pre><code>g++ main.cpp
+</code></pre>
+
+<p>Result:</p>
+
+<pre><code>fatal error: libpq-fe.h: No such file or directory
+</code></pre>
+
+<p>Hmm. Ok, I mostly expected this result actually. The compiler doesn&rsquo;t know anything about <code>libpq-fe.h</code> and we need to tell it where the file is.</p>
+
+<p>Next attempt (hard coding the path):</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+#include &quot;C:\path\to\postgres\include\libpq-fe.h&quot;
+
+int main() {
+    // my code here...
+}
+</code></pre>
+
+<p>Compiled with:</p>
+
+<pre><code>g++ main.cpp
+</code></pre>
+
+<p>Result (abbreviated):</p>
+
+<pre><code>undefined reference to `PQconnectdb'
+</code></pre>
+
+<p>Well, that&rsquo;s different. So the compiler knows where the header file is now but it knows nothing about the other methods in the library. Interesting. I think what we need are some flags to tell the compiler where the <code>include</code> file is <em>and</em> where the actual library is.</p>
+
+<p>I&rsquo;ll add the <code>-I</code> flag with the path to the <code>libpq-fe.h</code> include and the <code>-L</code> flag with the path to the actual library.</p>
+
+<p>Another attempt:</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+#include &quot;libpq-fe.h&quot;
+
+int main() {
+    // my code here...
+}
+</code></pre>
+
+<p>Compiled with:</p>
+
+<pre><code>g++ random.cpp -I &quot;path\to\postgres\include&quot; -L &quot;path\to\postgres\lib&quot;
+</code></pre>
+
+<p>Drum roll please&hellip;</p>
+
+<pre><code>undefined reference to `PQconnectdb'
+</code></pre>
+
+<p>Fuck. I was truly stuck here, but I stumbled across some <a href="https://www.postgresql.org/docs/9.4/static/libpq-build.html">postgres docs</a> that mentioned include <code>-lpq</code> in the compile command to tell the compiler which library you intend to use.</p>
+
+<p>So, using the code directly above I tried again with the following:</p>
+
+<pre><code>g++ random.cpp -I &quot;path\to\postgres\include&quot; -L &quot;path\to\postgres\lib&quot; -lpq
+</code></pre>
+
+<p>Annnnnd&hellip;no compiler errors. Awesome! I did, of course, have some other unrelated issues with my code but I&rsquo;ll save that for another post. With all of this being said, what I should really be using is a <a href="https://stackoverflow.com/questions/2481269/how-to-make-a-simple-c-makefile">Makefile</a> to build my programs. The Makefile lets you dump all of the include paths, link paths, and anything else you need at compile time into a file so they don&rsquo;t have to be typed out over and over. More to come on that too.</p>
+
+    </div>
+    
+        <div class="nav-left">
+    <a class="nav-item" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fericlearns.com%2fpost%2flinking-libs-include%2f" title="Share on Facebook" target="_blank"><span class="fa fa-facebook fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://plus.google.com/share?url=http%3a%2f%2fericlearns.com%2fpost%2flinking-libs-include%2f" title="Share on Google+" target="_blank"><span class="fa fa-google-plus fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2fericlearns.com%2fpost%2flinking-libs-include%2f" title="Share on LinkedIn" target="_blank"><span class="fa fa-linkedin fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://twitter.com/home?status=Linking%20and%20Including%20in%20C%2b%2b - http%3a%2f%2fericlearns.com%2fpost%2flinking-libs-include%2f" title="Tweet this" target="_blank"><span class="fa fa-twitter fa-2x"></span></a>
+    <a class="nav-item" href="http://www.reddit.com/submit?url=http%3a%2f%2fericlearns.com%2fpost%2flinking-libs-include%2f&title=Linking%20and%20Including%20in%20C%2b%2b" title="Share on Reddit" target="_blank"><span class="fa fa-reddit-alien fa-2x" aria-hidden="true"></span></a>
+    
+    </div>
+    
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+  </div>
+</section>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/go.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/dockerfile.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-42703121-4', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+
+

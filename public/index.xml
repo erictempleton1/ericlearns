@@ -6,8 +6,317 @@
     <description>Recent content on ericlearns</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 09 Jun 2017 06:35:20 -0400</lastBuildDate>
+    <lastBuildDate>Tue, 20 Jun 2017 06:34:21 -0400</lastBuildDate>
     <atom:link href="http://ericlearns.com/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Build a Thing Friday: SQLite3 Command Line Interface</title>
+      <link>http://ericlearns.com/post/batf-sqlite3/</link>
+      <pubDate>Tue, 20 Jun 2017 06:34:21 -0400</pubDate>
+      
+      <guid>http://ericlearns.com/post/batf-sqlite3/</guid>
+      <description>&lt;p&gt;For this edition of Build a Thing Friday I&amp;rsquo;ll be building a command line interface for SQLite3 in C++. Truth is, this is really just a walkthrough of the &lt;a href=&#34;https://sqlite.org/quickstart.html&#34;&gt;SQLite C/C++ tutorial&lt;/a&gt; but I&amp;rsquo;ll add a few features of my own to try and make it more interesting and &lt;em&gt;learn&lt;/em&gt; a thing or two extra. To get started, you&amp;rsquo;ll want to be sure you have &lt;a href=&#34;https://sqlite.org/download.html&#34;&gt;SQLite3 installed&lt;/a&gt; on your machine. I went with the &lt;em&gt;Source Code&lt;/em&gt; download to ensure I had all the header files and dll&amp;rsquo;s needed.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s start out by including the libs at the top of our file, which I&amp;rsquo;ll call &lt;code&gt;main.cpp&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;lt;string&amp;gt;
+#include &amp;quot;sqlite3.h&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Since this will be a &lt;em&gt;command line&lt;/em&gt; tool, we need to pass command line values to our program. We can work with command line arguments in C++ using &lt;code&gt;argc&lt;/code&gt; and &lt;code&gt;*argv[]&lt;/code&gt;. I&amp;rsquo;ll create a &lt;code&gt;main()&lt;/code&gt; function and instantiate a few vars to get us started. We&amp;rsquo;ll need a &lt;code&gt;db&lt;/code&gt; instance, error message instance, and db client instance. We will also want to pass the command line arguments to the main function so they can be used within the function.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;lt;string&amp;gt;
+#include &amp;quot;sqlite3.h&amp;quot;
+
+int main(int argc, char *argv[]) {
+    sqlite *db;
+    char *errMsg = 0;
+    int rc;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Mostly straightforward stuff, but we are using some pointers (oh my) and a type called &lt;code&gt;sqlite&lt;/code&gt; (from the sqlite3 lib) to instantiate the db.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;argc&lt;/code&gt; parameter in our &lt;code&gt;main&lt;/code&gt; function is the &lt;em&gt;argument count&lt;/em&gt; from the command line. When we compile this program we&amp;rsquo;ll use something like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;g++ sql_ex.cpp &amp;quot;SELECT * FROM myawesometable;&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The first argument (&lt;code&gt;argv[0]&lt;/code&gt;) is &lt;code&gt;sql_ex.cpp&lt;/code&gt;, and the second argument (&lt;code&gt;argv[1]&lt;/code&gt;) is the SQL statement. Sometimes I do stupid things when I compile my programs, like forgetting to actually include the SQL statement. I should make sure that when I do something stupid the program doesn&amp;rsquo;t implode.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;lt;string&amp;gt;
+#include &amp;quot;sqlite3.h&amp;quot;
+
+int main(int argc, char *argv[]) {
+    sqlite3 *db;
+    char *errMsg = 0;
+    int rc;
+
+    if (argc &amp;lt; 2) {
+        std::cout &amp;lt;&amp;lt; &amp;quot;Please enter a SQL statement to execute&amp;quot; &amp;lt;&amp;lt; std::endl;
+        return 1;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The reason for I check if  &lt;code&gt;argc &amp;lt; 2&lt;/code&gt; is because the first argument when we compile will be the filename. We assume the second argument is the SQL statement string. Also, why &lt;code&gt;return 1;&lt;/code&gt; here? &lt;code&gt;1&lt;/code&gt; is &lt;code&gt;false&lt;/code&gt;. We want the program to halt and exit here if there is no SQL statement supplied.&lt;/p&gt;
+
+&lt;p&gt;So now we&amp;rsquo;re finally ready to actually connect to a database. I should mention at this point that I wanted to use this as a small command line utility to track some exercises I&amp;rsquo;ve been doing, so you&amp;rsquo;ll notice that theme moving forward.&lt;/p&gt;
+
+&lt;p&gt;We&amp;rsquo;ll use SQLite&amp;rsquo;s &lt;code&gt;sqlite3_open&lt;/code&gt; &lt;a href=&#34;https://sqlite.org/c3ref/open.html&#34;&gt;method&lt;/a&gt; to connect to the database file. This method takes a &lt;code&gt;const char&lt;/code&gt; filename and reference to a db as arguments. We&amp;rsquo;ll also add an connection error check.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;lt;string&amp;gt;
+#include &amp;quot;sqlite3.h&amp;quot;
+
+int main(int argc, char *argv[]) {
+    sqlite3 *db;
+    char *errMsg = 0;
+    int rc;
+
+    if (argc &amp;lt; 2) {
+        std::cout &amp;lt;&amp;lt; &amp;quot;Please enter a SQL statement to execute&amp;quot; &amp;lt;&amp;lt; std::endl;
+        return 1;
+    }
+
+    rc = sqlite3_open(&amp;quot;workouts.db&amp;quot;, &amp;amp;db);
+    if (rc) {
+        std::cout &amp;lt;&amp;lt; &amp;quot;Can&#39;t open database: &amp;quot; &amp;lt;&amp;lt; sqlite3_errmsg(db) &amp;lt;&amp;lt; std::endl;
+    } else {
+        std::cout &amp;lt;&amp;lt; &amp;quot;Opened database successfully\n&amp;quot; &amp;lt;&amp;lt; std::endl;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The next thing to do is excecute the SQL statement supplied from the command line using the &lt;code&gt;sqlite3_exec&lt;/code&gt; method. This method is a wrapper for multiple other methods in the SQLite3 library. But before we can do that, we need to build a &lt;code&gt;callback&lt;/code&gt; function to pass as an argument to &lt;code&gt;sqlite3_exec&lt;/code&gt;. The callback function tells the &lt;code&gt;sqlite3_exec&lt;/code&gt; method (and the compiler) what we intend to with any results from our SQL statement. Right now, we&amp;rsquo;ll just print the results from our statement (if any) to the console. Let&amp;rsquo;s add a function called &lt;code&gt;callback&lt;/code&gt; that takes some interesting arguments, including a pointer &lt;em&gt;to&lt;/em&gt; a pointer(!).&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;lt;string&amp;gt;
+#include &amp;quot;sqlite3.h&amp;quot;
+
+int callback(void *notUsed, int argc, char **argv, char **colName) {
+    for (int i = 0; i &amp;lt; argc; i++) {
+        std::cout &amp;lt;&amp;lt; colName[i] &amp;lt;&amp;lt; &amp;quot;: &amp;quot; &amp;lt;&amp;lt; argv[i] &amp;lt;&amp;lt; std::endl;
+    }
+    std::cout &amp;lt;&amp;lt; &amp;quot;\n&amp;quot; &amp;lt;&amp;lt; std::endl;
+    return 0;
+}
+
+int main(int argc, char *argv[]) {
+    sqlite3 *db;
+    char *errMsg = 0;
+    int rc;
+
+    if (argc &amp;lt; 2) {
+        std::cout &amp;lt;&amp;lt; &amp;quot;Please enter a SQL statement to execute&amp;quot; &amp;lt;&amp;lt; std::endl;
+        return 1;
+    }
+
+    rc = sqlite3_open(&amp;quot;workouts.db&amp;quot;, &amp;amp;db);
+    if (rc) {
+        std::cout &amp;lt;&amp;lt; &amp;quot;Can&#39;t open database: &amp;quot; &amp;lt;&amp;lt; sqlite3_errmsg(db) &amp;lt;&amp;lt; std::endl;
+    } else {
+        std::cout &amp;lt;&amp;lt; &amp;quot;Opened database successfully\n&amp;quot; &amp;lt;&amp;lt; std::endl;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We&amp;rsquo;ll also now add a call to &lt;code&gt;sqlite3_exec&lt;/code&gt; which includes the &lt;code&gt;db&lt;/code&gt;, SQL statement from the command line, our &lt;code&gt;callback&lt;/code&gt; function, a zero value argument for the callback, and a reference to any error messages. Phew. Sounds like a lot more than it really is. Here&amp;rsquo;s how it looks:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;lt;string&amp;gt;
+#include &amp;quot;sqlite3.h&amp;quot;
+
+int callback(void *notUsed, int argc, char **argv, char **colName) {
+    for (int i = 0; i &amp;lt; argc; i++) {
+        std::cout &amp;lt;&amp;lt; colName[i] &amp;lt;&amp;lt; &amp;quot;: &amp;quot; &amp;lt;&amp;lt; argv[i] &amp;lt;&amp;lt; std::endl;
+    }
+    std::cout &amp;lt;&amp;lt; &amp;quot;\n&amp;quot; &amp;lt;&amp;lt; std::endl;
+    return 0;
+}
+
+int main(int argc, char *argv[]) {
+    sqlite3 *db;
+    char *errMsg = 0;
+    int rc;
+
+    if (argc &amp;lt; 2) {
+        std::cout &amp;lt;&amp;lt; &amp;quot;Please enter a SQL statement to execute&amp;quot; &amp;lt;&amp;lt; std::endl;
+        return 1;
+    }
+
+    rc = sqlite3_open(&amp;quot;workouts.db&amp;quot;, &amp;amp;db);
+    if (rc) {
+        std::cout &amp;lt;&amp;lt; &amp;quot;Can&#39;t open database: &amp;quot; &amp;lt;&amp;lt; sqlite3_errmsg(db) &amp;lt;&amp;lt; std::endl;
+    } else {
+        std::cout &amp;lt;&amp;lt; &amp;quot;Opened database successfully\n&amp;quot; std::endl;
+    }
+
+    rc = sqlite3_exec(db, argv[1], callback, 0, &amp;amp;errMsg);
+    if (rc != SQLITE_OK) {
+        std::cout &amp;lt;&amp;lt; &amp;quot;Error executing supplied statement: &amp;quot; &amp;lt;&amp;lt; errMsg &amp;lt;&amp;lt; std::endl;
+        return 1;
+    }
+
+    std::cout &amp;lt;&amp;lt; &amp;quot;Completed statement execution: &amp;quot; &amp;lt;&amp;lt; argv[1] &amp;lt;&amp;lt; std::endl;
+    std::cout &amp;lt;&amp;lt; &amp;quot;Closing database connection&amp;quot; &amp;lt;&amp;lt; std::endl;
+    sqlite3_close(db);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I added some extra lines to show the status on the command line, but this code is similar to opening the database. Check for an error and proceed. Lastly, close the database when finished.&lt;/p&gt;
+
+&lt;p&gt;So let&amp;rsquo;s see what this program can do! We&amp;rsquo;ll go ahead and compile with the following (note- paths may vary):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;g++ .\main.cpp  -o workouts.exe -I &amp;quot;C:\Sqlite3\&amp;quot; -L &amp;quot;C:\Sqlite3\&amp;quot; -lsqlite3
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We can run the program from the command line with:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;workouts.exe
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Which returns:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Please enter a SQL statement to execute
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Nice! So we know the argument check is working. Let&amp;rsquo;s create a table!&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;workouts.exe &amp;quot;CREATE TABLE IF NOT EXISTS exercises (id INTEGER PRIMARY KEY, name TEXT, reps INTEGER, sets INTE
+GER, weight INTEGER);&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Which returns:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Opened database successfully
+
+Completed statement execution: CREATE TABLE IF NOT EXISTS exercises (id INTEGER PRIMARY KEY, name TEXT, reps INTEGER, sets INTEGER, weight INTEGER);
+Closing database connection
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Let&amp;rsquo;s add some data (multiple INSERT statements at once) and query it:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;workout.exe &amp;quot;INSERT INTO exercises (name, reps, sets, weight) VALUES (&#39;Shoulder press&#39;, 6, 4, 45); INSERT INTO exercises (name, reps, sets, weight) VALUES (&#39;Bench press&#39;, 6, 4, 135);&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We&amp;rsquo;ll get the confirmation in printed to the console and we can run another statement to query the newly added data:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;workout.exe &amp;quot;SELECT * FROM exercises;&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Which returns:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Opened database successfully
+
+id: 1
+name: Shoulder press
+reps: 6
+sets: 4
+weight: 45
+
+id: 2
+name: Bench press
+reps: 6
+sets: 4
+weight: 135
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As you&amp;rsquo;ve guessed, you can execute &lt;em&gt;any&lt;/em&gt; SQL statement via the command line. This is a pretty handy tool. I think I am going to expand on this over the next couple weeks to &lt;em&gt;really&lt;/em&gt; make an exercise tracking command line tool. More to come!&lt;/p&gt;
+
+&lt;p&gt;Code (slightly modified) can be found &lt;a href=&#34;https://github.com/erictempleton1/workouts&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Linking and Including in C&#43;&#43;</title>
+      <link>http://ericlearns.com/post/linking-libs-include/</link>
+      <pubDate>Thu, 15 Jun 2017 07:53:18 -0400</pubDate>
+      
+      <guid>http://ericlearns.com/post/linking-libs-include/</guid>
+      <description>&lt;p&gt;So, you want to &lt;code&gt;include&lt;/code&gt; a 3rd party library in your C++ program? Cool. I wanted to do this too, but it turned out to be not as straight forward as I thought it would be. Why I thought it would be straight forward I am not sure, but I needed to do it either way.&lt;/p&gt;
+
+&lt;p&gt;I wanted to connect to a postgres database on my local machine, so I decided to use &lt;code&gt;libpq-fe.h&lt;/code&gt; which comes with the postgres download.&lt;/p&gt;
+
+&lt;p&gt;Here was my first attempt:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;quot;libpq-fe.h&amp;quot;
+
+int main() {
+    // my code here...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And compiled with:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;g++ main.cpp
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Result:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;fatal error: libpq-fe.h: No such file or directory
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Hmm. Ok, I mostly expected this result actually. The compiler doesn&amp;rsquo;t know anything about &lt;code&gt;libpq-fe.h&lt;/code&gt; and we need to tell it where the file is.&lt;/p&gt;
+
+&lt;p&gt;Next attempt (hard coding the path):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;quot;C:\path\to\postgres\include\libpq-fe.h&amp;quot;
+
+int main() {
+    // my code here...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Compiled with:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;g++ main.cpp
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Result (abbreviated):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;undefined reference to `PQconnectdb&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Well, that&amp;rsquo;s different. So the compiler knows where the header file is now but it knows nothing about the other methods in the library. Interesting. I think what we need are some flags to tell the compiler where the &lt;code&gt;include&lt;/code&gt; file is &lt;em&gt;and&lt;/em&gt; where the actual library is.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;ll add the &lt;code&gt;-I&lt;/code&gt; flag with the path to the &lt;code&gt;libpq-fe.h&lt;/code&gt; include and the &lt;code&gt;-L&lt;/code&gt; flag with the path to the actual library.&lt;/p&gt;
+
+&lt;p&gt;Another attempt:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;quot;libpq-fe.h&amp;quot;
+
+int main() {
+    // my code here...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Compiled with:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;g++ random.cpp -I &amp;quot;path\to\postgres\include&amp;quot; -L &amp;quot;path\to\postgres\lib&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Drum roll please&amp;hellip;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;undefined reference to `PQconnectdb&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Fuck. I was truly stuck here, but I stumbled across some &lt;a href=&#34;https://www.postgresql.org/docs/9.4/static/libpq-build.html&#34;&gt;postgres docs&lt;/a&gt; that mentioned include &lt;code&gt;-lpq&lt;/code&gt; in the compile command to tell the compiler which library you intend to use.&lt;/p&gt;
+
+&lt;p&gt;So, using the code directly above I tried again with the following:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;g++ random.cpp -I &amp;quot;path\to\postgres\include&amp;quot; -L &amp;quot;path\to\postgres\lib&amp;quot; -lpq
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Annnnnd&amp;hellip;no compiler errors. Awesome! I did, of course, have some other unrelated issues with my code but I&amp;rsquo;ll save that for another post. With all of this being said, what I should really be using is a &lt;a href=&#34;https://stackoverflow.com/questions/2481269/how-to-make-a-simple-c-makefile&#34;&gt;Makefile&lt;/a&gt; to build my programs. The Makefile lets you dump all of the include paths, link paths, and anything else you need at compile time into a file so they don&amp;rsquo;t have to be typed out over and over. More to come on that too.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>What does this Vector Contain?</title>
@@ -51,7 +360,7 @@ int main() {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Actually, that&amp;rsquo;s not &lt;em&gt;too&lt;/em&gt; bad. Everything is very verbose in C++, so I was actually expecting worse. Basically what the above C++ code does is use the &lt;code&gt;algorithm&lt;/code&gt; library&amp;rsquo;s &lt;code&gt;find()&lt;/code&gt; method which creates an iterator to search through the vector. It them compares the results with &lt;code&gt;end()&lt;/code&gt;, the last element in the vector.&lt;/p&gt;
+&lt;p&gt;Actually, that&amp;rsquo;s not &lt;em&gt;too&lt;/em&gt; bad. Everything is very verbose in C++, so I was expecting worse. Basically what the above C++ code does is use the &lt;code&gt;algorithm&lt;/code&gt; library&amp;rsquo;s &lt;code&gt;find()&lt;/code&gt; method which creates an iterator to search through the vector. It them compares the results with &lt;code&gt;end()&lt;/code&gt;, the last element in the vector.&lt;/p&gt;
 
 &lt;p&gt;Hey, you could wrap this up in a handy function!&lt;/p&gt;
 
@@ -79,7 +388,7 @@ int main() {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Pretty nice! Anyways, keep tinkering and writing more code.&lt;/p&gt;
+&lt;p&gt;Pretty nice!&lt;/p&gt;
 </description>
     </item>
     
@@ -1661,70 +1970,6 @@ int main() {
 &lt;p&gt;Why would you want to declare your own namespace? Well, I think this would help differentiate functions with the same name in the same space. If you use the namespace prepend, you can let the compiler know exactly which function you are referring to. Brilliant.&lt;/p&gt;
 
 &lt;p&gt;All this C++ namespace research got me wondering about namespaces in Python. Is there such a thing as a Python namespace? Well, yes but it works much differently than C++ namespaces. Python has &lt;code&gt;local&lt;/code&gt; and &lt;code&gt;global&lt;/code&gt; namespaces. A &lt;code&gt;local&lt;/code&gt; namespace exists in a package, module, class, or function. A &lt;code&gt;global&lt;/code&gt; namespace exists outside of the &lt;code&gt;local&lt;/code&gt; namespace when a name cannot be found in the &lt;code&gt;local&lt;/code&gt; namespace. This wonderful &lt;a href=&#34;http://stackoverflow.com/questions/3913217/what-are-python-namespaces-all-about?answertab=votes#tab-top&#34;&gt;SO answer&lt;/a&gt; sums it up nicely.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Things I Know, Things I Don&#39;t Know, and Things I&#39;m Avoiding</title>
-      <link>http://ericlearns.com/post/things-i-know-things-dont-know/</link>
-      <pubDate>Thu, 06 Apr 2017 20:47:16 -0400</pubDate>
-      
-      <guid>http://ericlearns.com/post/things-i-know-things-dont-know/</guid>
-      <description>&lt;p&gt;Let me get the thing I&amp;rsquo;m avoiding in C++ out of the way first: &lt;em&gt;Pointers&lt;/em&gt;. I recently read an article that boldy proclaimed&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;C++ pointers are easy and fun to learn!&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Hmm, this is a strange assertion and I&amp;rsquo;m not entirely convinced that the person who made this statement was entirely in their right mind. To me, pointers are very foreign concept. Even just googling &amp;ldquo;what is a pointer C++?&amp;rdquo; lead me to find many different definitions of &lt;em&gt;what&lt;/em&gt; a pointer actually is. Here is my best definition of a pointer for right now&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;A variable that stores the (memory) address of another variable&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;That seems simple enough but I know that&amp;rsquo;s not all there is to it, so I am storing pointers under &amp;ldquo;Things I&amp;rsquo;m Avoiding&amp;rdquo; for now.&lt;/p&gt;
-
-&lt;p&gt;How about some things I know? Well, I know that C++ is a &lt;em&gt;statically typed&lt;/em&gt; language, and all variable types must be defined as a result of this. Compared to Python and JavaScript (&lt;em&gt;dynamically typed&lt;/em&gt;) where basically anything goes, this is a bit of a change. But I will say that after writing some C++ for few days that having no option but to define the type is sort of refreshing. It&amp;rsquo;s nice to know exactly what is going in and what being returned.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;int myInt, myOtherInt;
-bool myBool;
-
-int awesomeBool() {
-    ...
-    return 100;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Another thing I know, but maybe don&amp;rsquo;t fully understand yet is the &lt;code&gt;main&lt;/code&gt; function. Another foreign concept to me, but it&amp;rsquo;s essentially the &lt;em&gt;entry point&lt;/em&gt; for the program. It must also &lt;em&gt;usually&lt;/em&gt; return an &lt;code&gt;int&lt;/code&gt; even if the &lt;code&gt;int&lt;/code&gt; is just a placeholder zero.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;int main() {
-    return 0;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Of course, &lt;code&gt;main&lt;/code&gt; also exists in Python but it&amp;rsquo;s not really as common and there is no entry point enforcement really. A more common idiom in Python is the &lt;code&gt;if __name__ == &#39;__main__:&lt;/code&gt;, which can take a function named &lt;code&gt;main&lt;/code&gt; or any object of your choice.&lt;/p&gt;
-
-&lt;p&gt;Lastly, something I don&amp;rsquo;t fully understand yet are vectors. I know that vectors are a very important data structure in C++, but I can&amp;rsquo;t stop picturing them as Python dictionaries&amp;hellip;.or maybe a list? They are accessed in a similar fashion to a Python list, but they&amp;rsquo;re not exactly the same. You can iterate them, add (read &lt;code&gt;push_to&lt;/code&gt;) them, and even &lt;em&gt;nest&lt;/em&gt; them. They also need to be &lt;code&gt;#include&lt;/code&gt;&amp;rsquo;d when they&amp;rsquo;re used. Very handy, but I need to explore more.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>An Intro of Sorts</title>
-      <link>http://ericlearns.com/post/an-intro-of-sorts/</link>
-      <pubDate>Wed, 05 Apr 2017 20:57:36 -0400</pubDate>
-      
-      <guid>http://ericlearns.com/post/an-intro-of-sorts/</guid>
-      <description>&lt;p&gt;So, I recently decided that I&amp;rsquo;d like to learn C++. Maybe not to become an expert C++ developer, which I assume takes many years, but to be comfortable enough
-in the language to have it be useful. I think &amp;ldquo;proficient in C++&amp;rdquo; would be the right way to put it. The purpose of this blog will be for me to track my thoughts
-and learning, and I also thought there might be someone else out there like me trying to learn who wants to follow along&amp;hellip;or sympathize with me.&lt;/p&gt;
-
-&lt;p&gt;I should say up front that I am not learning C++ as a &lt;em&gt;new&lt;/em&gt; developer. I am (what I would consider) a relatively experienced Python and JavaScript (Node.js) developer.
-In fact, I currently write code for a living. C++ always seemed like some monstrous beast of a language that was too difficult or not worth the tremendous effort to learn. I think I&amp;rsquo;ve
-come to a point where learning C++ would help me improve as a developer, so why not give it a shot.&lt;/p&gt;
-
-&lt;p&gt;You&amp;rsquo;ll probably see me make reference to idioms and patterns in python &lt;em&gt;a lot&lt;/em&gt;. Python is currently my favorite language, but it is obviously &lt;em&gt;very&lt;/em&gt; different than C++ in many ways. You will
-probably also see me make egregious errors in C++, things that would make a seasoned C++ developer cry out in pain. I think this is part of the learning process, and it&amp;rsquo;s important to make mistakes while
-learning new things, especially programming languages. With that being said, anything I write should NOT be used as a reference or tutorial of any sort. I mostly have no idea what I&amp;rsquo;m doing.&lt;/p&gt;
 </description>
     </item>
     

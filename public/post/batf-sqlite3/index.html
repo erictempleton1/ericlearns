@@ -1,0 +1,327 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta content="ericlearns, learn c&#43;&#43;, c&#43;&#43;, python, programming, learn programming, bicycling, cyclocross" name="keywords">
+<meta content="eric" name="author">
+<meta property="og:title" content="Build a Thing Friday: SQLite3 Command Line Interface - ericlearns">
+<meta property="og:url" content="http://ericlearns.com/post/batf-sqlite3/">
+<meta property="og:description" content="Follow along as I learn new things, including: c&#43;&#43;, and bicycling">
+<meta property="og:type" content="website" />
+<title>Build a Thing Friday: SQLite3 Command Line Interface | ericlearns</title>
+<link rel="stylesheet" href="http://ericlearns.com/css/style.css">
+<link rel="shortcut icon" href="http://ericlearns.com/wave.ico">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/github.min.css">
+
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="http://ericlearns.com"><h1 class="title is-4">ericlearns</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile">
+          
+          <a class="level-item" href="https://github.com/erictempleton1" target="_blank">
+            <span class="icon">
+              <i class="fa fa-github"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://twitter.com/google" target="_blank">
+            <span class="icon">
+              <i class="fa fa-twitter"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="https://linkedin.com/in/google" target="_blank">
+            <span class="icon">
+              <i class="fa fa-linkedin-square"></i>
+            </span>
+          </a>
+          
+          <a class="level-item" href="/index.xml" target="_blank">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+          </a>
+          
+        </nav>
+      </div>
+    </nav>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h1 class="title">Build a Thing Friday: SQLite3 Command Line Interface</h1>
+    <h2 class="subtitle is-5">June 20, 2017 by eric</h2>
+    
+      <div class="tags">
+    
+        <a class="button is-link" href="/tags/programming">programming</a>
+    
+        <a class="button is-link" href="/tags/c&#43;&#43;">c&#43;&#43;</a>
+    
+        <a class="button is-link" href="/tags/sqlite3">sqlite3</a>
+    
+</div>
+
+    
+    <div class="content">
+      <p>For this edition of Build a Thing Friday I&rsquo;ll be building a command line interface for SQLite3 in C++. Truth is, this is really just a walkthrough of the <a href="https://sqlite.org/quickstart.html">SQLite C/C++ tutorial</a> but I&rsquo;ll add a few features of my own to try and make it more interesting and <em>learn</em> a thing or two extra. To get started, you&rsquo;ll want to be sure you have <a href="https://sqlite.org/download.html">SQLite3 installed</a> on your machine. I went with the <em>Source Code</em> download to ensure I had all the header files and dll&rsquo;s needed.</p>
+
+<p>Let&rsquo;s start out by including the libs at the top of our file, which I&rsquo;ll call <code>main.cpp</code>:</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &quot;sqlite3.h&quot;
+</code></pre>
+
+<p>Since this will be a <em>command line</em> tool, we need to pass command line values to our program. We can work with command line arguments in C++ using <code>argc</code> and <code>*argv[]</code>. I&rsquo;ll create a <code>main()</code> function and instantiate a few vars to get us started. We&rsquo;ll need a <code>db</code> instance, error message instance, and db client instance. We will also want to pass the command line arguments to the main function so they can be used within the function.</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &quot;sqlite3.h&quot;
+
+int main(int argc, char *argv[]) {
+    sqlite *db;
+    char *errMsg = 0;
+    int rc;
+}
+</code></pre>
+
+<p>Mostly straightforward stuff, but we are using some pointers (oh my) and a type called <code>sqlite</code> (from the sqlite3 lib) to instantiate the db.</p>
+
+<p>The <code>argc</code> parameter in our <code>main</code> function is the <em>argument count</em> from the command line. When we compile this program we&rsquo;ll use something like:</p>
+
+<pre><code>g++ sql_ex.cpp &quot;SELECT * FROM myawesometable;&quot;
+</code></pre>
+
+<p>The first argument (<code>argv[0]</code>) is <code>sql_ex.cpp</code>, and the second argument (<code>argv[1]</code>) is the SQL statement. Sometimes I do stupid things when I compile my programs, like forgetting to actually include the SQL statement. I should make sure that when I do something stupid the program doesn&rsquo;t implode.</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &quot;sqlite3.h&quot;
+
+int main(int argc, char *argv[]) {
+    sqlite3 *db;
+    char *errMsg = 0;
+    int rc;
+
+    if (argc &lt; 2) {
+        std::cout &lt;&lt; &quot;Please enter a SQL statement to execute&quot; &lt;&lt; std::endl;
+        return 1;
+    }
+}
+</code></pre>
+
+<p>The reason for I check if  <code>argc &lt; 2</code> is because the first argument when we compile will be the filename. We assume the second argument is the SQL statement string. Also, why <code>return 1;</code> here? <code>1</code> is <code>false</code>. We want the program to halt and exit here if there is no SQL statement supplied.</p>
+
+<p>So now we&rsquo;re finally ready to actually connect to a database. I should mention at this point that I wanted to use this as a small command line utility to track some exercises I&rsquo;ve been doing, so you&rsquo;ll notice that theme moving forward.</p>
+
+<p>We&rsquo;ll use SQLite&rsquo;s <code>sqlite3_open</code> <a href="https://sqlite.org/c3ref/open.html">method</a> to connect to the database file. This method takes a <code>const char</code> filename and reference to a db as arguments. We&rsquo;ll also add an connection error check.</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &quot;sqlite3.h&quot;
+
+int main(int argc, char *argv[]) {
+    sqlite3 *db;
+    char *errMsg = 0;
+    int rc;
+
+    if (argc &lt; 2) {
+        std::cout &lt;&lt; &quot;Please enter a SQL statement to execute&quot; &lt;&lt; std::endl;
+        return 1;
+    }
+
+    rc = sqlite3_open(&quot;workouts.db&quot;, &amp;db);
+    if (rc) {
+        std::cout &lt;&lt; &quot;Can't open database: &quot; &lt;&lt; sqlite3_errmsg(db) &lt;&lt; std::endl;
+    } else {
+        std::cout &lt;&lt; &quot;Opened database successfully\n&quot; &lt;&lt; std::endl;
+    }
+}
+</code></pre>
+
+<p>The next thing to do is excecute the SQL statement supplied from the command line using the <code>sqlite3_exec</code> method. This method is a wrapper for multiple other methods in the SQLite3 library. But before we can do that, we need to build a <code>callback</code> function to pass as an argument to <code>sqlite3_exec</code>. The callback function tells the <code>sqlite3_exec</code> method (and the compiler) what we intend to with any results from our SQL statement. Right now, we&rsquo;ll just print the results from our statement (if any) to the console. Let&rsquo;s add a function called <code>callback</code> that takes some interesting arguments, including a pointer <em>to</em> a pointer(!).</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &quot;sqlite3.h&quot;
+
+int callback(void *notUsed, int argc, char **argv, char **colName) {
+    for (int i = 0; i &lt; argc; i++) {
+        std::cout &lt;&lt; colName[i] &lt;&lt; &quot;: &quot; &lt;&lt; argv[i] &lt;&lt; std::endl;
+    }
+    std::cout &lt;&lt; &quot;\n&quot; &lt;&lt; std::endl;
+    return 0;
+}
+
+int main(int argc, char *argv[]) {
+    sqlite3 *db;
+    char *errMsg = 0;
+    int rc;
+
+    if (argc &lt; 2) {
+        std::cout &lt;&lt; &quot;Please enter a SQL statement to execute&quot; &lt;&lt; std::endl;
+        return 1;
+    }
+
+    rc = sqlite3_open(&quot;workouts.db&quot;, &amp;db);
+    if (rc) {
+        std::cout &lt;&lt; &quot;Can't open database: &quot; &lt;&lt; sqlite3_errmsg(db) &lt;&lt; std::endl;
+    } else {
+        std::cout &lt;&lt; &quot;Opened database successfully\n&quot; &lt;&lt; std::endl;
+    }
+}
+</code></pre>
+
+<p>We&rsquo;ll also now add a call to <code>sqlite3_exec</code> which includes the <code>db</code>, SQL statement from the command line, our <code>callback</code> function, a zero value argument for the callback, and a reference to any error messages. Phew. Sounds like a lot more than it really is. Here&rsquo;s how it looks:</p>
+
+<pre><code class="language-C++">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &quot;sqlite3.h&quot;
+
+int callback(void *notUsed, int argc, char **argv, char **colName) {
+    for (int i = 0; i &lt; argc; i++) {
+        std::cout &lt;&lt; colName[i] &lt;&lt; &quot;: &quot; &lt;&lt; argv[i] &lt;&lt; std::endl;
+    }
+    std::cout &lt;&lt; &quot;\n&quot; &lt;&lt; std::endl;
+    return 0;
+}
+
+int main(int argc, char *argv[]) {
+    sqlite3 *db;
+    char *errMsg = 0;
+    int rc;
+
+    if (argc &lt; 2) {
+        std::cout &lt;&lt; &quot;Please enter a SQL statement to execute&quot; &lt;&lt; std::endl;
+        return 1;
+    }
+
+    rc = sqlite3_open(&quot;workouts.db&quot;, &amp;db);
+    if (rc) {
+        std::cout &lt;&lt; &quot;Can't open database: &quot; &lt;&lt; sqlite3_errmsg(db) &lt;&lt; std::endl;
+    } else {
+        std::cout &lt;&lt; &quot;Opened database successfully\n&quot; std::endl;
+    }
+
+    rc = sqlite3_exec(db, argv[1], callback, 0, &amp;errMsg);
+    if (rc != SQLITE_OK) {
+        std::cout &lt;&lt; &quot;Error executing supplied statement: &quot; &lt;&lt; errMsg &lt;&lt; std::endl;
+        return 1;
+    }
+
+    std::cout &lt;&lt; &quot;Completed statement execution: &quot; &lt;&lt; argv[1] &lt;&lt; std::endl;
+    std::cout &lt;&lt; &quot;Closing database connection&quot; &lt;&lt; std::endl;
+    sqlite3_close(db);
+}
+</code></pre>
+
+<p>I added some extra lines to show the status on the command line, but this code is similar to opening the database. Check for an error and proceed. Lastly, close the database when finished.</p>
+
+<p>So let&rsquo;s see what this program can do! We&rsquo;ll go ahead and compile with the following (note- paths may vary):</p>
+
+<pre><code>g++ .\main.cpp  -o workouts.exe -I &quot;C:\Sqlite3\&quot; -L &quot;C:\Sqlite3\&quot; -lsqlite3
+</code></pre>
+
+<p>We can run the program from the command line with:</p>
+
+<pre><code>workouts.exe
+</code></pre>
+
+<p>Which returns:</p>
+
+<pre><code>Please enter a SQL statement to execute
+</code></pre>
+
+<p>Nice! So we know the argument check is working. Let&rsquo;s create a table!</p>
+
+<pre><code>workouts.exe &quot;CREATE TABLE IF NOT EXISTS exercises (id INTEGER PRIMARY KEY, name TEXT, reps INTEGER, sets INTE
+GER, weight INTEGER);&quot;
+</code></pre>
+
+<p>Which returns:</p>
+
+<pre><code>Opened database successfully
+
+Completed statement execution: CREATE TABLE IF NOT EXISTS exercises (id INTEGER PRIMARY KEY, name TEXT, reps INTEGER, sets INTEGER, weight INTEGER);
+Closing database connection
+</code></pre>
+
+<p>Let&rsquo;s add some data (multiple INSERT statements at once) and query it:</p>
+
+<pre><code>workout.exe &quot;INSERT INTO exercises (name, reps, sets, weight) VALUES ('Shoulder press', 6, 4, 45); INSERT INTO exercises (name, reps, sets, weight) VALUES ('Bench press', 6, 4, 135);&quot;
+</code></pre>
+
+<p>We&rsquo;ll get the confirmation in printed to the console and we can run another statement to query the newly added data:</p>
+
+<pre><code>workout.exe &quot;SELECT * FROM exercises;&quot;
+</code></pre>
+
+<p>Which returns:</p>
+
+<pre><code>Opened database successfully
+
+id: 1
+name: Shoulder press
+reps: 6
+sets: 4
+weight: 45
+
+id: 2
+name: Bench press
+reps: 6
+sets: 4
+weight: 135
+</code></pre>
+
+<p>As you&rsquo;ve guessed, you can execute <em>any</em> SQL statement via the command line. This is a pretty handy tool. I think I am going to expand on this over the next couple weeks to <em>really</em> make an exercise tracking command line tool. More to come!</p>
+
+<p>Code (slightly modified) can be found <a href="https://github.com/erictempleton1/workouts">here</a>.</p>
+
+    </div>
+    
+        <div class="nav-left">
+    <a class="nav-item" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fericlearns.com%2fpost%2fbatf-sqlite3%2f" title="Share on Facebook" target="_blank"><span class="fa fa-facebook fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://plus.google.com/share?url=http%3a%2f%2fericlearns.com%2fpost%2fbatf-sqlite3%2f" title="Share on Google+" target="_blank"><span class="fa fa-google-plus fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2fericlearns.com%2fpost%2fbatf-sqlite3%2f" title="Share on LinkedIn" target="_blank"><span class="fa fa-linkedin fa-2x" aria-hidden="true"></span></a>
+    <a class="nav-item" href="https://twitter.com/home?status=Build%20a%20Thing%20Friday%3a%20SQLite3%20Command%20Line%20Interface - http%3a%2f%2fericlearns.com%2fpost%2fbatf-sqlite3%2f" title="Tweet this" target="_blank"><span class="fa fa-twitter fa-2x"></span></a>
+    <a class="nav-item" href="http://www.reddit.com/submit?url=http%3a%2f%2fericlearns.com%2fpost%2fbatf-sqlite3%2f&title=Build%20a%20Thing%20Friday%3a%20SQLite3%20Command%20Line%20Interface" title="Share on Reddit" target="_blank"><span class="fa fa-reddit-alien fa-2x" aria-hidden="true"></span></a>
+    
+    </div>
+    
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+  </div>
+</section>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" integrity="sha256-KbfTjB0WZ8vvXngdpJGY3Yp3xKk+tttbqClO11anCIU=" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/go.min.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/dockerfile.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-42703121-4', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+
+

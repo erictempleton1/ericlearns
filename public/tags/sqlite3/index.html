@@ -4,11 +4,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta content="ericlearns, learn c&#43;&#43;, c&#43;&#43;, python, programming, learn programming, bicycling, cyclocross" name="keywords">
 <meta content="eric" name="author">
-<meta property="og:title" content="G&#43;&#43; - ericlearns">
-<meta property="og:url" content="http://ericlearns.com/tags/g&#43;&#43;/">
+<meta property="og:title" content="Sqlite3 - ericlearns">
+<meta property="og:url" content="http://ericlearns.com/tags/sqlite3/">
 <meta property="og:description" content="Follow along as I learn new things, including: c&#43;&#43;, and bicycling">
 <meta property="og:type" content="website" />
-<title>G&#43;&#43; | ericlearns</title>
+<title>Sqlite3 | ericlearns</title>
 <link rel="stylesheet" href="http://ericlearns.com/css/style.css">
 <link rel="shortcut icon" href="http://ericlearns.com/wave.ico">
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -59,55 +59,24 @@
   <div class="container">
     
     <article>
-      <h1 class="title"><a href="http://ericlearns.com/post/linking-libs-include/">Linking and Including in C&#43;&#43;</a></h1>
-      <h2 class="subtitle is-5">June 15, 2017</h2>
+      <h1 class="title"><a href="http://ericlearns.com/post/batf-sqlite3/">Build a Thing Friday: SQLite3 Command Line Interface</a></h1>
+      <h2 class="subtitle is-5">June 20, 2017</h2>
       
         <div class="tags">
     
-        <a class="button is-link" href="/tags/c&#43;&#43;">c&#43;&#43;</a>
-    
         <a class="button is-link" href="/tags/programming">programming</a>
     
-        <a class="button is-link" href="/tags/g&#43;&#43;">g&#43;&#43;</a>
+        <a class="button is-link" href="/tags/c&#43;&#43;">c&#43;&#43;</a>
+    
+        <a class="button is-link" href="/tags/sqlite3">sqlite3</a>
     
 </div>
 
       
       <div class="content">
-        So, you want to include a 3rd party library in your C++ program? Cool. I wanted to do this too, but it turned out to be not as straight forward as I thought it would be. Why I thought it would be straight forward I am not sure, but I needed to do it either way.
-I wanted to connect to a postgres database on my local machine, so I decided to use libpq-fe.
+        For this edition of Build a Thing Friday I&rsquo;ll be building a command line interface for SQLite3 in C++. Truth is, this is really just a walkthrough of the SQLite C/C++ tutorial but I&rsquo;ll add a few features of my own to try and make it more interesting and learn a thing or two extra. To get started, you&rsquo;ll want to be sure you have SQLite3 installed on your machine. I went with the Source Code download to ensure I had all the header files and dll&rsquo;s needed.
         
-        ...<a class="button is-link" href="http://ericlearns.com/post/linking-libs-include/" style="height:28px">
-          Read more
-          <span class="icon is-small">
-            <i class="fa fa-angle-double-right"></i>
-          </span>
-        </a>
-        
-      </div>
-    </article>
-    
-    <article>
-      <h1 class="title"><a href="http://ericlearns.com/post/learning-about-the-compilier/">Learning About the g&#43;&#43; Compiler</a></h1>
-      <h2 class="subtitle is-5">April 10, 2017</h2>
-      
-        <div class="tags">
-    
-        <a class="button is-link" href="/tags/c&#43;&#43;">c&#43;&#43;</a>
-    
-        <a class="button is-link" href="/tags/programming">programming</a>
-    
-        <a class="button is-link" href="/tags/g&#43;&#43;">g&#43;&#43;</a>
-    
-        <a class="button is-link" href="/tags/compiler">compiler</a>
-    
-</div>
-
-      
-      <div class="content">
-        Being that C++ is a compiled language, we need a compiler to compile our code. Phew. For reasons that are not yet clear to me, my computers (Windows &amp; Linux) have g++ already installed on them, so that&rsquo;s what I&rsquo;ve been using. g++ is used primarily via the command line, and takes a few arguments including file names and an output flag. Let&rsquo;s write a simple C++ program and tinker with compiling it.
-        
-        ...<a class="button is-link" href="http://ericlearns.com/post/learning-about-the-compilier/" style="height:28px">
+        ...<a class="button is-link" href="http://ericlearns.com/post/batf-sqlite3/" style="height:28px">
           Read more
           <span class="icon is-small">
             <i class="fa fa-angle-double-right"></i>

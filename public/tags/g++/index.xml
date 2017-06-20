@@ -9,6 +9,93 @@
     <atom:link href="http://ericlearns.com/tags/g&#43;&#43;/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>Linking and Including in C&#43;&#43;</title>
+      <link>http://ericlearns.com/post/linking-libs-include/</link>
+      <pubDate>Thu, 15 Jun 2017 07:53:18 -0400</pubDate>
+      
+      <guid>http://ericlearns.com/post/linking-libs-include/</guid>
+      <description>&lt;p&gt;So, you want to &lt;code&gt;include&lt;/code&gt; a 3rd party library in your C++ program? Cool. I wanted to do this too, but it turned out to be not as straight forward as I thought it would be. Why I thought it would be straight forward I am not sure, but I needed to do it either way.&lt;/p&gt;
+
+&lt;p&gt;I wanted to connect to a postgres database on my local machine, so I decided to use &lt;code&gt;libpq-fe.h&lt;/code&gt; which comes with the postgres download.&lt;/p&gt;
+
+&lt;p&gt;Here was my first attempt:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;quot;libpq-fe.h&amp;quot;
+
+int main() {
+    // my code here...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And compiled with:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;g++ main.cpp
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Result:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;fatal error: libpq-fe.h: No such file or directory
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Hmm. Ok, I mostly expected this result actually. The compiler doesn&amp;rsquo;t know anything about &lt;code&gt;libpq-fe.h&lt;/code&gt; and we need to tell it where the file is.&lt;/p&gt;
+
+&lt;p&gt;Next attempt (hard coding the path):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;quot;C:\path\to\postgres\include\libpq-fe.h&amp;quot;
+
+int main() {
+    // my code here...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Compiled with:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;g++ main.cpp
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Result (abbreviated):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;undefined reference to `PQconnectdb&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Well, that&amp;rsquo;s different. So the compiler knows where the header file is now but it knows nothing about the other methods in the library. Interesting. I think what we need are some flags to tell the compiler where the &lt;code&gt;include&lt;/code&gt; file is &lt;em&gt;and&lt;/em&gt; where the actual library is.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;ll add the &lt;code&gt;-I&lt;/code&gt; flag with the path to the &lt;code&gt;libpq-fe.h&lt;/code&gt; include and the &lt;code&gt;-L&lt;/code&gt; flag with the path to the actual library.&lt;/p&gt;
+
+&lt;p&gt;Another attempt:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-C++&#34;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;quot;libpq-fe.h&amp;quot;
+
+int main() {
+    // my code here...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Compiled with:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;g++ random.cpp -I &amp;quot;path\to\postgres\include&amp;quot; -L &amp;quot;path\to\postgres\lib&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Drum roll please&amp;hellip;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;undefined reference to `PQconnectdb&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Fuck. I was truly stuck here, but I stumbled across some &lt;a href=&#34;https://www.postgresql.org/docs/9.4/static/libpq-build.html&#34;&gt;postgres docs&lt;/a&gt; that mentioned include &lt;code&gt;-lpq&lt;/code&gt; in the compile command to tell the compiler which library you intend to use.&lt;/p&gt;
+
+&lt;p&gt;So, using the code directly above I tried again with the following:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;g++ random.cpp -I &amp;quot;path\to\postgres\include&amp;quot; -L &amp;quot;path\to\postgres\lib&amp;quot; -lpq
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Annnnnd&amp;hellip;no compiler errors. Awesome! I did, of course, have some other unrelated issues with my code but I&amp;rsquo;ll save that for another post. With all of this being said, what I should really be using is a &lt;a href=&#34;https://stackoverflow.com/questions/2481269/how-to-make-a-simple-c-makefile&#34;&gt;Makefile&lt;/a&gt; to build my programs. The Makefile lets you dump all of the include paths, link paths, and anything else you need at compile time into a file so they don&amp;rsquo;t have to be typed out over and over. More to come on that too.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Learning About the g&#43;&#43; Compiler</title>
       <link>http://ericlearns.com/post/learning-about-the-compilier/</link>
       <pubDate>Mon, 10 Apr 2017 20:32:38 -0400</pubDate>

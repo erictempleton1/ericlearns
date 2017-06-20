@@ -59,6 +59,63 @@
   <div class="container">
     
     <article>
+      <h1 class="title"><a href="http://ericlearns.com/post/batf-sqlite3/">Build a Thing Friday: SQLite3 Command Line Interface</a></h1>
+      <h2 class="subtitle is-5">June 20, 2017</h2>
+      
+        <div class="tags">
+    
+        <a class="button is-link" href="/tags/programming">programming</a>
+    
+        <a class="button is-link" href="/tags/c&#43;&#43;">c&#43;&#43;</a>
+    
+        <a class="button is-link" href="/tags/sqlite3">sqlite3</a>
+    
+</div>
+
+      
+      <div class="content">
+        For this edition of Build a Thing Friday I&rsquo;ll be building a command line interface for SQLite3 in C++. Truth is, this is really just a walkthrough of the SQLite C/C++ tutorial but I&rsquo;ll add a few features of my own to try and make it more interesting and learn a thing or two extra. To get started, you&rsquo;ll want to be sure you have SQLite3 installed on your machine. I went with the Source Code download to ensure I had all the header files and dll&rsquo;s needed.
+        
+        ...<a class="button is-link" href="http://ericlearns.com/post/batf-sqlite3/" style="height:28px">
+          Read more
+          <span class="icon is-small">
+            <i class="fa fa-angle-double-right"></i>
+          </span>
+        </a>
+        
+      </div>
+    </article>
+    
+    <article>
+      <h1 class="title"><a href="http://ericlearns.com/post/linking-libs-include/">Linking and Including in C&#43;&#43;</a></h1>
+      <h2 class="subtitle is-5">June 15, 2017</h2>
+      
+        <div class="tags">
+    
+        <a class="button is-link" href="/tags/c&#43;&#43;">c&#43;&#43;</a>
+    
+        <a class="button is-link" href="/tags/programming">programming</a>
+    
+        <a class="button is-link" href="/tags/g&#43;&#43;">g&#43;&#43;</a>
+    
+</div>
+
+      
+      <div class="content">
+        So, you want to include a 3rd party library in your C++ program? Cool. I wanted to do this too, but it turned out to be not as straight forward as I thought it would be. Why I thought it would be straight forward I am not sure, but I needed to do it either way.
+I wanted to connect to a postgres database on my local machine, so I decided to use libpq-fe.
+        
+        ...<a class="button is-link" href="http://ericlearns.com/post/linking-libs-include/" style="height:28px">
+          Read more
+          <span class="icon is-small">
+            <i class="fa fa-angle-double-right"></i>
+          </span>
+        </a>
+        
+      </div>
+    </article>
+    
+    <article>
       <h1 class="title"><a href="http://ericlearns.com/post/check-vector/">What does this Vector Contain?</a></h1>
       <h2 class="subtitle is-5">June 9, 2017</h2>
       
@@ -271,68 +328,6 @@ my_list = ['test', 'items', 'go', 'here'] if 'test' in my_list: # it's here. do 
 #include &lt;iostream&gt; struct BikeRoute { int distance, watts; double time; std::string routeName; // member functions int accountForHills(int gradient, int multiplier); int accountForHills(int gradient, int timeMultiplier); };  But there is a problem here.
         
         ...<a class="button is-link" href="http://ericlearns.com/post/function-overloading/" style="height:28px">
-          Read more
-          <span class="icon is-small">
-            <i class="fa fa-angle-double-right"></i>
-          </span>
-        </a>
-        
-      </div>
-    </article>
-    
-    <article>
-      <h1 class="title"><a href="http://ericlearns.com/post/starting-out-with-structs/">Starting Out With Structs</a></h1>
-      <h2 class="subtitle is-5">April 13, 2017</h2>
-      
-        <div class="tags">
-    
-        <a class="button is-link" href="/tags/c&#43;&#43;">C&#43;&#43;</a>
-    
-        <a class="button is-link" href="/tags/programming">programming</a>
-    
-        <a class="button is-link" href="/tags/structs">structs</a>
-    
-        <a class="button is-link" href="/tags/data-structures">data structures</a>
-    
-</div>
-
-      
-      <div class="content">
-        From this point on I am going to write all my C++ programs with a minimum of 3 files: main.cpp headerFile.h logicFile.cpp
-main.cpp and logicFile.cpp will contain an #include headerFile.h statement at the top. This seems like the best way to keep everything organized, as well as a C++ best practice.
-So, with that out of way let&rsquo;s talk about structs. A struct is a C++ data structure that allows you to store different types of variables together in one place (encapsulation anyone?
-        
-        ...<a class="button is-link" href="http://ericlearns.com/post/starting-out-with-structs/" style="height:28px">
-          Read more
-          <span class="icon is-small">
-            <i class="fa fa-angle-double-right"></i>
-          </span>
-        </a>
-        
-      </div>
-    </article>
-    
-    <article>
-      <h1 class="title"><a href="http://ericlearns.com/post/learning-about-the-compilier/">Learning About the g&#43;&#43; Compiler</a></h1>
-      <h2 class="subtitle is-5">April 10, 2017</h2>
-      
-        <div class="tags">
-    
-        <a class="button is-link" href="/tags/c&#43;&#43;">c&#43;&#43;</a>
-    
-        <a class="button is-link" href="/tags/programming">programming</a>
-    
-        <a class="button is-link" href="/tags/g&#43;&#43;">g&#43;&#43;</a>
-    
-        <a class="button is-link" href="/tags/compiler">compiler</a>
-    
-</div>
-
-      
-      <div class="content">
-        Being that C++ is a compiled language, we need a compiler to compile our code. Phew. For reasons that are not yet clear to me, my computers (Windows &amp; Linux) have g++ already installed on them, so that&rsquo;s what I&rsquo;ve been using. g++ is used primarily via the command line, and takes a few arguments including file names and an output flag. Let&rsquo;s write a simple C++ program and tinker with compiling it.
-        
-        ...<a class="button is-link" href="http://ericlearns.com/post/learning-about-the-compilier/" style="height:28px">
           Read more
           <span class="icon is-small">
             <i class="fa fa-angle-double-right"></i>
